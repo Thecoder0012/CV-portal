@@ -6,15 +6,28 @@ import bcrypt from "bcrypt";
 const router = Router();
 
 
+
+
 router.post("/signup", async (req,res) => {
-const { username, email, password, roleId } = req.body;
+const { username, password, email, roleId } = req.body;
+const encryptedPass = await bcrypt.hash(password, 12);
 
-const encryptedPass = await bcrypt.hash(password.toString(), 12);
-const signUp = await db.query("INSERT into users (username,email,password,role_id) values (?,?,?,?)",
-[username,password,email,roleId]);
+const existingUser = await db.query("SELECT * FROM users WHERE email = ? OR username = ?", [email, username])
+const [user] = existingUser[0]
+if(!!user){
+    return res.status(409).send("A account already exists with this email/username")
+} else {
+    const signUp = await db.query("INSERT into users (username,password,email,role_id) values (?,?,?,?)",
+    [username,encryptedPass,email,roleId]);
+    
+   return res.status(200).send("You have now signed up")
+}
 
-res.status(200).send("You have signed up.")
 });
+
+
+
+
 
 
 export default router;
