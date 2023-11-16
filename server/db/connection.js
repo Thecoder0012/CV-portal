@@ -10,14 +10,14 @@ const db = mysql.createPool({
 });
 
 async function createConnection() {
-    const connection = await db.getConnection();
-    try {
-        console.log("Connection")
-    } catch (error) {
-      console.error("Could not connect.:", error);
-    } finally {
-      connection.release();
-    }
+  const connection = await db.getConnection();
+  try {
+    console.log("Connection")
+  } catch (error) {
+    console.error("Could not connect.:", error);
+  } finally {
+    connection.release();
   }
-  createConnection();
-  export default db;
+}
+createConnection();
+export default db;
