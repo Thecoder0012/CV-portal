@@ -14,7 +14,7 @@ async function createConnection() {
   try {
     console.log("Connection")
   } catch (error) {
-    console.error("Could not connect.:", error);
+    console.error("Could not connect to the database:", error);
   } finally {
     connection.release();
   }

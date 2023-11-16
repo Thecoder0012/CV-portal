@@ -4,6 +4,7 @@ import router from "./routes/auth.js";
 import "dotenv/config";
 
 const app = express();
+app.use(express.json())
 
 app.use(
   session({
@@ -19,13 +20,9 @@ app.use(
   })
 );
 
-app.use(express.json());
 app.use(router);
 
-app.get("/", (req, res) => {
-  res.send("Hello world");
+app.listen(8080,() => {
+    console.log("Running on port",8080);
 });
 
-app.listen(8080, () => {
-  console.log("Running on port", 8080);
-});

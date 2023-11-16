@@ -1,40 +1,8 @@
+import { Router } from "express";
 import db from "../db/connection.js";
-import express from "express";
 import bcrypt from "bcrypt";
 
-const router = express.Router();
-
-
-router.post("/register", async (req, res) => {
-  try {
-    const { username, password, email, role_id } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const existingUser = await db.query(
-      "SELECT * FROM users WHERE email = ? OR username = ?",
-      [email, username]
-    );
-    console.log(existingUser);
-    const [user] = existingUser[0];
-
-    if (user) {
-      return res
-        .status(409)
-        .send("A account already exists with this email/username");
-    } else {
-      const signUp = await db.query(
-        "INSERT into users (username,password,email,role_id) values (?,?,?,?)",
-        [username, hashedPassword, email, role_id]
-      );
-
-      res.status(201).send("User registered successfully");
-    }
-  } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
+const router = Router();
 
 router.post("/login", async (req, res) => {
   try {
@@ -44,7 +12,6 @@ router.post("/login", async (req, res) => {
       "SELECT * FROM users WHERE username = ? OR email = ?",
       [username, email]
     );
-
     const user = getUser[0];
 
     if (user) {
