@@ -2,6 +2,7 @@ import { Router } from "express";
 import db from "../db/connection.js";
 import bcrypt from "bcrypt";
 
+
 const router = Router();
 
 router.post("/register", async (req, res) => {
