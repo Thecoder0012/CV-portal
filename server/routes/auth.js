@@ -14,7 +14,7 @@ router.post("/signup", async (req, res) => {
     );
     const [user] = existingUser[0];
 
-    if (!!user) {
+    if (user) {
       return res
         .status(409)
         .send("An account already exists with this email/username");
