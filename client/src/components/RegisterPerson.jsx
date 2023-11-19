@@ -5,11 +5,11 @@ import "../styles/registerPerson.css";
 
 export const RegisterPerson = () => {
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
-  const [addressId, setAddressId] = useState("");
+  const [first_name, setFirstname] = useState("");
+  const [last_name, setLastname] = useState("");
+  const [date_of_birth, setDateOfBirth] = useState("");
+  const [phone_number, setPhonenumber] = useState("");
+  const [address_id, setAddressId] = useState("");
   const [error, setError] = useState(false);
   
   const handleSubmit = async (e) => {
@@ -17,11 +17,11 @@ export const RegisterPerson = () => {
     setError(false);
     try {
       const res = await axios.post("http://localhost:8080/registerPerson", {
-        firstname,
-        lastname,
-        dateOfBirth,
-        phonenumber,
-        addressId
+        first_name,
+        last_name,
+        date_of_birth,
+        phone_number,
+        address_id
       });
       res.data && window.location.replace("/");
     } catch (err) {

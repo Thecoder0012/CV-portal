@@ -15,9 +15,10 @@ export const Register = () => {
     setError(false);
     try {
       const res = await axios.post("http://localhost:8080/register", {
-        username,
-        email,
-        password,
+        username: username,
+        email: email,
+        password: password,
+        role_id: 2
       });
       res.data && window.location.replace("/login");
     } catch (err) {

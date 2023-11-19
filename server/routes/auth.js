@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { username, password, email, roleId } = req.body;
+    const { username, password, email, role_id } = req.body;
     const encryptedPass = await bcrypt.hash(password, 12);
     const existingUser = await db.query(
       "SELECT * FROM users WHERE email = ? OR username = ?",
@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
     } else {
       const signUp = await db.query(
         "INSERT into users (username,password,email,role_id) values (?,?,?,?)",
-        [username, encryptedPass, email, roleId]
+        [username, encryptedPass, email, role_id]
       );
       return res.status(200).send("You have now signed up");
     }

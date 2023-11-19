@@ -8,7 +8,6 @@ const router = Router();
 router.post("/registerPerson", async (req, res) => {
     try {
       const { first_name, last_name, date_of_birth, phone_number, address_id } = req.body;
-   
       const registerPerson = await db.query(
         "INSERT INTO person (first_name, last_name, date_of_birth, phone_number, address_id) VALUES (?,?,?,?,?)",
         [first_name, last_name, new Date(date_of_birth), phone_number, address_id]
