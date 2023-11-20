@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { RegisterManager } from "./components/RegisterManager.js";
-import { Register } from "./components/Register.jsx";
-import { Login } from "./components/Login.jsx";
-import { RegisterPerson } from "./components/RegisterPerson.jsx";
+import { Register } from "./components/Register.js";
+import { Login } from "./components/Login.js";
+import { RegisterPerson } from "./components/CvProfile.js";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Route path="/" element={<RegisterManager />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/registerPerson" element={<RegisterPerson />} />
+      <Route path="/cv" element={<RegisterPerson />} />
     </Routes>
   );
 }

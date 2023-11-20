@@ -1,10 +1,9 @@
-import React from 'react'
+import React from "react";
 import axios from "axios";
 import { useState } from "react";
-import "../styles/register.css"
+import "../styles/auth.css";
 
 export const Register = () => {
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +17,7 @@ export const Register = () => {
         username: username,
         email: email,
         password: password,
-        role_id: 2
+        role_id: 2,
       });
       res.data && window.location.replace("/login");
     } catch (err) {
@@ -26,8 +25,8 @@ export const Register = () => {
     }
   };
 
-    return (
-        <div className="register">
+  return (
+    <div className="register">
       <span className="registerTitle">Create User</span>
       <form className="registerForm" onSubmit={handleSubmit}>
         <label>Username</label>
@@ -55,7 +54,11 @@ export const Register = () => {
           Create
         </button>
       </form>
-      {error && <span style={{color:"red", marginTop:"10px"}}>Something went wrong!</span>}
+      {error && (
+        <span style={{ color: "red", marginTop: "10px" }}>
+          Something went wrong!
+        </span>
+      )}
     </div>
   );
-}
+};
