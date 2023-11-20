@@ -1,8 +1,19 @@
 import { Router } from "express";
 import db from "../db/connection.js";
 import bcrypt from "bcrypt";
+import rateLimit from "express-rate-limit";
 
 const router = Router();
+
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 5,
+  standardHeaders: true, 
+  legacyHeaders: false
+});
+
+router.use("/register",apiLimiter)
 
 router.post("/register", async (req, res) => {
   try {
@@ -13,20 +24,20 @@ router.post("/register", async (req, res) => {
       [email, username]
     );
     const [user] = existingUser[0];
-
+    
     if (user) {
       return res
         .status(409)
-        .send("An account already exists with this email/username");
+        .send({message:"An account already exists with this email/username"});
     } else {
       const signUp = await db.query(
         "INSERT into users (username,password,email,role_id) values (?,?,?,?)",
         [username, encryptedPass, email, roleId]
       );
-      return res.status(200).send("You have now signed up");
+      return res.status(200).send({message:"You have now signed up"});
     }
   } catch (error) {
-    res.status(500).send("Internal server error");
+    res.status(500).send({message:"Internal server error"});
   }
 });
 
