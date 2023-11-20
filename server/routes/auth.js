@@ -35,11 +35,14 @@ router.post("/login", async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
+    console.log(req.body)
+
     const [getUser] = await db.query(
       "SELECT * FROM users WHERE username = ? OR email = ?",
       [username, email]
     );
     const user = getUser[0];
+
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -50,7 +53,7 @@ router.post("/login", async (req, res) => {
       } else {
         res.status(401).send("Invalid password");
       }
-    } else {
+    } else {  
       res.status(404).send("User not found");
     }
   } catch (error) {

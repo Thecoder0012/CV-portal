@@ -12,7 +12,9 @@ router.post("/registerPerson", async (req, res) => {
         "INSERT INTO person (first_name, last_name, date_of_birth, phone_number, address_id) VALUES (?,?,?,?,?)",
         [first_name, last_name, new Date(date_of_birth), phone_number, address_id]
       );
-   
+
+
+      
       return res.status(200).send("The person has been registered");
 
     } catch (error) {
