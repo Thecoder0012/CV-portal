@@ -7,11 +7,9 @@ export const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(false);
     try {
       const res = await axios.post("http://localhost:8080/register", {
         username: username,
@@ -19,9 +17,7 @@ export const Register = () => {
         password: password,
         role_id: 2,
       });
-      res.data && window.location.replace("/login");
     } catch (err) {
-      setError(true);
     }
   };
 
@@ -33,32 +29,28 @@ export const Register = () => {
         <input
           type="text"
           className="registerInput"
-          placeholder="Enter your username..."
+          placeholder="Username"
           onChange={(e) => setUsername(e.target.value)}
         />
         <label>Email</label>
         <input
           type="text"
           className="registerInput"
-          placeholder="Enter your email..."
+          placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
         <label>Password</label>
         <input
           type="password"
           className="registerInput"
-          placeholder="Enter your password..."
+          placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <button className="registerButton" type="submit">
           Create
         </button>
       </form>
-      {error && (
-        <span style={{ color: "red", marginTop: "10px" }}>
-          Something went wrong!
-        </span>
-      )}
+
     </div>
   );
 };
