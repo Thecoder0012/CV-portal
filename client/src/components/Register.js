@@ -1,10 +1,11 @@
 import React from 'react'
 import axios from "axios";
 import { useState } from "react";
-import "../styles/register.css"
-import { API_URL } from "../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/register.css"
+import { API_URL } from "../config/apiUrl.js";
+
 
 
 export const Register = () => {
@@ -23,6 +24,7 @@ export const Register = () => {
         role_id: 2,
       });
        if (response.status === 200) {
+        console.log(response.data);
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -35,6 +37,12 @@ export const Register = () => {
 
     return (
       <div className="register">
+        <ToastContainer
+          autoClose={15000}
+          closeOnClick={true}
+          position={toast.POSITION.TOP_CENTER}
+          limit={2}
+        />
         <form className="registerForm" onSubmit={handleSubmit}>
           <label>Username</label>
           <input

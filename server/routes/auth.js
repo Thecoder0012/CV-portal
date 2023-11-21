@@ -18,16 +18,15 @@ router.post("/register", async (req, res) => {
     if (user) {
       return res
         .status(409)
-        .send("An account already exists with this email/username");
+        .send({message:"An account already exists with this email/username"});
     } else {
       const signUp = await db.query(
         "INSERT into users (username,password,email,role_id) values (?,?,?,?)",
         [username, encryptedPass, email, role_id]
       );
-      return res.status(200).send("You have now signed up");
-    }
+ return res.status(200).send({message:"You have now signed up"});    }
   } catch (error) {
-    res.status(500).send("Internal server error");
+    res.status(500).send({message:"Internal server error"});
   }
 });
 
