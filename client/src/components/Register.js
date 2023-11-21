@@ -1,16 +1,21 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "../styles/auth.css";
 import { API_URL } from "../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 export const Register = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState({
+    username: "",
+    email: "",
+    password: "",
+    role_id: "",
+  });
+
+  const { username, email, password } = credentials;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,8 +26,7 @@ export const Register = () => {
         password: password,
         role_id: 2,
       });
-       if (response.status === 200) {
-        console.log(response.data);
+      if (response.status === 200) {
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -30,11 +34,24 @@ export const Register = () => {
       if (error.response.status === 429) {
         toast.error(error.response.data);
       }
-  }
-}
+    }
+  };
+
+  const handleInputChange = (event) => {
+    setCredentials((prevCreds) => ({
+      ...prevCreds,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
   return (
     <div className="mainContainer">
+      <ToastContainer
+        autoClose={15000}
+        closeOnClick={true}
+        position={toast.POSITION.TOP_CENTER}
+        limit={2}
+      />
       <div className="register-container">
         <div className="register">
           <span className="registerTitle">Create User</span>
@@ -42,30 +59,37 @@ export const Register = () => {
             <label>Username</label>
             <input
               type="text"
+              name="username"
               className="registerInput"
               placeholder="Username"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleInputChange}
             />
             <label>Email</label>
             <input
               type="text"
+              name="email"
               className="registerInput"
               placeholder="Email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange}
             />
             <label>Password</label>
             <input
               type="password"
+              name="password"
               className="registerInput"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInputChange}
             />
-            <button className="registerButton" type="submit">
-              Create user
-            </button>
+            <input className="registerButton" type="submit" value="Register" />
           </form>
+
+          <div className="signup-link">
+            <p>
+              <Link to="/login">Sign in here if you have registered!</Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
-  }  
+};

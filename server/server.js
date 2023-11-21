@@ -1,14 +1,18 @@
 import express from "express";
 import session from "express-session";
 import routerAuth from "./routes/auth.js";
-import routerPerson from "./routes/person.js";
+import routerPerson from "./routes/profile.js";
 import cors from 'cors';
 import "dotenv/config";
 
 const app = express();
 app.use(express.json())
-app.use(cors());
-
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 app.use(
   session({
     key: process.env.SESSION_KEY,

@@ -2,7 +2,6 @@ import { Router } from "express";
 import db from "../db/connection.js";
 import bcrypt from "bcrypt";
 
-
 const router = Router();
 
 router.post("/register", async (req, res) => {
@@ -14,50 +13,46 @@ router.post("/register", async (req, res) => {
       [email, username]
     );
     const [user] = existingUser[0];
-
     if (user) {
       return res
         .status(409)
-        .send({message:"An account already exists with this email/username"});
+        .send({
+          message: "An account already exists with this email/username",
+        });
     } else {
       const signUp = await db.query(
         "INSERT into users (username,password,email,role_id) values (?,?,?,?)",
         [username, encryptedPass, email, role_id]
       );
- return res.status(200).send({message:"You have now signed up"});    }
+      return res.status(200).send({ message: "You have now signed up" });
+    }
   } catch (error) {
-    res.status(500).send({message:"Internal server error"});
+    res.status(500).send({ message: "Internal server error" });
   }
 });
 
 router.post("/login", async (req, res) => {
   try {
     const { username, password, email } = req.body;
-
-    console.log(req.body)
-
     const [getUser] = await db.query(
       "SELECT * FROM users WHERE username = ? OR email = ?",
       [username, email]
     );
     const user = getUser[0];
-
-
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (isPasswordValid) {
         req.session.user = user;
-        res.status(200).send("Login successful");
+        res.status(200).send({message:"Login successful"});
       } else {
-        res.status(401).send("Invalid password");
+        res.status(401).send({message:"Invalid password"});
       }
-    } else {  
-      res.status(404).send("User not found");
+    } else {
+      res.status(404).send({message:"User not found"});
     }
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send({message:"Internal Server Error"});
   }
 });
 
