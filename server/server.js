@@ -1,7 +1,8 @@
 import express from "express";
 import session from "express-session";
-import router from "./routes/auth.js";
-import cors from "cors";
+import authRouter from "./routes/auth.js";
+import profileRouter from "./routes/profile.js";
+import cors from 'cors';
 import "dotenv/config";
 
 const app = express();
@@ -12,7 +13,6 @@ app.use(
     origin: true,
   })
 );
-
 
 app.use(
   session({
@@ -28,7 +28,8 @@ app.use(
   })
 );
 
-app.use(router);
+app.use(authRouter);
+app.use(profileRouter);
 
 app.listen(8080,() => {
     console.log("Running on port",8080);
