@@ -55,7 +55,7 @@ export const RegisterManager = () => {
       <form onSubmit={handleSubmit} className={styles.container} method="POST">
         <p>
           <input
-            id="Username"
+            className={styles.input}
             type="text"
             name="username"
             placeholder="Username"
@@ -67,7 +67,7 @@ export const RegisterManager = () => {
 
         <p>
           <input
-            id="Email"
+            className={styles.input}
             type="text"
             name="email"
             placeholder="Email"
@@ -78,7 +78,7 @@ export const RegisterManager = () => {
         </p>
         <p>
           <input
-            id="password"
+            className={styles.input}
             type="password"
             name="password"
             placeholder="Password"
