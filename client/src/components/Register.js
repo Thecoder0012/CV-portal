@@ -22,35 +22,38 @@ export const Register = () => {
   };
 
   return (
-    <div className="register">
-      <span className="registerTitle">Create User</span>
-      <form className="registerForm" onSubmit={handleSubmit}>
-        <label>Username</label>
-        <input
-          type="text"
-          className="registerInput"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label>Email</label>
-        <input
-          type="text"
-          className="registerInput"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label>Password</label>
-        <input
-          type="password"
-          className="registerInput"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="registerButton" type="submit">
-          Create
-        </button>
-      </form>
-
+    <div className="mainContainer">
+      <div className="register-container">
+        <div className="register">
+          <span className="registerTitle">Create User</span>
+          <form className="registerForm" onSubmit={handleSubmit}>
+            <label>Username</label>
+            <input
+              type="text"
+              className="registerInput"
+              placeholder="Username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <label>Email</label>
+            <input
+              type="text"
+              className="registerInput"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <label>Password</label>
+            <input
+              type="password"
+              className="registerInput"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button className="registerButton" type="submit">
+              Create user
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
-};
+  }  

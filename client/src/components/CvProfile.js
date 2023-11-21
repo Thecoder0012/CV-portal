@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
-import "../styles/registerPerson.css";
+import "../styles/auth.css";
 
 export const RegisterPerson = () => {
   const [first_name, setFirstname] = useState("");
@@ -24,6 +24,8 @@ export const RegisterPerson = () => {
   };
 
   return (
+    <div className="mainContainer">
+    <div className="cv-container">
     <div className="register">
       <span className="registerTitle">Enter Your User Information</span>
       <form className="registerForm" onSubmit={handleSubmit}>
@@ -67,6 +69,8 @@ export const RegisterPerson = () => {
           Accept
         </button>
       </form>
+    </div>
+    </div>
     </div>
   );
 };
