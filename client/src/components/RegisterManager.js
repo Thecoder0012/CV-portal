@@ -1,6 +1,6 @@
 import styles from "../styles/ManagerForm.module.css";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -12,23 +12,7 @@ export const RegisterManager = () => {
     email: "",
     password: "",
   });
-  const [auth, setAuth] = useState("false");
   const { username, email, password } = credentials;
-  const WITH_CREDENTIALS = { withCredentials: true };
-  const navigate = useNavigate();
-
-  const fetchUser = async () => {
-    const response = await axios.get(API_URL + "/login", WITH_CREDENTIALS);
-    if (response.data.auth) {
-      setAuth(response.data.user);
-    } else {
-      //   navigate("/login");
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
