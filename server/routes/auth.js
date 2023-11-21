@@ -1,7 +1,7 @@
 import { Router } from "express";
 import db from "../db/connection.js";
 import bcrypt from "bcrypt";
-import rateLimit from "express-rate-limit";
+import {rateLimit} from "express-rate-limit";
 
 const router = Router();
 
@@ -13,7 +13,7 @@ const apiLimiter = rateLimit({
   legacyHeaders: false
 });
 
-router.use("/register",apiLimiter)
+router.use(["/register","/login"],apiLimiter)
 
 router.post("/register", async (req, res) => {
   try {
