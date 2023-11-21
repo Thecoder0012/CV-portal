@@ -1,7 +1,7 @@
 import express from "express";
 import session from "express-session";
-import routerAuth from "./routes/auth.js";
-import routerPerson from "./routes/profile.js";
+import authRouter from "./routes/auth.js";
+import profileRouter from "./routes/profile.js";
 import cors from 'cors';
 import "dotenv/config";
 
@@ -13,6 +13,7 @@ app.use(
     origin: true,
   })
 );
+
 app.use(
   session({
     key: process.env.SESSION_KEY,
@@ -27,10 +28,8 @@ app.use(
   })
 );
 
-
-app.use(routerAuth);
-app.use(routerPerson);
-
+app.use(authRouter);
+app.use(profileRouter);
 
 app.listen(8080,() => {
     console.log("Running on port",8080);

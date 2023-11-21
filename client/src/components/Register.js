@@ -85,7 +85,7 @@ export const Register = () => {
 
           <div className="signup-link">
             <p>
-              <Link to="/login">Sign in here if you have registered!</Link>
+              <Link to="/login">Login in here if you have registered!</Link>
             </p>
           </div>
         </div>
