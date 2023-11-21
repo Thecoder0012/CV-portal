@@ -2,6 +2,10 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import "../styles/auth.css";
+import { API_URL } from "../config/apiUrl.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const Register = () => {
   const [username, setUsername] = useState("");
@@ -11,15 +15,23 @@ export const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/register", {
+      const response = await axios.post(API_URL + "/register", {
         username: username,
         email: email,
         password: password,
         role_id: 2,
       });
-    } catch (err) {
-    }
-  };
+       if (response.status === 200) {
+        console.log(response.data);
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      if (error.response.status === 429) {
+        toast.error(error.response.data);
+      }
+  }
+}
 
   return (
     <div className="mainContainer">
