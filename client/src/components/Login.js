@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import styles from "../styles/auth.module.css"
 import axios from "axios";
-import "../styles/auth.css";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +15,8 @@ export const Login = () => {
   const { username, password } = credentials;
   const navigate = useNavigate();
   const WITH_CREDENTIALS = { withCredentials: true };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,21 +50,21 @@ export const Login = () => {
   };
 
   return (
-    <div className="mainContainer">
+    <div className={styles.mainContainer}>
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}
         position={toast.POSITION.TOP_CENTER}
         limit={2}
       />
-      <div className="login-container">
-        <div className="login">
-          <span className="loginTitle">Login</span>
-          <form className="loginForm" onSubmit={handleSubmit}>
+      <div className={styles.loginContainer}>
+        <div className={styles.login}>
+          <span className={styles.loginTitle}>Login</span>
+          <form className={styles.loginForm} onSubmit={handleSubmit}>
             <label>Username</label>
             <input
               type="text"
-              className="loginInput"
+              className={styles.loginInput}
               name="username"
               placeholder="Username"
               onChange={handleInputChange}
@@ -75,7 +77,7 @@ export const Login = () => {
               placeholder="Password"
               onChange={handleInputChange}
             />
-            <input className="loginButton" type="submit" value="login" />
+            <input className={styles.loginButton} type="submit" value="Login" />
           </form>
           <div className="signup-link">
             <Link to="/register">Click here to Register</Link>

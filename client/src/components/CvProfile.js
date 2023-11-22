@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/auth.css";
+import styles from "../styles/auth.module.css";
 import { API_URL } from "../config/apiUrl.js";
 import { useNavigate } from "react-router-dom";
 
@@ -63,7 +63,7 @@ export const CvProfile = () => {
   };
 
   return (
-    <div className="mainContainer">
+    <div className={styles.mainContainer}>
       <h3 style={{ textAlign: "right" }}>Logged in as: {auth}</h3>
       <ToastContainer
         autoClose={15000}
@@ -71,10 +71,10 @@ export const CvProfile = () => {
         position={toast.POSITION.TOP_CENTER}
         limit={2}
       />
-      <div className="cv-container">
-        <div className="register">
-          <span className="registerTitle">Enter Your User Information</span>
-          <form className="registerForm" onSubmit={handleSubmit}>
+      <div className={styles.cvContainer}>
+        <div className={styles.register}>
+          <span className={styles.registerTitle}>Enter Your User Information</span>
+          <form className={styles.registerForm} onSubmit={handleSubmit}>
             <label>First Name</label>
             <input
               type="text"
@@ -115,8 +115,7 @@ export const CvProfile = () => {
               placeholder="Enter your addressId..."
               onChange={handleInputChange}
             />
-
-            <input className="registerButton" type="submit" value="Create" />
+            <input className={styles.registerButton} type="submit" value="Create" />
           </form>
         </div>
       </div>

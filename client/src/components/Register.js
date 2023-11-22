@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/auth.css";
+import styles from "../styles/auth.module.css";
 import { API_URL } from "../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +17,8 @@ export const Register = () => {
 
   const { username, email, password } = credentials;
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -26,6 +28,7 @@ export const Register = () => {
         password: password,
         role_id: 2,
       });
+
       if (response.status === 200) {
         toast.success(response.data.message);
       }
@@ -45,51 +48,66 @@ export const Register = () => {
   };
 
   return (
-    <div className="mainContainer">
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={2}
-      />
-      <div className="register-container">
-        <div className="register">
-          <span className="registerTitle">Create User</span>
-          <form className="registerForm" onSubmit={handleSubmit}>
-            <label>Username</label>
-            <input
-              type="text"
-              name="username"
-              className="registerInput"
-              placeholder="Username"
-              onChange={handleInputChange}
-            />
-            <label>Email</label>
-            <input
-              type="text"
-              name="email"
-              className="registerInput"
-              placeholder="Email"
-              onChange={handleInputChange}
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              className="registerInput"
-              placeholder="Password"
-              onChange={handleInputChange}
-            />
-            <input className="registerButton" type="submit" value="Register" />
-          </form>
+     <div className={styles.mainContainer}>
+  <ToastContainer
+    autoClose={3000}
+    closeOnClick={true}
+    position={toast.POSITION.TOP_CENTER}
+    limit={3}
+  />
+  <div className={styles.registerContainer}>
+    <div className={styles.register}>
+      <span className={styles.registerTitle}>Create User</span>
+      <form
+        className={styles.registerForm}
+        onSubmit={handleSubmit}
+        method="POST"
+      >
+        <label>Username</label>
+        <input
+          type="text"
+          name="username"
+          className={styles.registerInput}
+          placeholder="Username"
+          value={username}
+          onChange={handleInputChange}
+          required
+        />
+        <label>Email</label>
+        <input
+          type="text"
+          name="email"
+          className={styles.registerInput}
+          placeholder="Email"
+          value={email}
+          onChange={handleInputChange}
+          required
+        />
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          className={styles.registerInput}
+          placeholder="Password"
+          value={password}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          className={styles.registerButton}
+          type="submit"
+          value="Register"
+        />
+      </form>
 
-          <div className="signup-link">
-            <p>
-              <Link to="/login">Login in here if you have registered!</Link>
-            </p>
-          </div>
-        </div>
+      <div className={styles.signupLink}>
+        <p>
+          <Link to="/login">Login in here if you have registered!</Link>
+        </p>
       </div>
     </div>
-  );
-};
+  </div>
+</div>
+);
+}
+   

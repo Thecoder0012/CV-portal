@@ -1,5 +1,5 @@
 body {
-  background-color: antiquewhite;
+  /* background-color: antiquewhite; */
 }
 .container {
   position: absolute;
@@ -11,7 +11,9 @@ body {
   left: 42%;
   margin-top: 9%;
 }
-input {
+
+
+.input {
   width: 170%;
   margin-top: 10px;
   height: 45px;
@@ -20,7 +22,7 @@ input {
   border: 1px solid grey;
 }
 
-input[placeholder] {
+.input[placeholder] {
   font-size: 1em;
   text-indent: 9px;
 }
@@ -63,4 +65,15 @@ input[placeholder] {
   position: absolute;
   width: 300px;
   top: -20%;
+}
+
+.loginButton, .registerButton {
+  background-color: #A100FF;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
