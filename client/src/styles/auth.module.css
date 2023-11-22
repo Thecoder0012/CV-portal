@@ -3,12 +3,13 @@
   font-family: system-ui;
 }
 
-.login-container, .register-container, .cv-container {
+.loginContainer, .registerContainer, .cvContainer {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
 }
+
 
 .login, .register {
   background-color: #0000002b;
@@ -20,6 +21,7 @@
   width: 100%;
 }
 
+
 .loginTitle, .registerTitle {
   font-size: 24px;
   font-weight: bold;
@@ -27,6 +29,7 @@
   display: block;
   text-align: center;
 }
+
 
 .loginForm, .registerForm {
   display: flex;
@@ -42,6 +45,7 @@ input{
   font-size: 16px;
 }
 
+
 .loginButton, .registerButton {
   background-color: #A100FF;
   color: #fff;
@@ -53,9 +57,11 @@ input{
   transition: background-color 0.3s ease;
 }
 
+
 .loginButton:hover {
   background-color: #8800ff
 }
+
 
 .registerButton:hover {
   background-color: #8800ff

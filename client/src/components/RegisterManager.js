@@ -1,4 +1,4 @@
-import styles from "../styles/ManagerForm.module.css";
+import styles from "../styles/auth.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -42,59 +42,60 @@ export const RegisterManager = () => {
   };
 
   return (
-    <div className={styles.body}>
-      <ToastContainer
-        autoClose={3000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={3}
-      />
-      <div id={styles.header}>
-        <h1>Register Manager</h1>
-      </div>
-      <form onSubmit={handleSubmit} className={styles.container} method="POST">
-        <p>
-          <input
-            className={styles.input}
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={username}
-            onChange={handleInputChange}
-            required
-          />
-        </p>
+    <div className={styles.mainContainer}>
+ <ToastContainer
+   autoClose={3000}
+   closeOnClick={true}
+   position={toast.POSITION.TOP_CENTER}
+   limit={3}
+ />
 
-        <p>
-          <input
-            className={styles.input}
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={handleInputChange}
-            required
-          />
-        </p>
-        <p>
-          <input
-            className={styles.input}
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={handleInputChange}
-            required
-          />
-        </p>
-        <input type="submit" id={styles.submitButton} value="Sign up" />
-      </form>
-
-      <div id={styles.loginLink}>
-        <p>
-          <Link to="/">Click here to login if you have registered!</Link>
-        </p>
-      </div>
-    </div>
-  );
-};
+ <div className={styles.registerContainer}>
+   <div className={styles.register}>
+     <span className={styles.registerTitle}>Create Manager</span>
+     <form
+       className={styles.registerForm}
+       onSubmit={handleSubmit}
+       method="POST"
+     >
+       <label>Username</label>
+       <input
+         type="text"
+         name="username"
+         className={styles.registerInput}
+         placeholder="Username"
+         value={username}
+         onChange={handleInputChange}
+         required
+       />
+       <label>Email</label>
+       <input
+         type="text"
+         name="email"
+         className={styles.registerInput}
+         placeholder="Email"
+         value={email}
+         onChange={handleInputChange}
+         required
+       />
+       <label>Password</label>
+       <input
+         type="password"
+         name="password"
+         className={styles.registerInput}
+         placeholder="Password"
+         value={password}
+         onChange={handleInputChange}
+         required
+       />
+       <input
+         className={styles.registerButton}
+         type="submit"
+         value="Register"
+       />
+     </form>
+   </div>
+ </div>
+</div>
+);
+}
