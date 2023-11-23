@@ -1,19 +1,18 @@
 import { Router } from "express";
 import db from "../db/connection.js";
 import bcrypt from "bcrypt";
-import {rateLimit} from "express-rate-limit";
+import { rateLimit } from "express-rate-limit";
 
 const router = Router();
 
-
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
+  windowMs: 15 * 60 * 1000,
   max: 5,
-  standardHeaders: true, 
-  legacyHeaders: false
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
-router.use(["/register","/login"],apiLimiter)
+router.use(["/register", "/login"], apiLimiter);
 
 router.post("/register", async (req, res) => {
   try {
@@ -24,19 +23,17 @@ router.post("/register", async (req, res) => {
       [email, username]
     );
     const [user] = existingUser[0];
-    
+
     if (user) {
-      return res
-        .status(409)
-        .send({
-          message: "An account already exists with this email/username",
-        });
+      return res.status(409).send({
+        message: "An account already exists with this email/username",
+      });
     } else {
       const signUp = await db.query(
         "INSERT into users (username,password,email,role_id) values (?,?,?,?)",
         [username, encryptedPass, email, role_id]
       );
-      return res.status(200).send({message:"You have now signed up"});
+      return res.status(200).send({ message: "You have now signed up" });
     }
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
@@ -56,19 +53,19 @@ router.post("/login", async (req, res) => {
 
       if (isPasswordValid) {
         req.session.user = user;
-        res.status(200).send({message:"Login successful"});
+        res.status(200).send({ message: "Login successful" });
       } else {
-        res.status(401).send({message:"Invalid password"});
+        res.status(401).send({ message: "Invalid password" });
       }
     } else {
-      res.status(404).send({message:"User not found"});
+      res.status(404).send({ message: "User not found" });
     }
   } catch (error) {
-    res.status(500).send({message:"Internal Server Error"});
+    res.status(500).send({ message: "Internal Server Error" });
   }
 });
 
-router.get("/login", (req, res) => {
+router.get("/auth-login", (req, res) => {
   const auth = !!req.session.user;
   res.status(200).send({ auth, user: req.session.user });
 });

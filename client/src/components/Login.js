@@ -79,7 +79,7 @@ export const Login = () => {
             />
             <input className={styles.loginButton} type="submit" value="Login" />
           </form>
-          <div className="signup-link">
+          <div className={styles.signupLink}>
             <Link to="/register">Click here to Register</Link>
           </div>
         </div>

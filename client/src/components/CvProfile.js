@@ -16,6 +16,10 @@ export const CvProfile = () => {
     address_id: "",
   });
 
+    const [addresses, setAddresses] = useState([]);
+    const [chosenAddress, setChosenAddress] = useState("");
+    const [number_taken, set_number_taken] = useState(false);
+
   const { first_name, last_name, date_of_birth, phone_number, address_id } =
     profile;
 
@@ -28,13 +32,14 @@ export const CvProfile = () => {
       ? setAuth(response.data.user.username)
       : navigate("/login");
   };
+   async function getData() {
+     const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
+     checkAuth(response);
+   }
 
   useEffect(() => {
-    async function getData() {
-      const response = await axios.get(API_URL + "/login", WITH_CREDENTIALS);
-      checkAuth(response);
-    }
     getData();
+    fetchAddresses();
   }, []);
 
   const handleInputChange = (event) => {
@@ -52,14 +57,40 @@ export const CvProfile = () => {
         date_of_birth: date_of_birth,
         phone_number: phone_number,
         address_id: address_id,
-      });
+      },WITH_CREDENTIALS);
 
       if (response.status === 200) {
+        set_number_taken(false)
         toast.success(response.data.message);
       }
     } catch (err) {
       toast.error(err.response.data.message);
+      set_number_taken(false)
+
+     if(err.response.data.phone_state === false){
+        set_number_taken(true)
+     }
     }
+  };
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await axios.get(API_URL+"/api/address"); 
+      if (response.status === 200) {
+        setAddresses(response.data.addresses);
+      } else {
+        console.error("Server could not find addresses");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const handleAddress = (event) => {
+    setChosenAddress(event.target.value);
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      address_id: event.target.value
+    }));
   };
 
   return (
@@ -73,7 +104,9 @@ export const CvProfile = () => {
       />
       <div className={styles.cvContainer}>
         <div className={styles.register}>
-          <span className={styles.registerTitle}>Enter Your User Information</span>
+          <span className={styles.registerTitle}>
+            Enter Your User Information
+          </span>
           <form className={styles.registerForm} onSubmit={handleSubmit}>
             <label>First Name</label>
             <input
@@ -106,16 +139,31 @@ export const CvProfile = () => {
               name="phone_number"
               placeholder="Enter your phonenumber..."
               onChange={handleInputChange}
+              style={{borderColor: number_taken ? 'red' : ''}}
             />
+            {number_taken && <p style={{fontSize: '13px',color: 'red'}}>Change phone number.</p>}
             <label>Address</label>
-            <input
-              type="text"
+            <select
               className="registerInput"
               name="address_id"
-              placeholder="Enter your addressId..."
-              onChange={handleInputChange}
+              onChange={handleAddress}
+              value={chosenAddress}
+            >
+              <option value="" disabled>
+                Select an address
+              </option>
+              {addresses.map((address) => (
+                <option key={address.address_id} value={address.address_id}>
+                  {address.zip_code}, {address.city}
+                </option>
+              ))}
+            </select>
+
+            <input
+              className={styles.registerButton}
+              type="submit"
+              value="Create"
             />
-            <input className={styles.registerButton} type="submit" value="Create" />
           </form>
         </div>
       </div>
