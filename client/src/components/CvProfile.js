@@ -17,8 +17,11 @@ export const CvProfile = () => {
     pdf_file: null
   });
 
+  console.log(profile.pdf_file);
+
     const [skills, setSkills] = useState([]);
     const [selectedSkills, setSelectedSkills] = useState([]);
+
 
     const [departments, setDepartments] = useState([]);
     const [chosenDepartment, setChosenDepartment] = useState("");
@@ -57,6 +60,7 @@ export const CvProfile = () => {
         phone_number: phone_number,
         department_id: department_id,
         skills: selectedSkills,
+        pdf:profile.pdf_file
       },WITH_CREDENTIALS);
 
       if (response.status === 200) {
@@ -113,6 +117,14 @@ export const CvProfile = () => {
     } else {
       setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
     }
+  };
+
+  const handlePdfChange = (event) => {
+    // Update the state with the selected PDF file
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      pdf_file: event.target.files[0],
+    }));
   };
 
 
@@ -204,6 +216,18 @@ export const CvProfile = () => {
                 accept=".pdf"
                 onChange={handlePdfChange}
               />
+
+        {profile.pdf_file && (
+          <a
+            href={URL.createObjectURL(profile.pdf_file)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open Your PDF file
+          </a>
+        )}
+
+
 
             <input
               className={styles.registerButton}
