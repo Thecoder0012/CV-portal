@@ -17,8 +17,6 @@ export const CvProfile = () => {
     pdf_file: null
   });
 
-  console.log(profile.pdf_file);
-
     const [skills, setSkills] = useState([]);
     const [selectedSkills, setSelectedSkills] = useState([]);
 
@@ -53,30 +51,38 @@ export const CvProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(API_URL + "/profile", {
-        first_name: first_name,
-        last_name: last_name,
-        date_of_birth: date_of_birth,
-        phone_number: phone_number,
-        department_id: department_id,
-        skills: selectedSkills,
-        pdf:profile.pdf_file
-      },WITH_CREDENTIALS);
+  
+      const response = await axios.post(
+        API_URL + '/profile',
+        {
+          first_name: first_name,
+          last_name: last_name,
+          date_of_birth: date_of_birth,
+          phone_number: phone_number,
+          department_id: department_id,
+          skills: selectedSkills,
+          file:profile.pdf_file
+        },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+        }
+      );
 
+  
       if (response.status === 200) {
-        set_number_taken(false)
+        set_number_taken(false);
         toast.success(response.data.message);
       }
     } catch (err) {
+      console.log(err);
       toast.error(err.response.data.message);
-      set_number_taken(false)
-
-     if(err.response.data.phone_state === false){
-        set_number_taken(true)
-     }
+      set_number_taken(false);
     }
   };
-
+  
   const fetchDepartments = async () => {
     try {
       const response = await axios.get(API_URL+"/api/departments"); 
@@ -120,7 +126,6 @@ export const CvProfile = () => {
   };
 
   const handlePdfChange = (event) => {
-    // Update the state with the selected PDF file
     setProfile((prevProfile) => ({
       ...prevProfile,
       pdf_file: event.target.files[0],
@@ -213,7 +218,7 @@ export const CvProfile = () => {
           <label>Upload PDF</label>
               <input
                 type="file"
-                accept=".pdf"
+                accept="application/pdf"
                 onChange={handlePdfChange}
               />
 

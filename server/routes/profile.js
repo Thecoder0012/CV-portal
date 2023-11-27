@@ -1,9 +1,29 @@
 import { Router } from "express";
 import db from "../db/connection.js";
+import multer from 'multer';
+import path from "path";
+
+
 
 const router = Router();
 
-router.post("/profile", async (req, res) => {
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
+
+
+router.post("/profile", upload.single('file'), async (req, res) => {
   try {
     const {
       first_name,
@@ -11,8 +31,9 @@ router.post("/profile", async (req, res) => {
       date_of_birth,
       phone_number,
       department_id,
-      skills,
+      skills
     } = req.body;
+    let file_path = req.file.filename;
 
     const user_id = req.session.user.user_id;
     const [existingProfile] = await db.query(
@@ -54,8 +75,8 @@ router.post("/profile", async (req, res) => {
         ]
       );
       const createEmployee = await db.query(
-        "INSERT INTO employee (person_id, user_id, department_id) VALUES (?,?,?)",
-        [createProfile[0].insertId, user_id, department_id]
+        "INSERT INTO employee (person_id, user_id, department_id,project_path_url) VALUES (?,?,?,?)",
+        [createProfile[0].insertId, user_id, department_id, file_path]
       );
 
        for (const skill_id of skills) {
