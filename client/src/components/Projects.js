@@ -22,8 +22,8 @@ export const Projects = () => {
     project_file_path: "",
   });
 
+  console.log(project);
   const [imagePreview, setImagePreview] = useState(null);
-  const [pdfFile, setPdfFile] = useState(null);
 
   const { username, password } = credentials;
   const navigate = useNavigate();
@@ -54,33 +54,17 @@ export const Projects = () => {
   };
 
   const handleInputChange = (event) => {
-    setCredentials((prevCreds) => ({
-      ...prevCreds,
+    setProject((prevProjects) => ({
+      ...prevProjects,
       [event.target.name]: event.target.value,
     }));
+  };
 
-    if (event.target.type === "file") {
-      const file = event.target.files[0];
-
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreview(reader.result);
-        };
-        reader.readAsDataURL(file);
-      } else if (file.type === "application/pdf") {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPdfFile(reader.result);
-        };
-        reader.readAsArrayBuffer(file);
-      }
-    } else {
-      setProject((prevProject) => ({
-        ...prevProject,
-        [event.target.name]: event.target.value,
-      }));
-    }
+  const handlePdfChange = (event) => {
+    setProject((prevProjects) => ({
+      ...prevProjects,
+      project_file_path: event.target.files[0],
+    }));
   };
 
   return (
@@ -147,34 +131,34 @@ export const Projects = () => {
           />
         </div>
 
-        {pdfFile && (
+        {project.project_file_path && (
           <div className={styles.pdfPreview}>
             <p
               onClick={() => {
-                const blob = new Blob([pdfFile], { type: "application/pdf" });
+                const blob = new Blob([project.project_file_path], { type: "application/pdf" });
                 const url = URL.createObjectURL(blob);
                 window.open(url, "_blank");
               }}
               style={{ cursor: "pointer" }}
             >
-              {pdfFile.name || "CV File"}
+              {project.project_file_path.name || "CV File"}
             </p>
           </div>
         )}
 
         <div className={styles.projectFormGroup}>
-          {!pdfFile && (
+          {!project.project_file_path && (
             <label htmlFor="fileInput" className={styles.fileInputLabel}>
               Insert your CV
             </label>
           )}
-          {!pdfFile && (
+          {!project.project_file_path && (
             <input
               type="file"
               id="fileInput"
               className={styles.projectFile}
               accept=".pdf"
-              onChange={handleInputChange}
+              onChange={handlePdfChange}
               name="cvInput"
             />
           )}
