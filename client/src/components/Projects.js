@@ -12,8 +12,18 @@ export const Projects = () => {
     password: "",
   });
 
+  const [project, setProject] = useState({
+    project_title: "",
+    project_description: "",
+    project_author: "",
+    project_done: "",
+    date_made: "",
+    date_finish: "",
+    project_file_path: "",
+  });
+
   const [imagePreview, setImagePreview] = useState(null);
-  const [pdfPreview, setPdfPreview] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
 
   const { username, password } = credentials;
   const navigate = useNavigate();
@@ -21,7 +31,26 @@ export const Projects = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Your submission logic
+
+    try {
+      const response = await axios.post(API_URL + "/projects/createProject", {
+        project_title: project.project_title,
+        project_description: project.project_description,
+        project_author: project.project_author,
+        project_done: project.project_done,
+        date_made: project.date_made,
+        date_finish: project.date_finish,
+        project_file_path: project.project_file_path,
+      });
+      if (response.status === 200) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      if (error.response.status === 429) {
+        toast.error(error.response.data);
+      }
+    }
   };
 
   const handleInputChange = (event) => {
@@ -37,39 +66,33 @@ export const Projects = () => {
         const reader = new FileReader();
         reader.onloadend = () => {
           setImagePreview(reader.result);
-          setPdfPreview(null);
         };
         reader.readAsDataURL(file);
-      }
-
-      if (file.type === "application/pdf") {
+      } else if (file.type === "application/pdf") {
         const reader = new FileReader();
         reader.onloadend = () => {
-          // Set the PDF preview as a Blob URL
-          setPdfPreview(URL.createObjectURL(new Blob([file])));
-          setImagePreview(null);
+          setPdfFile(reader.result);
         };
         reader.readAsArrayBuffer(file);
       }
+    } else {
+      setProject((prevProject) => ({
+        ...prevProject,
+        [event.target.name]: event.target.value,
+      }));
     }
-  };
-
-  const handlePdfChange = (event) => {
-    // Update the state with the selected PDF file
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      pdf_file: event.target.files[0],
-    }));
   };
 
   return (
     <div className={styles.createProjects}>
       {imagePreview && (
-        <img
-          src={imagePreview}
-          alt="Selected"
-          className={styles.imagePreview}
-        />
+        <div>
+          <img
+            src={imagePreview}
+            alt="Selected"
+            className={styles.imagePreview}
+          />
+        </div>
       )}
       <form className={styles.projectForm} onSubmit={handleSubmit}>
         <div className={styles.projectFormGroup}>
@@ -95,7 +118,6 @@ export const Projects = () => {
             onChange={handleInputChange}
           />
         </div>
-
         <div className={styles.projectFormGroup}>
           <textarea
             placeholder="What was your project about..."
@@ -103,7 +125,6 @@ export const Projects = () => {
             className={styles.writeProjectsText}
             onChange={handleInputChange}
           ></textarea>
-
           <label htmlFor="projectStatus"></label>
           <select
             id="projectStatus"
@@ -122,46 +143,47 @@ export const Projects = () => {
             id="projectDate"
             className={styles.projectFormGroupSelectDate}
             onChange={handleInputChange}
-            name="projectDate"
+            name="projectDateFinish"
           />
-
-          {pdfPreview && (
-            <div className={styles.pdfPreview}>
-              <img
-                src="../pdf/pdf-icon.png"
-                alt="PDF Icon"
-                onClick={() => window.open(pdfPreview, "_blank")}
-                style={{ cursor: "pointer" }}
-              />
-            </div>
-          )}
-
-          <label htmlFor="fileInput" className={styles.fileInputLabel}>
-            Insert your CV
-          </label>
-          <input
-            type="file"
-            id="fileInput"
-            className={styles.projectFile}
-            onChange={handleInputChange}
-            name="cvInput"
-          />
-
-          <label>Upload PDF</label>
-          <input type="file" accept=".pdf" onChange={handlePdfChange} />
-
-          {profile.pdf_file && (
-            <a
-              href={URL.createObjectURL(profile.pdf_file)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open Your PDF file
-            </a>
-          )}
         </div>
 
-        <button className={styles.projectSubmit} type="submit">
+        {pdfFile && (
+          <div className={styles.pdfPreview}>
+            <p
+              onClick={() => {
+                const blob = new Blob([pdfFile], { type: "application/pdf" });
+                const url = URL.createObjectURL(blob);
+                window.open(url, "_blank");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              {pdfFile.name || "CV File"}
+            </p>
+          </div>
+        )}
+
+        <div className={styles.projectFormGroup}>
+          {!pdfFile && (
+            <label htmlFor="fileInput" className={styles.fileInputLabel}>
+              Insert your CV
+            </label>
+          )}
+          {!pdfFile && (
+            <input
+              type="file"
+              id="fileInput"
+              className={styles.projectFile}
+              accept=".pdf"
+              onChange={handleInputChange}
+              name="cvInput"
+            />
+          )}
+        </div>
+        <button
+          className={styles.projectSubmit}
+          type="submit"
+          onChange={handleSubmit}
+        >
           Create project
         </button>
       </form>
