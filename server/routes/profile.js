@@ -10,9 +10,8 @@ router.post("/profile", async (req, res) => {
       last_name,
       date_of_birth,
       phone_number,
-      address_id,
       department_id,
-      skills_id,
+      skills,
     } = req.body;
 
     const user_id = req.session.user.user_id;
@@ -46,19 +45,25 @@ router.post("/profile", async (req, res) => {
       }
     } else {
       const createProfile = await db.query(
-        "INSERT INTO person (first_name, last_name, date_of_birth, phone_number, address_id) VALUES (?,?,?,?,?)",
+        "INSERT INTO person (first_name, last_name, date_of_birth, phone_number) VALUES (?,?,?,?)",
         [
           first_name,
           last_name,
           new Date(date_of_birth),
-          phone_number,
-          address_id,
+          phone_number
         ]
       );
       const createEmployee = await db.query(
-        "INSERT INTO employee (person_id, user_id, department_id, skills_id) VALUES (?,?,?,?)",
-        [createProfile[0].insertId, user_id, department_id, skills_id]
+        "INSERT INTO employee (person_id, user_id, department_id) VALUES (?,?,?)",
+        [createProfile[0].insertId, user_id, department_id]
       );
+
+       for (const skill_id of skills) {
+         await db.query(
+           "INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)",
+           [createEmployee[0].insertId, skill_id]
+         );
+       }
 
       return res
         .status(200)
@@ -69,12 +74,23 @@ router.post("/profile", async (req, res) => {
   }
 });
 
-router.get("/api/address", async (req, res) => {
+router.get("/api/departments", async (req, res) => {
   try {
-    const [addresses] = await db.query("SELECT * FROM address");
-    res.status(200).send({ addresses });
+    const [departments] = await db.query("SELECT * FROM department");
+    res.status(200).send({ departments });
   } catch (error) {
-    console.error("Error finding addresses:", error);
+    console.error("Error finding departments:", error);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+
+router.get("/api/skills", async (req, res) => {
+  try {
+    const [skills] = await db.query("SELECT * FROM skills");
+    res.status(200).send({ skills });
+  } catch (error) {
+    console.error("Error finding skills:", error);
     res.status(500).send({ error: "Internal server error" });
   }
 });

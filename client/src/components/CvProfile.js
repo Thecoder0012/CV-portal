@@ -5,7 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/auth.module.css";
 import { API_URL } from "../config/apiUrl.js";
-import { useNavigate } from "react-router-dom";
 
 export const CvProfile = () => {
   const [profile, setProfile] = useState({
@@ -13,33 +12,32 @@ export const CvProfile = () => {
     last_name: "",
     date_of_birth: "",
     phone_number: "",
-    address_id: "",
+    department_id: "",
+    skills: [],
+    pdf_file: null
   });
 
-    const [addresses, setAddresses] = useState([]);
-    const [chosenAddress, setChosenAddress] = useState("");
+    const [skills, setSkills] = useState([]);
+    const [selectedSkills, setSelectedSkills] = useState([]);
+
+    const [departments, setDepartments] = useState([]);
+    const [chosenDepartment, setChosenDepartment] = useState("");
     const [number_taken, set_number_taken] = useState(false);
 
-  const { first_name, last_name, date_of_birth, phone_number, address_id } =
-    profile;
+    const { first_name, last_name, date_of_birth, phone_number, department_id } = profile;
+    
+    const [auth, setAuth] = useState();
+    const WITH_CREDENTIALS = { withCredentials: true };
 
-  const [auth, setAuth] = useState();
-  const navigate = useNavigate();
-  const WITH_CREDENTIALS = { withCredentials: true };
-
-  const checkAuth = (response) => {
-    return response.data.auth
-      ? setAuth(response.data.user.username)
-      : navigate("/login");
-  };
-   async function getData() {
+   async function authName() {
      const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-     checkAuth(response);
-   }
+     setAuth(response.data.user.username)
+  }
 
   useEffect(() => {
-    getData();
-    fetchAddresses();
+    authName()
+    fetchDepartments();
+    fetchSkills()
   }, []);
 
   const handleInputChange = (event) => {
@@ -48,6 +46,7 @@ export const CvProfile = () => {
       [event.target.name]: event.target.value,
     }));
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -56,7 +55,8 @@ export const CvProfile = () => {
         last_name: last_name,
         date_of_birth: date_of_birth,
         phone_number: phone_number,
-        address_id: address_id,
+        department_id: department_id,
+        skills: selectedSkills,
       },WITH_CREDENTIALS);
 
       if (response.status === 200) {
@@ -73,25 +73,48 @@ export const CvProfile = () => {
     }
   };
 
-  const fetchAddresses = async () => {
+  const fetchDepartments = async () => {
     try {
-      const response = await axios.get(API_URL+"/api/address"); 
+      const response = await axios.get(API_URL+"/api/departments"); 
       if (response.status === 200) {
-        setAddresses(response.data.addresses);
+        setDepartments(response.data.departments);
       } else {
-        console.error("Server could not find addresses");
+        console.error("Server could not find departments");
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  const handleAddress = (event) => {
-    setChosenAddress(event.target.value);
+  const handleDepartments = (event) => {
+    setChosenDepartment(event.target.value);
     setProfile((prevProfile) => ({
       ...prevProfile,
-      address_id: event.target.value
+      department_id: event.target.value
     }));
   };
+
+  const fetchSkills = async () => {
+    try {
+      const response = await axios.get(API_URL + "/api/skills");
+      if (response.status === 200) {
+        setSkills(response.data.skills);
+      } else {
+        console.error("Server could not find skills");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleSkills = (event) => {
+    const selectedSkill = event.target.value;
+    if (selectedSkills.includes(selectedSkill)) {
+      setSelectedSkills((prevSkills) => prevSkills.filter((skill) => skill !== selectedSkill));
+    } else {
+      setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
+    }
+  };
+
 
   return (
     <div className={styles.mainContainer}>
@@ -142,22 +165,45 @@ export const CvProfile = () => {
               style={{borderColor: number_taken ? 'red' : ''}}
             />
             {number_taken && <p style={{fontSize: '13px',color: 'red'}}>Change phone number.</p>}
-            <label>Address</label>
+            <label>Department</label>
             <select
               className="registerInput"
-              name="address_id"
-              onChange={handleAddress}
-              value={chosenAddress}
+              name="department_id"
+              onChange={handleDepartments}
+              value={chosenDepartment}
             >
               <option value="" disabled>
-                Select an address
+                Select a Department
               </option>
-              {addresses.map((address) => (
-                <option key={address.address_id} value={address.address_id}>
-                  {address.zip_code}, {address.city}
+              {departments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}, {department.country}
                 </option>
               ))}
             </select>
+
+           <label>Skills</label>
+            {skills.map((skill) => (
+              <div key={skill.id} className="checkbox-item">
+                <input
+                  type="checkbox"
+                  id={skill.id}
+                  name="skills"
+                  value={skill.id}
+                  onChange={handleSkills}
+                  defaultChecked={selectedSkills.includes(skill.id)}
+
+                />
+                <label htmlFor={skill.id}>{skill.name}</label>
+              </div>
+                ))}
+
+          <label>Upload PDF</label>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handlePdfChange}
+              />
 
             <input
               className={styles.registerButton}
