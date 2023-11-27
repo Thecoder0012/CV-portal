@@ -54,6 +54,14 @@ export const Projects = () => {
     }
   };
 
+  const handlePdfChange = (event) => {
+    // Update the state with the selected PDF file
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      pdf_file: event.target.files[0],
+    }));
+  };
+
   return (
     <div className={styles.createProjects}>
       {imagePreview && (
@@ -138,6 +146,19 @@ export const Projects = () => {
             onChange={handleInputChange}
             name="cvInput"
           />
+
+          <label>Upload PDF</label>
+          <input type="file" accept=".pdf" onChange={handlePdfChange} />
+
+          {profile.pdf_file && (
+            <a
+              href={URL.createObjectURL(profile.pdf_file)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open Your PDF file
+            </a>
+          )}
         </div>
 
         <button className={styles.projectSubmit} type="submit">
