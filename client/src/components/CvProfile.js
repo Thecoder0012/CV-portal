@@ -5,7 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/auth.module.css";
 import { API_URL } from "../config/apiUrl.js";
-import { useNavigate } from "react-router-dom";
 
 export const CvProfile = () => {
   const [profile, setProfile] = useState({
@@ -13,28 +12,33 @@ export const CvProfile = () => {
     last_name: "",
     date_of_birth: "",
     phone_number: "",
-    address_id: "",
+    department_id: "",
+    skills: [],
+    pdf_file: null
   });
 
-  const { first_name, last_name, date_of_birth, phone_number, address_id } =
-    profile;
+    const [skills, setSkills] = useState([]);
+    const [selectedSkills, setSelectedSkills] = useState([]);
 
-  const [auth, setAuth] = useState();
-  const navigate = useNavigate();
-  const WITH_CREDENTIALS = { withCredentials: true };
 
-  const checkAuth = (response) => {
-    return response.data.auth
-      ? setAuth(response.data.user.username)
-      : navigate("/login");
-  };
+    const [departments, setDepartments] = useState([]);
+    const [chosenDepartment, setChosenDepartment] = useState("");
+    const [number_taken, set_number_taken] = useState(false);
+
+    const { first_name, last_name, date_of_birth, phone_number, department_id } = profile;
+    
+    const [auth, setAuth] = useState();
+    const WITH_CREDENTIALS = { withCredentials: true };
+
+   async function authName() {
+     const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
+     setAuth(response.data.user.username)
+  }
 
   useEffect(() => {
-    async function getData() {
-      const response = await axios.get(API_URL + "/login", WITH_CREDENTIALS);
-      checkAuth(response);
-    }
-    getData();
+    authName()
+    fetchDepartments();
+    fetchSkills()
   }, []);
 
   const handleInputChange = (event) => {
@@ -43,24 +47,91 @@ export const CvProfile = () => {
       [event.target.name]: event.target.value,
     }));
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(API_URL + "/profile", {
-        first_name: first_name,
-        last_name: last_name,
-        date_of_birth: date_of_birth,
-        phone_number: phone_number,
-        address_id: address_id,
-      });
+  
+      const response = await axios.post(
+        API_URL + '/profile',
+        {
+          first_name: first_name,
+          last_name: last_name,
+          date_of_birth: date_of_birth,
+          phone_number: phone_number,
+          department_id: department_id,
+          skills: selectedSkills,
+          file:profile.pdf_file
+        },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+        }
+      );
 
+  
       if (response.status === 200) {
+        set_number_taken(false);
         toast.success(response.data.message);
       }
     } catch (err) {
+      console.log(err);
       toast.error(err.response.data.message);
+      set_number_taken(false);
     }
   };
+  
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get(API_URL+"/api/departments"); 
+      if (response.status === 200) {
+        setDepartments(response.data.departments);
+      } else {
+        console.error("Server could not find departments");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const handleDepartments = (event) => {
+    setChosenDepartment(event.target.value);
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      department_id: event.target.value
+    }));
+  };
+
+  const fetchSkills = async () => {
+    try {
+      const response = await axios.get(API_URL + "/api/skills");
+      if (response.status === 200) {
+        setSkills(response.data.skills);
+      } else {
+        console.error("Server could not find skills");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleSkills = (event) => {
+    const selectedSkill = event.target.value;
+    if (selectedSkills.includes(selectedSkill)) {
+      setSelectedSkills((prevSkills) => prevSkills.filter((skill) => skill !== selectedSkill));
+    } else {
+      setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
+    }
+  };
+
+  const handlePdfChange = (event) => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      pdf_file: event.target.files[0],
+    }));
+  };
+
 
   return (
     <div className={styles.mainContainer}>
@@ -73,7 +144,9 @@ export const CvProfile = () => {
       />
       <div className={styles.cvContainer}>
         <div className={styles.register}>
-          <span className={styles.registerTitle}>Enter Your User Information</span>
+          <span className={styles.registerTitle}>
+            Enter Your User Information
+          </span>
           <form className={styles.registerForm} onSubmit={handleSubmit}>
             <label>First Name</label>
             <input
@@ -106,16 +179,66 @@ export const CvProfile = () => {
               name="phone_number"
               placeholder="Enter your phonenumber..."
               onChange={handleInputChange}
+              style={{borderColor: number_taken ? 'red' : ''}}
             />
-            <label>Address</label>
-            <input
-              type="text"
+            {number_taken && <p style={{fontSize: '13px',color: 'red'}}>Change phone number.</p>}
+            <label>Department</label>
+            <select
               className="registerInput"
-              name="address_id"
-              placeholder="Enter your addressId..."
-              onChange={handleInputChange}
+              name="department_id"
+              onChange={handleDepartments}
+              value={chosenDepartment}
+            >
+              <option value="" disabled>
+                Select a Department
+              </option>
+              {departments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}, {department.country}
+                </option>
+              ))}
+            </select>
+
+           <label>Skills</label>
+            {skills.map((skill) => (
+              <div key={skill.id} className="checkbox-item">
+                <input
+                  type="checkbox"
+                  id={skill.id}
+                  name="skills"
+                  value={skill.id}
+                  onChange={handleSkills}
+                  defaultChecked={selectedSkills.includes(skill.id)}
+
+                />
+                <label htmlFor={skill.id}>{skill.name}</label>
+              </div>
+                ))}
+
+          <label>Upload PDF</label>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handlePdfChange}
+              />
+
+        {profile.pdf_file && (
+          <a
+            href={URL.createObjectURL(profile.pdf_file)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open Your PDF file
+          </a>
+        )}
+
+
+
+            <input
+              className={styles.registerButton}
+              type="submit"
+              value="Create"
             />
-            <input className={styles.registerButton} type="submit" value="Create" />
           </form>
         </div>
       </div>

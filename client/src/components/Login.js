@@ -68,6 +68,7 @@ export const Login = () => {
               name="username"
               placeholder="Username"
               onChange={handleInputChange}
+              required
             />
             <label>Password</label>
             <input
@@ -76,10 +77,11 @@ export const Login = () => {
               name="password"
               placeholder="Password"
               onChange={handleInputChange}
+              required
             />
             <input className={styles.loginButton} type="submit" value="Login" />
           </form>
-          <div className="signup-link">
+          <div className={styles.signupLink}>
             <Link to="/register">Click here to Register</Link>
           </div>
         </div>
