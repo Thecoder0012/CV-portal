@@ -12,32 +12,16 @@ export const Projects = () => {
     password: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
+  const [pdfPreview, setPdfPreview] = useState(null);
+
   const { username, password } = credentials;
   const navigate = useNavigate();
   const WITH_CREDENTIALS = { withCredentials: true };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        API_URL + "/login",
-        {
-          username: username,
-          password: password,
-        },
-        WITH_CREDENTIALS
-      );
-
-      if (response.status === 200) {
-        navigate("/cv");
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      if (error.response.status === 429) {
-        toast.error(error.response.data);
-      }
-    }
+    // Your submission logic
   };
 
   const handleInputChange = (event) => {
@@ -45,15 +29,56 @@ export const Projects = () => {
       ...prevCreds,
       [event.target.name]: event.target.value,
     }));
+
+    if (event.target.type === "file") {
+      const file = event.target.files[0];
+
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result);
+          setPdfPreview(null);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      if (file.type === "application/pdf") {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Set the PDF preview as a Blob URL
+          setPdfPreview(URL.createObjectURL(new Blob([file])));
+          setImagePreview(null);
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
   };
 
   return (
     <div className={styles.createProjects}>
+      {imagePreview && (
+        <img
+          src={imagePreview}
+          alt="Selected"
+          className={styles.imagePreview}
+        />
+      )}
       <form className={styles.projectForm} onSubmit={handleSubmit}>
         <div className={styles.projectFormGroup}>
-          <label htmlFor="fileInput">
-            <i className="projectIcon fas fa-plus"></i>
-          </label>
+          {!imagePreview && (
+            <div>
+              <label htmlFor="fileInput" className={styles.fileInputLabel}>
+                Choose a picture
+              </label>
+              <input
+                type="file"
+                id="fileInput"
+                className={styles.projectFile}
+                onChange={handleInputChange}
+              />
+            </div>
+          )}
+
           <input
             type="text"
             placeholder="Title of your project"
@@ -65,14 +90,7 @@ export const Projects = () => {
 
         <div className={styles.projectFormGroup}>
           <textarea
-            placeholder="What was you project was about..."
-            type="text"
-            className={styles.writeProjectsText}
-            onChange={handleInputChange}
-          ></textarea>
-
-          <textarea
-            placeholder="Project file path..."
+            placeholder="What was your project about..."
             type="text"
             className={styles.writeProjectsText}
             onChange={handleInputChange}
@@ -85,7 +103,7 @@ export const Projects = () => {
             onChange={handleInputChange}
             name="projectStatus"
           >
-            <option value="fresh">Fresh</option>
+            <option value="notStarted">Not started</option>
             <option value="inProgress">In Progress</option>
             <option value="done">Done</option>
           </select>
@@ -99,14 +117,26 @@ export const Projects = () => {
             name="projectDate"
           />
 
+          {pdfPreview && (
+            <div className={styles.pdfPreview}>
+              <img
+                src="../pdf/pdf-icon.png"
+                alt="PDF Icon"
+                onClick={() => window.open(pdfPreview, "_blank")}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          )}
+
           <label htmlFor="fileInput" className={styles.fileInputLabel}>
-            Choose a picture
+            Insert your CV
           </label>
           <input
             type="file"
             id="fileInput"
             className={styles.projectFile}
             onChange={handleInputChange}
+            name="cvInput"
           />
         </div>
 

@@ -1,125 +1,152 @@
 .project {
-    padding-top: 50px;
-  }
-  
-  .projectImg {
-    margin-left: 150px;
-    width: 70vw;
-    height: 250px;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-  
-  .projectForm {
-    margin-bottom: 10%;
-    position: relative;
-  }
-  
-  .projectFormGroup {
-    margin-left: 150px;
-    align-items: center;
-  }
-  
-  .projectIcon {
-    width: 25px;
-    height: 25px;
-    font-size: 20px;
-    border: 1px solid;
-    border-radius: 50%;
-    color: rgb(129, 125, 125);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .projectInput {
-    font-size: 30px;
-    border: none;
-    padding: 20px;
-    width: 70vw;
-    margin-top: 10%;
-  }
-  
-  .projectInput::placeholder {
-    color: rgb(189, 185, 185);
-    font-weight: 400;
-  }
-  
-  .projectInput:focus {
-    outline-style: none;
-  }
+  padding-top: 50px;
+}
+
+.createProjects {
+  position: relative;
+}
+
+.projectImg {
+  margin-left: 150px;
+  width: 70vw;
+  height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.projectForm {
+  margin-top: 0px;
+  margin-bottom: 10%;
+  position: relative;
+  padding-top: 50px;
+}
+
+.projectFormGroup {
+  margin-left: 150px;
+  align-items: center;
+}
+
+.projectIcon {
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+  border: 1px solid;
+  border-radius: 50%;
+  color: rgb(129, 125, 125);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.projectInput {
+  font-size: 30px;
+  border: none;
+  padding: 20px;
+  width: 70vw;
+  margin-top: 0%;
+}
+
+.projectInput::placeholder {
+  color: rgb(189, 185, 185);
+  font-weight: 400;
+}
+
+.projectInput:focus {
+  outline-style: none;
+}
 
 .projectFile {
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
-  }
-  
-  .customFileButton {
-    background-color: #de11e3;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
-  }
-  
-  .fileInputLabel {
-    font-size: 18px;
-    border: none;
-    width: 17vw;
-    color: black;
-    padding: 10px 15px;
-    cursor: pointer;
-    display: inline-block;
-  }
-  
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
 
-  .writeProjects {
-    font-size: 20px;
-    border: none;
-    padding: 20px;
-    width: 70vw;
-  }
-  
-  .writeProjectsText {
-    width: 70vw;
-    height: 40vh;
-    font-family: inherit;
-    font-size: 20px;
-    margin-top: 25px;
-  }
+.customFileButton {
+  background-color: #de11e3;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
 
-  .projectFormGroupSelectStatus{
-    width: 70.4vw;
-    height: 8vh;
-    font-family: inherit;
-    font-size: 20px;
-    margin-top: 25px;
-  }
+.fileInputLabel {
+  font-size: 18px;
+  border: none;
+  width: 17vw;
+  color: black;
+  padding: 10px 15px;
+  cursor: pointer;
+  display: inline-block;
+}
 
-  .projectFormGroupSelectDate{
-    width: 69.2vw;
-    height: 4vh;
-    font-family: inherit;
-    font-size: 20px;
-    margin-top: 25px;
-  }
-  
-  .projectSubmit {
-    position: absolute;
-    left: 45%;
-    color: black;
-    background-color: #de11e3;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    font-size: 19px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    margin-top: 2%;
-    
-  }
+.writeProjects {
+  font-size: 20px;
+  border: none;
+  padding: 20px;
+  width: 70vw;
+}
+
+.writeProjectsText {
+  width: 70vw;
+  height: 40vh;
+  font-family: inherit;
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+.projectFormGroupSelectStatus {
+  width: 70.4vw;
+  height: 8vh;
+  font-family: inherit;
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+.projectFormGroupSelectDate {
+  width: 69.2vw;
+  height: 4vh;
+  font-family: inherit;
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+.projectSubmit {
+  position: absolute;
+  left: 45%;
+  color: black;
+  background-color: #de11e3;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 19px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.imagePreview {
+  position: relative;
+    top: 30px;
+    left: 9%;
+    width: 100%;
+    max-width: 70vw;
+    margin-top: 10px;
+    object-fit: cover;
+    border-radius: 26px;
+}
+
+.pdfPreview {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.pdfPreview img {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
