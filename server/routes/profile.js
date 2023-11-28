@@ -1,9 +1,7 @@
 import { Router } from "express";
 import db from "../db/connection.js";
-import multer from 'multer';
+import multer from "multer";
 import path from "path";
-
-
 
 const router = Router();
 
@@ -23,38 +21,41 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/profile", async (req, res) => {
-  const userId = req.session.user.user_id
+  const userId = req.session.user.user_id;
 
-    const fetchProfile = await db.query(`SELECT *
+  const [fetchProfile] = await db.query(
+    `SELECT *
       FROM users
       INNER JOIN employee ON users.user_id = employee.user_id
-      INNER JOIN person ON users.user_id = person.person_id
-      WHERE employee.user_id = ?;`
-      , [userId]);
+      INNER JOIN person ON employee.person_id = person.person_id
+      WHERE employee.user_id = ?;`,
+    [userId]
+  );
 
-      const fetchProfileSkills = await db.query(`SELECT *
+  const employee_id = fetchProfile[0].employee_id;
+
+  const [fetchProfileSkills] = await db.query(
+    `SELECT *
       FROM employee_skills
-      WHERE employee_id = ?`, [userId])
+      WHERE employee_id = ?`,
+    [employee_id]
+  );
 
-      const result = fetchProfileSkills[0]
+  const skillsIdsArray = fetchProfileSkills.map((row) => row.skills_id);
 
-      const skillsIdsArray = result.map((row) => row.skills_id);
+  const profile = {
+    ...fetchProfile,
+    skills: skillsIdsArray,
+  };
 
-      const profile = {
-        ...fetchProfile[0],
-        skills: skillsIdsArray,
-      };
-
-  if(profile){
-    return res.status(200).send(profile)
+  if (profile) {
+    return res.status(200).send(profile);
+  } else {
+    return res.status(409).send("Der opstod en fejl");
   }
-  
-  else {
-    return res.status(409).send("Der opstod en fejl")
-  }
-  })
+});
 
-router.post("/profile", upload.single('file'), async (req, res) => {
+router.post("/profile", upload.single("file"), async (req, res) => {
   try {
     const {
       first_name,
@@ -62,7 +63,7 @@ router.post("/profile", upload.single('file'), async (req, res) => {
       date_of_birth,
       phone_number,
       department_id,
-      skills
+      skills,
     } = req.body;
     let file_path = req.file.filename;
 
@@ -98,24 +99,19 @@ router.post("/profile", upload.single('file'), async (req, res) => {
     } else {
       const createProfile = await db.query(
         "INSERT INTO person (first_name, last_name, date_of_birth, phone_number) VALUES (?,?,?,?)",
-        [
-          first_name,
-          last_name,
-          new Date(date_of_birth),
-          phone_number
-        ]
+        [first_name, last_name, new Date(date_of_birth), phone_number]
       );
       const createEmployee = await db.query(
         "INSERT INTO employee (person_id, user_id, department_id,project_path_url) VALUES (?,?,?,?)",
         [createProfile[0].insertId, user_id, department_id, file_path]
       );
 
-       for (const skill_id of skills) {
-         await db.query(
-           "INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)",
-           [createEmployee[0].insertId, skill_id]
-         );
-       }
+      for (const skill_id of skills) {
+        await db.query(
+          "INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)",
+          [createEmployee[0].insertId, skill_id]
+        );
+      }
 
       return res
         .status(200)
@@ -127,44 +123,71 @@ router.post("/profile", upload.single('file'), async (req, res) => {
 });
 
 router.put("/profile", async (req, res) => {
-  const userId = req.session.user.user_id
-    try {
-      const {first_name, last_name, date_of_birth, phone_number, department_id, skills } = req.body
-      const person_id = userId
-     
+  const userId = req.session.user.user_id;
+  try {
+    const {
+      first_name,
+      last_name,
+      date_of_birth,
+      phone_number,
+      department_id,
+      skills,
+    } = req.body;
 
-      if (!person_id) {
-          return res.status(400).send({ message: "Person ID is required for updating a profile." });
-      }
+    const [fetchProfile] = await db.query(
+      `SELECT *
+      FROM users
+      INNER JOIN employee ON users.user_id = employee.user_id
+      INNER JOIN person ON employee.person_id = person.person_id
+      WHERE employee.user_id = ?;`,
+      [userId]
+    );
 
-      const updateProfile = await db.query(
-          "UPDATE person SET first_name=?, last_name=?, date_of_birth=?, phone_number=? WHERE person_id=?",
-          [first_name, last_name, date_of_birth, phone_number, person_id]
+    const employee_id = fetchProfile[0].employee_id;
+    const person_id = fetchProfile[0].person_id;
+
+    if (!person_id) {
+      return res
+        .status(400)
+        .send({ message: "Person ID is required for updating a profile." });
+    }
+
+    const updateProfile = await db.query(
+      "UPDATE person SET first_name=?, last_name=?, date_of_birth=?, phone_number=? WHERE person_id=?",
+      [first_name, last_name, date_of_birth, phone_number, person_id]
+    );
+
+    const updateEmployee = await db.query(
+      "UPDATE employee SET department_id=? WHERE employee_id=?",
+      [department_id, employee_id]
+    );
+
+    const deleteSkills = await db.query(
+      "DELETE FROM employee_skills WHERE employee_id = ?",
+      [employee_id]
+    );
+
+    for (const skill of skills) {
+      await db.query(
+        "INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)",
+        [employee_id, skill]
       );
-
-      const updateEmployee = await db.query(
-        "UPDATE employee SET department_id=? WHERE employee_id=?",
-        [department_id, person_id]
-      )
-
-
-      const deleteSkills = await db.query("DELETE FROM employee_skills WHERE employee_id = ?",
-      [person_id])
-
-      for (const skill of skills) { 
-        await db.query("INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)", [person_id, skill])
-        
-        }
-      if (updateProfile[0].affectedRows > 0 && updateEmployee[0].affectedRows > 0) {
-          return res.status(200).send({ message: "The person's profile has been updated." });
-      } else {
-          return res.status(404).send({ message: "Person not found or no changes were made." });
-      }
-
-
+    }
+    if (
+      updateProfile[0].affectedRows > 0 &&
+      updateEmployee[0].affectedRows > 0
+    ) {
+      return res
+        .status(200)
+        .send({ message: "The person's profile has been updated." });
+    } else {
+      return res
+        .status(404)
+        .send({ message: "Person not found or no changes were made." });
+    }
   } catch (error) {
-      console.error(error);
-      return res.status(500).send({ message: "Internal server error" });
+    console.error(error);
+    return res.status(500).send({ message: "Internal server error" });
   }
 });
 
@@ -177,7 +200,6 @@ router.get("/api/departments", async (req, res) => {
     res.status(500).send({ error: "Internal server error" });
   }
 });
-
 
 router.get("/api/skills", async (req, res) => {
   try {

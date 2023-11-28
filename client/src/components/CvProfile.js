@@ -14,31 +14,31 @@ export const CvProfile = () => {
     phone_number: "",
     department_id: "",
     skills: [],
-    pdf_file: null
+    pdf_file: null,
   });
 
-    const [skills, setSkills] = useState([]);
-    const [selectedSkills, setSelectedSkills] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
 
+  const [departments, setDepartments] = useState([]);
+  const [chosenDepartment, setChosenDepartment] = useState("");
+  const [number_taken, set_number_taken] = useState(false);
 
-    const [departments, setDepartments] = useState([]);
-    const [chosenDepartment, setChosenDepartment] = useState("");
-    const [number_taken, set_number_taken] = useState(false);
+  const { first_name, last_name, date_of_birth, phone_number, department_id } =
+    profile;
 
-    const { first_name, last_name, date_of_birth, phone_number, department_id } = profile;
-    
-    const [auth, setAuth] = useState();
-    const WITH_CREDENTIALS = { withCredentials: true };
+  const [auth, setAuth] = useState();
+  const WITH_CREDENTIALS = { withCredentials: true };
 
-   async function authName() {
-     const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-     setAuth(response.data.user.username)
+  async function authName() {
+    const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
+    setAuth(response.data.user.username);
   }
 
   useEffect(() => {
-    authName()
+    authName();
     fetchDepartments();
-    fetchSkills()
+    fetchSkills();
   }, []);
 
   const handleInputChange = (event) => {
@@ -47,13 +47,12 @@ export const CvProfile = () => {
       [event.target.name]: event.target.value,
     }));
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-  
       const response = await axios.post(
-        API_URL + '/profile',
+        API_URL + "/profile",
         {
           first_name: first_name,
           last_name: last_name,
@@ -61,17 +60,16 @@ export const CvProfile = () => {
           phone_number: phone_number,
           department_id: department_id,
           skills: selectedSkills,
-          file:profile.pdf_file
+          file: profile.pdf_file,
         },
         {
           withCredentials: true,
           headers: {
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-  
       if (response.status === 200) {
         set_number_taken(false);
         toast.success(response.data.message);
@@ -82,10 +80,10 @@ export const CvProfile = () => {
       set_number_taken(false);
     }
   };
-  
+
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get(API_URL+"/api/departments"); 
+      const response = await axios.get(API_URL + "/api/departments");
       if (response.status === 200) {
         setDepartments(response.data.departments);
       } else {
@@ -99,7 +97,7 @@ export const CvProfile = () => {
     setChosenDepartment(event.target.value);
     setProfile((prevProfile) => ({
       ...prevProfile,
-      department_id: event.target.value
+      department_id: event.target.value,
     }));
   };
 
@@ -119,7 +117,9 @@ export const CvProfile = () => {
   const handleSkills = (event) => {
     const selectedSkill = event.target.value;
     if (selectedSkills.includes(selectedSkill)) {
-      setSelectedSkills((prevSkills) => prevSkills.filter((skill) => skill !== selectedSkill));
+      setSelectedSkills((prevSkills) =>
+        prevSkills.filter((skill) => skill !== selectedSkill)
+      );
     } else {
       setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
     }
@@ -131,7 +131,6 @@ export const CvProfile = () => {
       pdf_file: event.target.files[0],
     }));
   };
-
 
   return (
     <div className={styles.mainContainer}>
@@ -179,9 +178,13 @@ export const CvProfile = () => {
               name="phone_number"
               placeholder="Enter your phonenumber..."
               onChange={handleInputChange}
-              style={{borderColor: number_taken ? 'red' : ''}}
+              style={{ borderColor: number_taken ? "red" : "" }}
             />
-            {number_taken && <p style={{fontSize: '13px',color: 'red'}}>Change phone number.</p>}
+            {number_taken && (
+              <p style={{ fontSize: "13px", color: "red" }}>
+                Change phone number.
+              </p>
+            )}
             <label>Department</label>
             <select
               className="registerInput"
@@ -199,7 +202,7 @@ export const CvProfile = () => {
               ))}
             </select>
 
-           <label>Skills</label>
+            <label>Skills</label>
             {skills.map((skill) => (
               <div key={skill.id} className="checkbox-item">
                 <input
@@ -209,30 +212,27 @@ export const CvProfile = () => {
                   value={skill.id}
                   onChange={handleSkills}
                   defaultChecked={selectedSkills.includes(skill.id)}
-
                 />
                 <label htmlFor={skill.id}>{skill.name}</label>
               </div>
-                ))}
+            ))}
 
-          <label>Upload PDF</label>
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={handlePdfChange}
-              />
+            <label>Upload PDF</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handlePdfChange}
+            />
 
-        {profile.pdf_file && (
-          <a
-            href={URL.createObjectURL(profile.pdf_file)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open Your PDF file
-          </a>
-        )}
-
-
+            {profile.pdf_file && (
+              <a
+                href={URL.createObjectURL(profile.pdf_file)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Your PDF file
+              </a>
+            )}
 
             <input
               className={styles.registerButton}
