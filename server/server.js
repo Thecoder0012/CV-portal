@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(
   cors({
     credentials: true,
-    origin: true,
+    origin: true
   })
 );
 
@@ -24,7 +24,7 @@ app.use(
     cookie: {
       secure: false,
       maxAge: 60 * 60 * 1000,
-      httpOnly: true,
+      httpOnly: true
     },
   })
 );
