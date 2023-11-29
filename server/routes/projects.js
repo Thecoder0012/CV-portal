@@ -64,7 +64,7 @@ router.get("/getProject/:id", async (req, res) => {
     const projectId = req.params.id;
 
     const [project] = await db.query(
-      "SELECT * FROM project WHERE project_id = ?",
+      "SELECT * FROM project WHERE id = ?",
       [projectId]
     );
 

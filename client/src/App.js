@@ -4,6 +4,7 @@ import { Login } from "./components/Login.js";
 import { CvProfile } from "./components/CvProfile.js";
 import { RegisterManager } from "./components/RegisterManager.js";
 import  {UpdateEmployee} from "./components/UpdateEmployee.js";
+import  { SingleProject } from "./components/SingleProject.js";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes.js";
 import { NotFound } from "./utils/NotFound.js";
 
@@ -18,6 +19,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />     
       <Route path="*" element={<NotFound />} />
+      <Route path="/singleProject/:projectId" element={<SingleProject />} />
     </Routes>
   );
 }
