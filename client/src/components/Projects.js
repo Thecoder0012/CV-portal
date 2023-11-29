@@ -13,13 +13,13 @@ export const Projects = () => {
   });
 
   const [project, setProject] = useState({
-    project_title: "",
-    project_description: "",
-    project_author: "",
-    project_done: "",
+    title: "",
+    description: "",
+    author: "",
+    done: "",
     date_made: "",
     date_finish: "",
-    project_file_path: "",
+    file_path: "",
   });
 
   console.log(project);
@@ -28,30 +28,7 @@ export const Projects = () => {
   const { username, password } = credentials;
   const navigate = useNavigate();
   const WITH_CREDENTIALS = { withCredentials: true };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(API_URL + "/projects/createProject", {
-        project_title: project.project_title,
-        project_description: project.project_description,
-        project_author: project.project_author,
-        project_done: project.project_done,
-        date_made: project.date_made,
-        date_finish: project.date_finish,
-        project_file_path: project.project_file_path,
-      });
-      if (response.status === 200) {
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      if (error.response.status === 429) {
-        toast.error(error.response.data);
-      }
-    }
-  };
+  const { title, description, author, done, date_made, date_finish, file_path} = project;
 
   const handleInputChange = (event) => {
     setProject((prevProjects) => ({
@@ -66,6 +43,40 @@ export const Projects = () => {
       project_file_path: event.target.files[0],
     }));
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(API_URL + "/projects/createProject", {
+        title: title,
+        description: description,
+        author: author,
+        done: done,
+        date_made: date_made,
+        date_finish: date_finish,
+        file_path: file_path,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+      }
+    );
+    
+      if (response.status === 200) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      if (error.response.status === 429) {
+        toast.error(error.response.data);
+      }
+    }
+  };
+
+
 
   return (
     <div className={styles.createProjects}>
@@ -97,6 +108,7 @@ export const Projects = () => {
           <input
             type="text"
             placeholder="Title of your project"
+            name="title"
             className={styles.projectInput}
             autoFocus={true}
             onChange={handleInputChange}
@@ -104,17 +116,18 @@ export const Projects = () => {
         </div>
         <div className={styles.projectFormGroup}>
           <textarea
-            placeholder="What was your project about..."
             type="text"
+            placeholder="What was your project about..."
+            name="description"
             className={styles.writeProjectsText}
             onChange={handleInputChange}
           ></textarea>
           <label htmlFor="projectStatus"></label>
           <select
             id="projectStatus"
+            name="done"
             className={styles.projectFormGroupSelectStatus}
             onChange={handleInputChange}
-            name="projectStatus"
           >
             <option value="notStarted">Not started</option>
             <option value="inProgress">In Progress</option>
@@ -127,11 +140,11 @@ export const Projects = () => {
             id="projectDate"
             className={styles.projectFormGroupSelectDate}
             onChange={handleInputChange}
-            name="projectDateFinish"
+            name="date_finish"
           />
         </div>
 
-        {project.project_file_path && (
+        {project.file_path && (
           <div className={styles.pdfPreview}>
             <p
               onClick={() => {
@@ -152,14 +165,14 @@ export const Projects = () => {
               Insert your CV
             </label>
           )}
-          {!project.project_file_path && (
+          {!project.file_path && (
             <input
               type="file"
               id="fileInput"
               className={styles.projectFile}
               accept=".pdf"
               onChange={handlePdfChange}
-              name="cvInput"
+              name="file_path"
             />
           )}
         </div>

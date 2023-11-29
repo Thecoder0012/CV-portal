@@ -25,7 +25,7 @@ router.post(
   upload.single("projectFile"),
   async (req, res) => {
     try {
-      const { project_title, project_description, project_author, manager_id } =
+      const { title, description, author, done, date_made, date_finish, file_path, manager_id } =
         req.body;
       const projectFile = req.file;
 
@@ -40,15 +40,18 @@ router.post(
       }
 
       const createProjectQuery = `
-        INSERT INTO project (project_title, project_description, project_author, project_done, date_made, date_finish, project_file_path)
+        INSERT INTO project (title, description, author, done, date_made, date_finish, file_path)
         VALUES (?, ?, ?, false, CURDATE(), null, ?)
         `;
 
       const result = await db.query(createProjectQuery, [
-        project_title,
-        project_description,
-        project_author,
-        projectFile ? projectFile.path : null,
+        title,
+        description,
+        author,
+        date_made,
+        done,
+        date_finish,
+        file_path ? projectFile.path : null,
       ]);
 
       res.status(201).send("Project succesfully created");
@@ -91,19 +94,19 @@ router.put(
 
       const updateProjectQuery = `
             UPDATE project 
-            SET project_title = ?, 
-                project_description = ?, 
-                project_file_path = ?,
-                project_done = ?,
+            SET title = ?, 
+                description = ?, 
+                file_path = ?,
+                done = ?,
                 date_finish = ?
             WHERE project_id = ?
         `;
 
       await db.query(updateProjectQuery, [
-        project_title,
-        project_description,
+        title,
+        description,
         projectFile ? projectFile.path : null,
-        project_done,
+        done,
         date_finish,
         projectId,
       ]);
