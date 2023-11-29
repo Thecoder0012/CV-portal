@@ -4,6 +4,7 @@ import authRouter from "./routes/auth.js";
 import profileRouter from "./routes/profile.js";
 import projectsRouter from "./routes/projects.js";
 import cors from 'cors';
+import path from "path";
 import "dotenv/config";
 
 const app = express();
@@ -14,6 +15,11 @@ app.use(
     origin: true
   })
 );
+
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 
 app.use(
   session({
