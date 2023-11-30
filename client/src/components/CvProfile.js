@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/auth.module.css";
+import {NavigationBar} from "./NavigationBar.js";
 import { API_URL } from "../config/apiUrl.js";
 
 export const CvProfile = () => {
@@ -134,7 +135,7 @@ export const CvProfile = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <h3 style={{ textAlign: "right" }}>Logged in as: {auth}</h3>
+      <NavigationBar />
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}

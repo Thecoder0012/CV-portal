@@ -3,6 +3,7 @@ import styles from "../styles/auth.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../config/apiUrl";
+import { NavigationBar } from "./NavigationBar";
 
 export const UpdateEmployee = () => {
   const [skills, setSkills] = useState([]);
@@ -23,14 +24,7 @@ export const UpdateEmployee = () => {
 
   const { first_name, last_name, date_of_birth, phone_number, department_id } =
     profile;
-
-  const [auth, setAuth] = useState();
   const WITH_CREDENTIALS = { withCredentials: true };
-
-  async function authName() {
-    const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-    setAuth(response.data.user.username);
-  }
 
   async function getProfileData() {
     const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
@@ -50,7 +44,6 @@ export const UpdateEmployee = () => {
   }
 
   useEffect(() => {
-    authName();
     getProfileData();
     fetchDepartments();
     fetchSkills();
@@ -150,7 +143,7 @@ export const UpdateEmployee = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <h3 style={{ textAlign: "right" }}>Logged in as: {auth}</h3>
+    <NavigationBar/>
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}

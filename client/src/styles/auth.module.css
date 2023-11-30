@@ -1,3 +1,31 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+}
+
+.li {
+  margin-left: 20px;
+}
+
+.Link a {
+  text-decoration: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #007acc;
+  transition: background-color 0.3s ease;
+}
+
+.Link:hover a {
+  background-color: #005b9d;
+}
 
 .mainContainer{
   font-family: system-ui;
@@ -7,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: auto;
 }
 
 
