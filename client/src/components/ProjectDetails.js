@@ -34,9 +34,9 @@ import React, { useState, useEffect } from "react";
      getProject();
    }, [id]);
 
-      const handleDelete = async () => {
+      const handleDelete = async (project_id) => {
         try {
-          await axios.delete(API_URL + "/projects/" + id);
+          await axios.delete(API_URL + "/projects/" + project_id);
         } catch (error) {
           console.error("Error deleting project:", error);
         }
@@ -74,6 +74,7 @@ import React, { useState, useEffect } from "react";
              View PDF
            </a>
          )}
+        <button onClick={() => handleDelete(project.id)}>Delete</button>
        </div>
 
        {/* <div className="singleProjectWrapper">

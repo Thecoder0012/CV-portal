@@ -80,7 +80,7 @@ return (
               </a>
             )}
             <p>
-              <Link to={`/projects/${project.id}`}>View project</Link>
+              <Link to={`/project/${project.id}`}>View project</Link>
             </p>
           </p>
         </div>
