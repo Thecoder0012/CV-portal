@@ -59,20 +59,18 @@ router.post(
   }
 );
 
-router.get("/getProject/:id", async (req, res) => {
+router.get("/projects/:id", async (req, res) => {
   try {
-    const projectId = req.params.id;
-
-    const [project] = await db.query(
-      "SELECT * FROM project WHERE id = ?",
-      [projectId]
-    );
-
+    const project_id = req.params.id;
+    const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
+      project_id,
+    ]);
     if (!project) {
       return res.status(404).send("Sorry, Project not found");
     }
 
-    res.status(200).json(project);
+    const getProject = project[0];
+    res.status(200).json(getProject);
   } catch (error) {
     console.error("Error while fetching project:", error);
     res.status(500).send("Internal Server Error");
@@ -98,7 +96,6 @@ router.put(
                 date_finish = ?
             WHERE project_id = ?
         `;
-
       await db.query(updateProjectQuery, [
         project_title,
         project_description,
@@ -116,16 +113,12 @@ router.put(
   }
 );
 
-router.delete("/deleteProject/:project_id", async (req, res) => {
+router.delete("/projects/:id", async (req, res) => {
   try {
-    const projectId = req.params.project_id;
-
-    const deleteProjectQuery = `
-        DELETE FROM project WHERE project_id = ?
-        `;
-
-    await db.query(deleteProjectQuery, [projectId]);
-
+    const project_id = req.params.id;
+    const deleteProject = await db.query("DELETE FROM project WHERE id = ?", [
+      project_id,
+    ]);
     res.status(200).send("Project deleted successfully");
   } catch (error) {
     console.error("Error deleting the project:", error);
