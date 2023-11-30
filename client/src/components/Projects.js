@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../config/apiUrl.js";
+import { Link } from "react-router-dom";
 
 export const Projects = () => {
 
@@ -26,9 +27,6 @@ export const Projects = () => {
      width: "300px",
    },
  };
-
-   const { title, description, author, done, date_made,date_finish,file_path } = projects;
-
 
 
      const fetchProjects = async () => {
@@ -81,6 +79,9 @@ return (
                 View PDF
               </a>
             )}
+            <p>
+              <Link to={`/projects/${project.id}`}>View project</Link>
+            </p>
           </p>
         </div>
       ))}
