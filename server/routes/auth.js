@@ -72,7 +72,7 @@ router.get("/auth-login", (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.session.destroy();
-  res.status(200).send({ message: "you are logged out" });
+  res.status(200).send({ message: "Successfully signed out" });
 });
 
 export default router;
