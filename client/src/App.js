@@ -19,7 +19,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />     
       <Route path="*" element={<NotFound />} />
-      <Route path="/singleProject/:projectId" element={<SingleProject />} />
+      <Route path="/singleProject/:id" element={<SingleProject />} />
     </Routes>
   );
 }
