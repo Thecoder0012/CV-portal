@@ -1,0 +1,117 @@
+.singleProject {
+    flex: 9;
+  }
+
+  .singleProjectWrapper {
+    padding: 20px;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+  }
+
+  .singleProjectImg {
+    width: 100%;
+    height: 300px;
+    border-radius: 5px;
+    object-fit: cover;
+  }
+
+  .singleProjectTitle {
+    text-align: center;
+    margin: 10px;
+    font-family: "Lora", serif;
+    font-size: 28px;
+  }
+
+  .singleProjectTitleInput {
+    margin: 10px;
+    font-family: "Lora", serif;
+    font-size: 28px;
+    text-align: center;
+    border: none;
+    color: gray;
+    border-bottom: 1px solid lightgray;
+  }
+
+  .singleProjectTitleInput:focus {
+    outline: none;
+  }
+
+  .singleProjectEdit {
+    float: right;
+    font-size: 16px;
+  }
+
+  .singleProjectIcon {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .singleProjectIcon:first-child {
+    color: teal;
+  }
+
+  .singleProjectIcon:last-child {
+    color: tomato;
+  }
+
+  .singleProjectInfo {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-family: "Varela Round", sans-serif;
+    color: #b39656;
+  }
+
+  .singleProjectCategories{
+    font-size: 15px;
+    font-style: italic;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  .singleProjectDesc {
+    color: #666;
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  .singleProjectDesc::first-letter {
+    margin-left: 20px;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  .singleProjectCategoriesInput {
+    border: none;
+    color: #666;
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  .singleProjectCategoriesInput:focus {
+    outline: none;
+  }
+
+  .singleProjectDescInput {
+    border: none;
+    color: #666;
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  .singleProjectDescInput:focus {
+    outline: none;
+  }
+  .singleProjectButton {
+    width: 100px;
+    border: none;
+    background-color: teal;
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-top: 20px;
+  }

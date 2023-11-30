@@ -31,7 +31,7 @@ app.use(
 
 app.use(authRouter);
 app.use(profileRouter);
-app.use("/projects", projectsRouter);
+app.use(projectsRouter);
 
 app.listen(8080,() => {
     console.log("Running on port",8080);
