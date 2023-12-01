@@ -1,10 +1,11 @@
 .navContainer {
-    background-color: #004b7d24;
+    background-color: #a100ff3d;
     padding: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
-    margin: 10px;
+    align-items: center;
+    font-family: 'Graphik', Arial, Helvetica, sans-serif;
 }
 
 .logo {
@@ -20,6 +21,7 @@
 .dropdown {
     display: inline-block;
     position: relative;
+    left: 0;
 }
 
 .dropdownContent {
@@ -28,7 +30,6 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    right: 0;
 }
 
 .dropdownContent a {
@@ -40,4 +41,20 @@
 
 .dropdownContent a:hover {
     background-color: #a200ff39;
+}
+
+h4 {
+    margin: 0;
+    color: white; 
+    font-size: 16px; 
+    margin-right: 20px;
+    text-decoration: none;
+}
+
+.Link{
+    text-decoration: none;
+}
+
+.Link:hover{
+    color: black;
 }

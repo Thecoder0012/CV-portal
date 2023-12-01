@@ -12,58 +12,83 @@ import {faCaretDown} from  "@fortawesome/free-solid-svg-icons"
 
 export const NavigationBar = () => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [auth, setAuth] = useState()
+    const [auth, setAuth] = useState();
+    const [role, setRole] = useState();
+    const [userId, setUserId] = useState()
     const WITH_CREDENTIALS = { withCredentials: true };
 
-    async function authName() {
+
+    async function fetchUser() {
         const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-    setAuth(response.data.user.username)
+        console.log(response.data)
+        const userRole = response.data.user.role_id === 2 ? "Employee" : "Manager";
+        setRole(userRole);
+        setAuth(response.data.user.username);
+    
     }
-
-    authName()
-
-    async function handleSignOut(){
-       const response = await axios.get(API_URL + "/logout", WITH_CREDENTIALS)
-
-       if(response.status === 200){
-        toast.success(response.data.message)
-       }
+    async function fetchProfile(){
+        const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);  
+        setUserId(response.data[0].person_id)
     }
+    useEffect(() => {
+        fetchUser()
+        fetchProfile()
+    }, []);
 
 
 
-return (
+    const handleSignOut = async () => {
+        const response = await axios.get(API_URL + "/logout", WITH_CREDENTIALS);
+
+        if (response.status === 200) {
+            toast.success(response.data.message);
+        }
+    };
+
+    return (
     <div>
-        <ToastContainer
-            autoClose={3000}
-            closeOnClick={true}
-            position={toast.POSITION.TOP_CENTER}
-            limit={1}
-        />
-        <nav className={Navbar.navContainer}>
-        <h4>User: {auth} </h4>
-            <div className={Navbar.logoContainer}>
-                <img className={Navbar.logo} src={logo} alt="Logo" />
-            </div>
-            <div className={Navbar.iconWrapper}>
-                <li className={Navbar.dropdown}>
-                    <FontAwesomeIcon
-                        icon={faCaretDown}
-                        className={Navbar.dropbtnArrow}
-                        style={{ color: '#A100FF' }}
-                        onClick={() => setDropdownVisible(!dropdownVisible)}
-                    />
-                    {dropdownVisible && (
-                        <div className={Navbar.dropdownContent}>
-                            <Link to="/login" onClick={handleSignOut}>Sign out</Link>
-                            <Link to="/profile">Update profile</Link>
-                        </div>
-                    )}
-                </li>
-            </div>
-        </nav>
-    </div>
-);
-
-
+    <ToastContainer
+        autoClose={3000}
+        closeOnClick={true}
+        position={toast.POSITION.TOP_CENTER}
+        limit={1}
+    />
+    <nav className={Navbar.navContainer}>
+        <div className={Navbar.logoContainer}>
+            <img className={Navbar.logo} src={logo} alt="Logo" />
+            
+        </div>
+        <Link className={Navbar.Link} to="/projects">
+        <h4>View Projects</h4>
+        </Link>
+        <Link className={Navbar.Link}>
+        <h4>View Projects</h4>
+        </Link>
+        <Link className={Navbar.Link}>
+        <h4>View Projects</h4>
+        </Link>
+        <Link className={Navbar.Link}>
+        <h4>View Projects</h4>
+        </Link>
+        <div className={Navbar.iconWrapper}>
+            <li className={Navbar.dropdown}>
+            <h4>User: {auth} / {role} </h4>
+                <FontAwesomeIcon
+                    icon={faCaretDown}
+                    className={Navbar.dropbtnArrow}
+                    style={{ color: '#A100FF' }}
+                    onClick={() => setDropdownVisible(!dropdownVisible)}
+                />
+                {dropdownVisible && (
+                    <div className={Navbar.dropdownContent}>
+                        <Link to="/login" onClick={handleSignOut}>Sign out</Link>
+                        <Link to={`/profile/update/${userId}`}>Update profile</Link>
+                    </div>
+                )}
+            </li>
+        </div>
+    </nav>
+</div>
+)
 }
+

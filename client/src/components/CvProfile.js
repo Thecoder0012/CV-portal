@@ -82,6 +82,7 @@ export const CvProfile = () => {
     }
   };
 
+
   const fetchDepartments = async () => {
     try {
       const response = await axios.get(API_URL + "/api/departments");
@@ -172,18 +173,18 @@ export const CvProfile = () => {
               placeholder="Enter your date of birth..."
               onChange={handleInputChange}
             />
-            <label>Phonenumber</label>
+            <label>Phone number</label>
             <input
               type="text"
               className="registerInput"
               name="phone_number"
-              placeholder="Enter your phonenumber..."
+              placeholder="Enter your phone number..."
               onChange={handleInputChange}
               style={{ borderColor: number_taken ? "red" : "" }}
             />
             {number_taken && (
               <p style={{ fontSize: "13px", color: "red" }}>
-                Change phone number.
+                Change phone number
               </p>
             )}
             <label>Department</label>

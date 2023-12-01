@@ -4,6 +4,9 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../config/apiUrl";
 import { NavigationBar } from "./NavigationBar";
+import { useParams } from "react-router-dom";
+
+
 
 export const UpdateEmployee = () => {
   const [skills, setSkills] = useState([]);
@@ -21,14 +24,16 @@ export const UpdateEmployee = () => {
   const [departments, setDepartments] = useState([]);
   const [chosenDepartment, setChosenDepartment] = useState("");
   const [number_taken, set_number_taken] = useState(false);
+  const { id } = useParams();
 
   const { first_name, last_name, date_of_birth, phone_number, department_id } =
     profile;
   const WITH_CREDENTIALS = { withCredentials: true };
 
   async function getProfileData() {
-    const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
+    const response = await axios.get(API_URL + "/profile/" + id, WITH_CREDENTIALS);
     if (response.status === 200) {
+      console.log("RP DATA", response.data)
       const userProfile = response.data[0];
       setProfile({
         ...profile,
@@ -144,12 +149,6 @@ export const UpdateEmployee = () => {
   return (
     <div className={styles.mainContainer}>
     <NavigationBar/>
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={2}
-      />
       <div className={styles.cvContainer}>
         <div className={styles.register}>
           <span className={styles.registerTitle}>Update profile</span>
