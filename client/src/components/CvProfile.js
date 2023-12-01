@@ -36,6 +36,8 @@ export const CvProfile = () => {
     setAuth(response.data.user.username);
   }
 
+
+
   useEffect(() => {
     authName();
     fetchDepartments();
@@ -189,7 +191,7 @@ export const CvProfile = () => {
             )}
             <label>Department</label>
             <select
-              className="registerInput"
+              className={styles.registerInput}
               name="department_id"
               onChange={handleDepartments}
               value={chosenDepartment}
@@ -203,21 +205,6 @@ export const CvProfile = () => {
                 </option>
               ))}
             </select>
-
-            <label>Skills</label>
-            {skills.map((skill) => (
-              <div key={skill.id} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  id={skill.id}
-                  name="skills"
-                  value={skill.id}
-                  onChange={handleSkills}
-                  defaultChecked={selectedSkills.includes(skill.id)}
-                />
-                <label htmlFor={skill.id}>{skill.name}</label>
-              </div>
-            ))}
 
             <label>Upload PDF</label>
             <input
@@ -235,6 +222,23 @@ export const CvProfile = () => {
                 Open Your PDF file
               </a>
             )}
+
+            <div className={styles.checkboxContainer}>
+            <label>Skills</label>
+            {skills.map((skill) => (
+              <div key={skill.id} className={styles.checkboxItem}>
+                <input
+                  type="checkbox"
+                  id={skill.id}
+                  name="skills"
+                  value={skill.id}
+                  onChange={handleSkills}
+                  defaultChecked={selectedSkills.includes(skill.id)}
+                />
+                <label htmlFor={skill.id}>{skill.name}</label>
+              </div>
+            ))}
+            </div>
 
             <input
               className={styles.registerButton}

@@ -33,7 +33,6 @@ export const UpdateEmployee = () => {
   async function getProfileData() {
     const response = await axios.get(API_URL + "/profile/" + id, WITH_CREDENTIALS);
     if (response.status === 200) {
-      console.log("RP DATA", response.data)
       const userProfile = response.data[0];
       setProfile({
         ...profile,
@@ -172,7 +171,7 @@ export const UpdateEmployee = () => {
             <label>Date Of Birth</label>
             <input
               type="date"
-              className="registerInput"
+              className=""
               name="date_of_birth"
               value={formatDate(profile.date_of_birth)}
               onChange={handleInputChange}
@@ -193,7 +192,7 @@ export const UpdateEmployee = () => {
             )}
             <label>Department</label>
             <select
-              className="registerInput"
+              className={styles.registerInput}
               name="department_id"
               onChange={handleDepartments}
               value={chosenDepartment}
@@ -209,9 +208,10 @@ export const UpdateEmployee = () => {
               ))}
             </select>
 
+            <div className={styles.checkboxContainer}>
             <label>Skills</label>
             {skills.map((skill) => (
-              <div key={skill.id} className="checkbox-item">
+              <div key={skill.id} className={styles.checkboxItem}>
                 <input
                   type="checkbox"
                   id={skill.id}
@@ -223,7 +223,7 @@ export const UpdateEmployee = () => {
                 <label htmlFor={skill.id}>{skill.name}</label>
               </div>
             ))}
-
+            </div>
             <input
               className={styles.registerButton}
               type="submit"

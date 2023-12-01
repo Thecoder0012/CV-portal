@@ -20,16 +20,19 @@ export const NavigationBar = () => {
 
     async function fetchUser() {
         const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-        console.log(response.data)
         const userRole = response.data.user.role_id === 2 ? "Employee" : "Manager";
         setRole(userRole);
         setAuth(response.data.user.username);
     
     }
     async function fetchProfile(){
-        const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);  
+        const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
         setUserId(response.data[0].person_id)
     }
+
+    
+
+
     useEffect(() => {
         fetchUser()
         fetchProfile()
@@ -79,10 +82,21 @@ export const NavigationBar = () => {
                     style={{ color: '#A100FF' }}
                     onClick={() => setDropdownVisible(!dropdownVisible)}
                 />
-                {dropdownVisible && (
+                
+                {dropdownVisible && role === "Employee" && (
                     <div className={Navbar.dropdownContent}>
                         <Link to="/login" onClick={handleSignOut}>Sign out</Link>
-                        <Link to={`/profile/update/${userId}`}>Update profile</Link>
+                        <Link to={`/profile/update/${userId}`}>Update Profile</Link>
+                        
+                    </div>
+                )}
+
+                {dropdownVisible && role === "Manager" && (
+                    <div className={Navbar.dropdownContent}>
+                        <Link to="/login" onClick={handleSignOut}>Sign out</Link>
+                        <Link to={`/profile/update/${userId}`}>Update Profile</Link>
+                        <Link to={`/profile/update/${userId}`}>Create Manager</Link>
+                        
                     </div>
                 )}
             </li>
