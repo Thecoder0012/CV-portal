@@ -23,6 +23,10 @@ const upload = multer({ storage: storage });
 router.get("/profile", async(req, res) => {
 
   const userId = req.session.user.user_id
+
+ if(req.session.user.role_id === 1) {
+
+ }
   const [fetchProfile] = await db.query(
     `SELECT *
       FROM users
@@ -31,6 +35,8 @@ router.get("/profile", async(req, res) => {
       WHERE employee.user_id = ?;`,
     [userId]
   );
+
+
 
 
   return res.status(200).send(fetchProfile);
@@ -43,7 +49,7 @@ router.get("/profile/:id", async (req, res) => {
 
   const personid = req.params.id
 
-  console.log(personid)
+
 
 
   const [fetchProfile] = await db.query(
@@ -53,9 +59,7 @@ router.get("/profile/:id", async (req, res) => {
     [personid]
   );
 
-console.log(fetchProfile)
   const employee_id = fetchProfile.employee_id;
-  console.log(employee_id)
   const [fetchProfileSkills] = await db.query(
     `SELECT *
       FROM employee_skills
