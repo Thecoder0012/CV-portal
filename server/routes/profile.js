@@ -20,9 +20,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/profile", async (req, res) => {
-  const userId = req.session.user.user_id;
+router.get("/profile", async(req, res) => {
 
+  const userId = req.session.user.user_id
   const [fetchProfile] = await db.query(
     `SELECT *
       FROM users
@@ -32,8 +32,30 @@ router.get("/profile", async (req, res) => {
     [userId]
   );
 
-  const employee_id = fetchProfile[0].employee_id;
 
+  return res.status(200).send(fetchProfile);
+
+
+})
+
+router.get("/profile/:id", async (req, res) => {
+
+
+  const personid = req.params.id
+
+  console.log(personid)
+
+
+  const [fetchProfile] = await db.query(
+    `SELECT * FROM person
+    INNER JOIN employee ON person.person_id = employee.person_id
+    WHERE employee.person_id = ?;`,
+    [personid]
+  );
+
+console.log(fetchProfile)
+  const employee_id = fetchProfile.employee_id;
+  console.log(employee_id)
   const [fetchProfileSkills] = await db.query(
     `SELECT *
       FROM employee_skills
@@ -224,13 +246,13 @@ router.get("/api/address", async (req, res) => {
 router.get("/api/projects", async (req, res) => {
   try {
     const [projects] = await db.query("SELECT * FROM project");
-    console.log(projects);
-    console.log("hello");
     res.status(200).send({ projects });
   } catch (error) {
     console.error("Error finding projects:", error);
     res.status(500).send({ error: "Internal server error" });
   }
 });
+
+
 
 export default router;
