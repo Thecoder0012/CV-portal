@@ -38,13 +38,7 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
     const [user] = await db.query("SELECT * FROM users WHERE user_id = ?", [
       user_id,
     ]);
-
-    if (user[0].role_id !== 1) {
-      return res
-        .status(403)
-        .send({ message: "You are not authorized to create a project!" });
-    }
-
+    
     const createProjectQuery = `
         INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
         VALUES (?, ?, false, CURDATE(), ?, ?,?)
@@ -59,11 +53,25 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
     ]);
 
     res.status(200).send({ message: "Project succesfully created" });
+
+router.get("/projects/:id", async (req, res) => {
+  try {
+    const project_id = req.params.id;
+    const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
+      project_id,
+    ]);
+    if (!project) {
+      return res.status(404).send("Sorry, Project not found");
+    }
+
+    const getProject = project[0];
+    res.status(200).json(getProject);
   } catch (error) {
     console.error("Error while creating the project:", error);
     res.status(500).send({ message: "Error while creating the project" });
   }
 });
+
 
 router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
   try {
@@ -87,6 +95,11 @@ router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
       description,
       projectFile ? projectFile.path : null,
       done,
+    await db.query(updateProjectQuery, [
+      project_title,
+      project_description,
+      projectFile ? projectFile.path : null,
+      project_done,
       date_finish,
       projectId,
     ]);
@@ -100,14 +113,10 @@ router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
 
 router.delete("/projects/:id", async (req, res) => {
   try {
-    const projectId = req.params.project_id;
-
-    const deleteProjectQuery = `
-        DELETE FROM project WHERE project_id = ?
-        `;
-
-    await db.query(deleteProjectQuery, [projectId]);
-
+    const project_id = req.params.id;
+    const deleteProject = await db.query("DELETE FROM project WHERE id = ?", [
+      project_id,
+    ]);
     res.status(200).send("Project deleted successfully");
   } catch (error) {
     console.error("Error deleting the project:", error);

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styles from "../styles/auth.module.css"
+import React, { useEffect, useState } from "react";
+import styles from "../styles/auth.module.css";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,8 +15,6 @@ export const Login = () => {
   const { username, password } = credentials;
   const navigate = useNavigate();
   const WITH_CREDENTIALS = { withCredentials: true };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,39 +46,46 @@ export const Login = () => {
       [event.target.name]: event.target.value,
     }));
   };
-
   return (
-    <div className={styles.mainContainer}>
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={2}
-      />
-      <div className={styles.loginContainer}>
-        <div className={styles.login}>
-          <span className={styles.loginTitle}>Login</span>
-          <form className={styles.loginForm} onSubmit={handleSubmit}>
-            <label>Username</label>
-            <input
-              type="text"
-              className={styles.loginInput}
-              name="username"
-              placeholder="Username"
-              onChange={handleInputChange}
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              className="loginInput"
-              name="password"
-              placeholder="Password"
-              onChange={handleInputChange}
-            />
-            <input className={styles.loginButton} type="submit" value="Login" />
-          </form>
-          <div className="signup-link">
-            <Link to="/register">Click here to Register</Link>
+    <div className={styles.body}>
+      <div className={styles.mainContainer}>
+        <ToastContainer
+          autoClose={15000}
+          closeOnClick={true}
+          position={toast.POSITION.TOP_CENTER}
+          limit={2}
+        />
+        <div className={styles.loginContainer}>
+          <div className={styles.login}>
+            <span className={styles.loginTitle}>Login</span>
+            <form className={styles.loginForm} onSubmit={handleSubmit}>
+              <label>Username</label>
+              <input
+                type="text"
+                className={styles.loginInput}
+                name="username"
+                placeholder="Username"
+                onChange={handleInputChange}
+                required
+              />
+              <label>Password</label>
+              <input
+                type="password"
+                className="loginInput"
+                name="password"
+                placeholder="Password"
+                onChange={handleInputChange}
+                required
+              />
+              <input
+                className={styles.loginButton}
+                type="submit"
+                value="Login"
+              />
+            </form>
+            <div className={styles.signupLink}>
+              <Link to="/register">Click here to Register</Link>
+            </div>
           </div>
         </div>
       </div>
