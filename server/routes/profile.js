@@ -25,7 +25,14 @@ router.get("/profile", async(req, res) => {
   const userId = req.session.user.user_id
 
  if(req.session.user.role_id === 1) {
-
+ const [managerProfile] = await db.query( `SELECT *
+  FROM users
+  INNER JOIN manager ON users.user_id = manager.user_id
+  INNER JOIN person ON manager.person_id = person.person_id
+  WHERE manager.user_id = ?;`,
+  [userId]
+  )
+  return res.status(200).send(managerProfile)
  }
   const [fetchProfile] = await db.query(
     `SELECT *
