@@ -38,7 +38,7 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
     const [user] = await db.query("SELECT * FROM users WHERE user_id = ?", [
       user_id,
     ]);
-    
+
     const createProjectQuery = `
         INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
         VALUES (?, ?, false, CURDATE(), ?, ?,?)
@@ -53,6 +53,11 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
     ]);
 
     res.status(200).send({ message: "Project succesfully created" });
+  } catch (error) {
+    console.error("Error while creating the project:", error);
+    res.status(500).send({ message: "Error while creating the project" });
+  }
+});
 
 router.get("/projects/:id", async (req, res) => {
   try {
@@ -90,11 +95,6 @@ router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
             WHERE project_id = ?
         `;
 
-    await db.query(updateProjectQuery, [
-      title,
-      description,
-      projectFile ? projectFile.path : null,
-      done,
     await db.query(updateProjectQuery, [
       project_title,
       project_description,
