@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
 .navContainer {
-    background-color: #a100ff3d;
     padding: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -9,7 +10,7 @@
 }
 
 .logo {
-    width: 100px;
+    width: 115px;
     height: auto;
 }
 
@@ -30,7 +31,6 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    left: -160px
 }
 
 .dropdownContent a {
@@ -46,10 +46,11 @@
 
 h4 {
     margin: 0;
-    color: white; 
     font-size: 16px; 
+    color: black;
     margin-right: 20px;
     text-decoration: none;
+    font-family: 'Roboto Mono', monospace;
 }
 
 .Link{

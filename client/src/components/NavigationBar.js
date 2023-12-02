@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faCaretDown} from  "@fortawesome/free-solid-svg-icons"
 
-
 export const NavigationBar = () => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [auth, setAuth] = useState();
@@ -20,12 +19,13 @@ export const NavigationBar = () => {
 
     async function fetchUser() {
         const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-        const userRole = response.data.user.role_id === 2 ? "Employee" : "Manager";
+
+
+        const userRole = response.data.user.role_id === 1 ? "Manager" : "Employee" 
         setRole(userRole);
-        console.log(response.data.user)
-        
-    
     }
+
+    
     async function fetchProfile(){
         const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
         setAuth(response.data[0].first_name)
@@ -33,8 +33,10 @@ export const NavigationBar = () => {
     }
 
     
+    //Homepage component
+    //Logik i navbar med manager / employee
 
-
+    
     useEffect(() => {
         fetchUser()
         fetchProfile()
@@ -63,10 +65,11 @@ export const NavigationBar = () => {
             <img className={Navbar.logo} src={logo} alt="Logo" />
             
         </div>
-        <Link className={Navbar.Link} to="/projects">
-        <h4>View Projects</h4>
-        </Link>
+
         <Link className={Navbar.Link}>
+        <h4>Home</h4>
+        </Link>
+        <Link className={Navbar.Link} to="/projects">
         <h4>View Projects</h4>
         </Link>
         <Link className={Navbar.Link}>
@@ -98,7 +101,7 @@ export const NavigationBar = () => {
                         <Link to="/login" onClick={handleSignOut}>Sign out</Link>
                         <Link to={`/profile/update/${userId}`}>Update Profile</Link>
                         <Link to={`/profile/update/${userId}`}>Create Manager</Link>
-                        
+                        <Link to={""}>View Managers / Employees</Link>
                     </div>
                 )}
             </li>

@@ -30,6 +30,10 @@ export const Projects = () => {
    },
  };
 
+ //Opdater projekt knap
+ // Add project members knap
+ // Hoved effekt når du hover over boksene
+ // 
 
      const fetchProjects = async () => {
        try {

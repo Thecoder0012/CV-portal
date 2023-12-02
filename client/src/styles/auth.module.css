@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,400&family=Roboto+Mono&display=swap');
+
 body{
   margin: 0;
   padding: 0;
@@ -32,6 +34,7 @@ ul {
 }
 
 .loginContainer, .registerContainer, .cvContainer {
+  margin-top: -5%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,11 +53,13 @@ ul {
 
 
 .loginTitle, .registerTitle {
-  font-size: 24px;
+  font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 20px;
   display: block;
   text-align: center;
+  font-family: 'Lato', sans-serif;
+font-family: 'Roboto Mono', monospace;
 }
 
 
@@ -117,7 +122,7 @@ input{
 }
 
 .checkboxContainer {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 15px; 
 }
 
