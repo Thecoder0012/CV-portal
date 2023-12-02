@@ -133,4 +133,38 @@ input{
   margin-bottom: 10px;
 }
 
+.h2{
+  color: #A100FF;
+  font-family: 'Lato', sans-serif;
+text-align: center;
+}
+
+.projectBox {
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  width: 300px;
+  box-shadow: 0px 2px 5px rgb(161 0 255 / 15%);
+  transition: transform 0.3s ease; 
+}
+
+.projectBox:hover {
+  transform: scale(1.1);
+}
+
+.projectDetails {
+ text-align: center;
+ display: grid;
+}
+
+
+.projectDetails a:hover {
+  text-decoration: underline;
+}
+
+.Headline{
+  text-align: center;
+  font-family: 'Lato';
+}
+
 

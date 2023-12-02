@@ -17,12 +17,17 @@
 .iconWrapper {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .dropdown {
     display: inline-block;
     position: relative;
     left: 0;
+}
+
+.Options{
+    display: contents;
 }
 
 .dropdownContent {

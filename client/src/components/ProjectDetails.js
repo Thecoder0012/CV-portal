@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
  import styles from "../styles/projectDetails.module.css";
  import { API_URL } from "../config/apiUrl.js";
  import { useParams } from "react-router-dom";
+ import { NavigationBar } from "./NavigationBar.js";
 
 
  export const ProjectDetails = () => {
@@ -55,6 +56,7 @@ import React, { useState, useEffect } from "react";
 
    return (
      <div className="singleProject">
+     <NavigationBar/>
        <div>
          <h1>{project.title}</h1>
          <p>Description: {project.description}</p>

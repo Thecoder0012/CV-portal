@@ -7,8 +7,11 @@ import { CreateProject } from "./components/CreateProject.js";
 import { ProjectDetails } from "./components/ProjectDetails.js";
 import  {UpdateEmployee} from "./components/UpdateEmployee.js";
 import {Projects} from "./components/Projects.js";
+import { MainPage } from "./components/MainPage.js";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes.js";
 import { NotFound } from "./utils/NotFound.js";
+
+
 
 function App() {
   return (
@@ -20,6 +23,7 @@ function App() {
         <Route path="/profile/update/:id" element={<UpdateEmployee />} />
         <Route path="/project/:id" element={<ProjectDetails/>}/>
         <Route path="/projects" element={<Projects />} />
+        <Route path="/main" element={<MainPage/>} />
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
