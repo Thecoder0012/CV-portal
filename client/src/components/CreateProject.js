@@ -6,7 +6,7 @@ import { API_URL } from "../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export const Projects = () => {
+export const CreateProject = () => {
   const [project, setProject] = useState({
     title: "",
     description: "",
