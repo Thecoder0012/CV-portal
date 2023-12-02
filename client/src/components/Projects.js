@@ -7,6 +7,8 @@ import mainCss from "../styles/auth.module.css"
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../config/apiUrl.js";
 import { Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+
 
 export const Projects = () => {
 
@@ -20,19 +22,11 @@ export const Projects = () => {
    file_path: null,
  }]);
 
- const styles = {
-   projectBox: {
-     border: "1px solid #ddd",
-     borderRadius: "8px",
-     padding: "16px",
-     margin: "16px",
-     width: "300px",
-   },
- };
+ const navigate = useNavigate()
 
  //Opdater projekt knap
  // Add project members knap
- // Hoved effekt når du hover over boksene
+ // Hover effekt når du hover over boksene
  // 
 
      const fetchProjects = async () => {
@@ -57,39 +51,42 @@ export const Projects = () => {
 return (
   <div className={mainCss.mainContainer}>
 <NavigationBar/>
-    <h1>Project List</h1>
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
+    <h1 className={mainCss.Headline}>Projects</h1>
+    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center' }}>
       {projects.map((project, i) => (
-        <div key={i} style={styles.projectBox}>
-          <h2>{project.title}</h2>
-          <p>
-            <strong>Description:</strong> {project.description}
-            <br />
-            <strong>Author:</strong> {project.author}
-            <br />
-            <strong>Status:</strong>{" "}
-            {project.done ? "Finished" : "Not finished"}
-            <br />
-            <strong>Project first date:</strong>{" "}
-            {new Date(project.date_made).toLocaleDateString()}
-            <br />
-            <strong>Project finished date:</strong>{" "}
-            {new Date(project.date_finish).toLocaleDateString()}
-            <br />
-            <strong>Pdf:</strong> {project.file_path}
-            {project.file_path && (
-              <a
-                href={API_URL + "/uploads/" + project.file_path}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View PDF
-              </a>
-            )}
-            <p>
-              <Link to={`/project/${project.id}`}>View project</Link>
-            </p>
-          </p>
+        <div key={i} className={mainCss.projectBox} onClick={() => {
+          navigate(`/project/${project.id}`);
+        }}>
+         
+          <div className={mainCss.projectDetailsContainer}>
+          <h2 className={mainCss.h2}>{project.title}</h2>
+  <p className={mainCss.projectDetails}>
+    <strong>Author:</strong> {project.author}
+    <br />
+    <strong>Status:</strong> {project.done ? "Finished" : "Not finished"}
+    <br />
+    <strong>Project first date:</strong>{" "}
+    {new Date(project.date_made).toLocaleDateString()}
+    <br />
+    <strong>Project finished date:</strong>{" "}
+    {new Date(project.date_finish).toLocaleDateString()}
+    <br />
+    <strong>PDF:</strong>{" "}
+    {project.file_path && (
+      <a
+        href={API_URL + "/uploads/" + project.file_path}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View PDF
+      </a>
+    )}
+    <p>
+      <Link to={`/project/${project.id}`}>View project</Link>
+    </p>
+  </p>
+</div>
+
         </div>
       ))}
     </div>

@@ -7,6 +7,7 @@ import styles from "../styles/auth.module.css";
 import {NavigationBar} from "./NavigationBar.js";
 import { API_URL } from "../config/apiUrl.js";
 
+
 export const CvProfile = () => {
   const [profile, setProfile] = useState({
     first_name: "",

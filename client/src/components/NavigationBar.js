@@ -36,7 +36,9 @@ export const NavigationBar = () => {
     //Homepage component
     //Logik i navbar med manager / employee
 
-    
+    //
+
+
     useEffect(() => {
         fetchUser()
         fetchProfile()
@@ -62,22 +64,36 @@ export const NavigationBar = () => {
     />
     <nav className={Navbar.navContainer}>
         <div className={Navbar.logoContainer}>
+        <Link to="/main">
             <img className={Navbar.logo} src={logo} alt="Logo" />
-            
+            </Link>
         </div>
-
-        <Link className={Navbar.Link}>
+{role === "Employee" && (
+    <div className={Navbar.Options}>
+        <Link to="/main" className={Navbar.Link}>
+        <h4>Home</h4>
+        </Link>
+        <Link className={Navbar.Link} to="/projects">
+        <h4>View Projects</h4>
+        </Link>
+        </div>
+        )}
+        {role === "Manager" && (
+    <div className={Navbar.Options}>
+        <Link to="/main" className={Navbar.Link}>
         <h4>Home</h4>
         </Link>
         <Link className={Navbar.Link} to="/projects">
         <h4>View Projects</h4>
         </Link>
         <Link className={Navbar.Link}>
-        <h4>View Projects</h4>
+        <h4>Create Project</h4>
         </Link>
         <Link className={Navbar.Link}>
-        <h4>View Projects</h4>
+        <h4>Search Employee Skills</h4>
         </Link>
+        </div>
+        )}
         <div className={Navbar.iconWrapper}>
             <li className={Navbar.dropdown}>
             <h4>{auth} / {role} </h4>
