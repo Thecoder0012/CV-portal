@@ -22,11 +22,13 @@ export const NavigationBar = () => {
         const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
         const userRole = response.data.user.role_id === 2 ? "Employee" : "Manager";
         setRole(userRole);
-        setAuth(response.data.user.username);
+        console.log(response.data.user)
+        
     
     }
     async function fetchProfile(){
         const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
+        setAuth(response.data[0].first_name)
         setUserId(response.data[0].person_id)
     }
 
@@ -75,7 +77,7 @@ export const NavigationBar = () => {
         </Link>
         <div className={Navbar.iconWrapper}>
             <li className={Navbar.dropdown}>
-            <h4>User: {auth} / {role} </h4>
+            <h4>{auth} / {role} </h4>
                 <FontAwesomeIcon
                     icon={faCaretDown}
                     className={Navbar.dropbtnArrow}

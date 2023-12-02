@@ -151,20 +151,18 @@ export const CvProfile = () => {
             Enter Your User Information
           </span>
           <form className={styles.registerForm} onSubmit={handleSubmit}>
-            <label>First Name</label>
             <input
               type="text"
               className="registerInput"
               name="first_name"
-              placeholder="Enter your first name..."
+              placeholder="First Name"
               onChange={handleInputChange}
             />
-            <label>Last Name</label>
             <input
               type="text"
               className="registerInput"
               name="last_name"
-              placeholder="Enter your last name..."
+              placeholder="Last Name"
               onChange={handleInputChange}
             />
             <label>Date Of Birth</label>
@@ -172,15 +170,14 @@ export const CvProfile = () => {
               type="date"
               className="registerInput"
               name="date_of_birth"
-              placeholder="Enter your date of birth..."
+              placeholder="Date Of Birth"
               onChange={handleInputChange}
             />
-            <label>Phone number</label>
             <input
               type="text"
               className="registerInput"
               name="phone_number"
-              placeholder="Enter your phone number..."
+              placeholder="Phone Number"
               onChange={handleInputChange}
               style={{ borderColor: number_taken ? "red" : "" }}
             />
@@ -189,7 +186,6 @@ export const CvProfile = () => {
                 Change phone number
               </p>
             )}
-            <label>Department</label>
             <select
               className={styles.registerInput}
               name="department_id"
@@ -206,7 +202,7 @@ export const CvProfile = () => {
               ))}
             </select>
 
-            <label>Upload PDF</label>
+            <label>Upload Resume / CV</label>
             <input
               type="file"
               accept="application/pdf"
