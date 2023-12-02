@@ -256,7 +256,7 @@ router.get("/api/address", async (req, res) => {
 
 router.get("/api/projects", async (req, res) => {
   try {
-    const [projects] = await db.query("SELECT * FROM project");
+    const [projects] = await db.query("SELECT * FROM project LIMIT 20");
     res.status(200).send({ projects });
   } catch (error) {
     console.error("Error finding projects:", error);
