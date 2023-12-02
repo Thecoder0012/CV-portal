@@ -2,6 +2,8 @@ import React from 'react'
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { NavigationBar } from './NavigationBar.js';
+import mainCss from "../styles/auth.module.css"
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../config/apiUrl.js";
 import { Link } from "react-router-dom";
@@ -28,6 +30,10 @@ export const Projects = () => {
    },
  };
 
+ //Opdater projekt knap
+ // Add project members knap
+ // Hoved effekt når du hover over boksene
+ // 
 
      const fetchProjects = async () => {
        try {
@@ -49,7 +55,8 @@ export const Projects = () => {
       }, []);
   
 return (
-  <div>
+  <div className={mainCss.mainContainer}>
+<NavigationBar/>
     <h1>Project List</h1>
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {projects.map((project, i) => (

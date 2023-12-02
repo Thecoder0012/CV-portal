@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/auth.module.css";
+import {NavigationBar} from "./NavigationBar.js";
 import { API_URL } from "../config/apiUrl.js";
 
 export const CvProfile = () => {
@@ -34,6 +35,8 @@ export const CvProfile = () => {
     const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
     setAuth(response.data.user.username);
   }
+
+
 
   useEffect(() => {
     authName();
@@ -80,6 +83,7 @@ export const CvProfile = () => {
       set_number_taken(false);
     }
   };
+
 
   const fetchDepartments = async () => {
     try {
@@ -134,7 +138,7 @@ export const CvProfile = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <h3 style={{ textAlign: "right" }}>Logged in as: {auth}</h3>
+      <NavigationBar />
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}
@@ -147,20 +151,18 @@ export const CvProfile = () => {
             Enter Your User Information
           </span>
           <form className={styles.registerForm} onSubmit={handleSubmit}>
-            <label>First Name</label>
             <input
               type="text"
               className="registerInput"
               name="first_name"
-              placeholder="Enter your first name..."
+              placeholder="First Name"
               onChange={handleInputChange}
             />
-            <label>Last Name</label>
             <input
               type="text"
               className="registerInput"
               name="last_name"
-              placeholder="Enter your last name..."
+              placeholder="Last Name"
               onChange={handleInputChange}
             />
             <label>Date Of Birth</label>
@@ -168,26 +170,24 @@ export const CvProfile = () => {
               type="date"
               className="registerInput"
               name="date_of_birth"
-              placeholder="Enter your date of birth..."
+              placeholder="Date Of Birth"
               onChange={handleInputChange}
             />
-            <label>Phonenumber</label>
             <input
               type="text"
               className="registerInput"
               name="phone_number"
-              placeholder="Enter your phonenumber..."
+              placeholder="Phone Number"
               onChange={handleInputChange}
               style={{ borderColor: number_taken ? "red" : "" }}
             />
             {number_taken && (
               <p style={{ fontSize: "13px", color: "red" }}>
-                Change phone number.
+                Change phone number
               </p>
             )}
-            <label>Department</label>
             <select
-              className="registerInput"
+              className={styles.registerInput}
               name="department_id"
               onChange={handleDepartments}
               value={chosenDepartment}
@@ -202,22 +202,7 @@ export const CvProfile = () => {
               ))}
             </select>
 
-            <label>Skills</label>
-            {skills.map((skill) => (
-              <div key={skill.id} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  id={skill.id}
-                  name="skills"
-                  value={skill.id}
-                  onChange={handleSkills}
-                  defaultChecked={selectedSkills.includes(skill.id)}
-                />
-                <label htmlFor={skill.id}>{skill.name}</label>
-              </div>
-            ))}
-
-            <label>Upload PDF</label>
+            <label>Upload Resume / CV</label>
             <input
               type="file"
               accept="application/pdf"
@@ -233,6 +218,23 @@ export const CvProfile = () => {
                 Open Your PDF file
               </a>
             )}
+
+            <div className={styles.checkboxContainer}>
+            <label>Skills</label>
+            {skills.map((skill) => (
+              <div key={skill.id} className={styles.checkboxItem}>
+                <input
+                  type="checkbox"
+                  id={skill.id}
+                  name="skills"
+                  value={skill.id}
+                  onChange={handleSkills}
+                  defaultChecked={selectedSkills.includes(skill.id)}
+                />
+                <label htmlFor={skill.id}>{skill.name}</label>
+              </div>
+            ))}
+            </div>
 
             <input
               className={styles.registerButton}

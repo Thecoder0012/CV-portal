@@ -14,7 +14,7 @@ function App() {
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route path="/cv" element={<CvProfile />} />
-        <Route path="/employee/update" element={<UpdateEmployee />} />
+        <Route path="/profile/update/:id" element={<UpdateEmployee />} />
         <Route path="/project/:id" element={<ProjectDetails/>}/>
         <Route path="/projects" element={<Projects />} />
       </Route>

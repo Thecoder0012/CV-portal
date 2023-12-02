@@ -1,33 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,400&family=Roboto+Mono&display=swap');
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+}
+
+.li {
+  margin-left: 20px;
+}
+
+.Link a {
+  text-decoration: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #007acc;
+  transition: background-color 0.3s ease;
+}
+
+.Link:hover a {
+  background-color: #005b9d;
+}
 
 .mainContainer{
   font-family: system-ui;
 }
 
 .loginContainer, .registerContainer, .cvContainer {
+  margin-top: -5%;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
+  flex-grow: 1;
 }
 
 
 .login, .register {
-  background-color: #0000002b;
-  border: 1px solid #ced4da;
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
+  max-width: 600px;
   width: 100%;
 }
 
 
 .loginTitle, .registerTitle {
-  font-size: 24px;
+  font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 20px;
   display: block;
   text-align: center;
+  font-family: 'Lato', sans-serif;
+font-family: 'Roboto Mono', monospace;
 }
 
 
@@ -81,3 +113,24 @@ input{
 .signupLink a:hover {
   text-decoration: underline;
 }
+
+.registerInput {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.checkboxContainer {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 15px; 
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+

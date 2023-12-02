@@ -3,6 +3,10 @@ import styles from "../styles/auth.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../config/apiUrl";
+import { NavigationBar } from "./NavigationBar";
+import { useParams } from "react-router-dom";
+
+
 
 export const UpdateEmployee = () => {
   const [skills, setSkills] = useState([]);
@@ -20,20 +24,14 @@ export const UpdateEmployee = () => {
   const [departments, setDepartments] = useState([]);
   const [chosenDepartment, setChosenDepartment] = useState("");
   const [number_taken, set_number_taken] = useState(false);
+  const { id } = useParams();
 
   const { first_name, last_name, date_of_birth, phone_number, department_id } =
     profile;
-
-  const [auth, setAuth] = useState();
   const WITH_CREDENTIALS = { withCredentials: true };
 
-  async function authName() {
-    const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-    setAuth(response.data.user.username);
-  }
-
   async function getProfileData() {
-    const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
+    const response = await axios.get(API_URL + "/profile/" + id, WITH_CREDENTIALS);
     if (response.status === 200) {
       const userProfile = response.data[0];
       setProfile({
@@ -50,7 +48,6 @@ export const UpdateEmployee = () => {
   }
 
   useEffect(() => {
-    authName();
     getProfileData();
     fetchDepartments();
     fetchSkills();
@@ -150,13 +147,7 @@ export const UpdateEmployee = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <h3 style={{ textAlign: "right" }}>Logged in as: {auth}</h3>
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={2}
-      />
+    <NavigationBar/>
       <div className={styles.cvContainer}>
         <div className={styles.register}>
           <span className={styles.registerTitle}>Update profile</span>
@@ -180,7 +171,7 @@ export const UpdateEmployee = () => {
             <label>Date Of Birth</label>
             <input
               type="date"
-              className="registerInput"
+              className=""
               name="date_of_birth"
               value={formatDate(profile.date_of_birth)}
               onChange={handleInputChange}
@@ -201,7 +192,7 @@ export const UpdateEmployee = () => {
             )}
             <label>Department</label>
             <select
-              className="registerInput"
+              className={styles.registerInput}
               name="department_id"
               onChange={handleDepartments}
               value={chosenDepartment}
@@ -217,9 +208,10 @@ export const UpdateEmployee = () => {
               ))}
             </select>
 
+            <div className={styles.checkboxContainer}>
             <label>Skills</label>
             {skills.map((skill) => (
-              <div key={skill.id} className="checkbox-item">
+              <div key={skill.id} className={styles.checkboxItem}>
                 <input
                   type="checkbox"
                   id={skill.id}
@@ -231,7 +223,7 @@ export const UpdateEmployee = () => {
                 <label htmlFor={skill.id}>{skill.name}</label>
               </div>
             ))}
-
+            </div>
             <input
               className={styles.registerButton}
               type="submit"
