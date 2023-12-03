@@ -1,0 +1,33 @@
+.searchInput {
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-left: 1.5%;
+    margin-top: 2%;
+  }
+  
+  .skillsTable {
+    width: 97%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: 1.5%;
+  }
+  
+  .tableHeader {
+    background-color: #bb86fc;
+    padding: 12px;
+    text-align: left;
+  }
+
+  tr {
+    border: 0.2px solid black;
+  }
+  
+  tr:hover {
+    background-color: #bb86fc;
+}
+
+tr:nth-child() {
+    background-color: #bb86fc;
+  }
+  
+  
