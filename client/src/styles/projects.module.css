@@ -15,16 +15,11 @@
 }
 
 .projectForm {
-  margin-top: 0px;
-  margin-bottom: 10%;
-  position: relative;
-  padding-top: 50px;
+ text-align: center;
+ margin-top: 50px;
 }
 
-.projectFormGroup {
-  margin-left: 150px;
-  align-items: center;
-}
+
 
 .projectIcon {
   width: 25px;
@@ -72,15 +67,7 @@
   display: inline-block;
 }
 
-.fileInputLabel {
-  font-size: 18px;
-  border: none;
-  width: 17vw;
-  color: black;
-  padding: 10px 15px;
-  cursor: pointer;
-  display: inline-block;
-}
+
 
 .writeProjects {
   font-size: 20px;
@@ -90,12 +77,16 @@
 }
 
 .writeProjectsText {
-  width: 70vw;
-  height: 40vh;
   font-family: inherit;
   font-size: 20px;
-  margin-top: 25px;
+  padding: 10px;
+  width: 70vw;
+  height: 4vh;
+  margin: 10px;
+  border-color: rgba(161, 0, 255, 0.19);
 }
+
+
 
 .projectFormGroupSelectStatus {
   width: 70.4vw;
@@ -114,19 +105,18 @@
 }
 
 .projectSubmit {
-  position: absolute;
-  left: 45%;
-  color: black;
-  background-color: #de11e3;
+  width: -webkit-fill-available; 
+  width: fill-available; 
+  background-color: #A100FF;
+  color: #fff;
   padding: 10px;
   border: none;
-  border-radius: 10px;
-  font-size: 19px;
+  border-radius: 4px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  margin-top: 2%;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
+
 
 .imagePreview {
   position: relative;
@@ -141,10 +131,8 @@
 }
 
 .pdfPreview {
-  margin-left: 9%;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .pdfPreview img{
@@ -152,3 +140,18 @@
   height: auto;
   margin-right: 10px;
 }
+
+.author{
+  margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    border-color: rgba(161, 0, 255, 0.19);
+}
+
+.createProjectInputs{
+  display: inline-grid;
+  margin-top: 10px;
+}
+

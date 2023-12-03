@@ -7,7 +7,6 @@ export const MainPage = () => {
         <div>
 <NavigationBar/>
         <h1>
-        Mainpage 
         </h1>
         
         </div>

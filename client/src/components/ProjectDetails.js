@@ -31,14 +31,6 @@ import React, { useState, useEffect } from "react";
      }
    };
 
-    //Underline på a tags i navbar, når man hover
-   //Dropdown ikon skal fylde mere, så man også kan klik på navn/user og få dropdown vist
-   //Fjern author var projects
-   //Style view pdf
-   //Fjern view Project og sæt cursor på boksen
-   //Style create project
-   //Inkluder navbar i mainPage
-   //Når du klikker på dropwdown, og så klikker på siden så skal den forsvinde
 
    useEffect(() => {
      getProject();

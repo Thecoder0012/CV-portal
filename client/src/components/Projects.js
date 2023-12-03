@@ -68,6 +68,7 @@ return (
     <br />
     <strong>Project finished date:</strong>{" "}
     {new Date(project.date_finish).toLocaleDateString()}
+    
     <br />
     {project.file_path && (
       <a

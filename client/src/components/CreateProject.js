@@ -100,7 +100,7 @@ export const CreateProject = () => {
         <div className={styles.projectFormGroup}>
           <input
             type="text"
-            placeholder="Title of the project"
+            placeholder="Project Title"
             name="title"
             className={styles.projectInput}
             autoFocus={true}
@@ -110,44 +110,38 @@ export const CreateProject = () => {
         <div className={styles.projectFormGroup}>
           <textarea
             type="text"
-            placeholder="Project description"
+            placeholder="Description"
             name="description"
             className={styles.writeProjectsText}
             onChange={handleInputChange}
           ></textarea>
 
-          <div className={styles.projectFormGroup}>
-            <label htmlFor="author">Manager</label>
-            <select
-              id="author"
-              name="authorId"
-              className={styles.projectInput}
-              onChange={handleManagers}
-              value={chosenManager}
-            >
-              <option value="" disabled>
-                Select an author
-              </option>
-              {managers.map((manager) => (
-                <option key={manager.id} value={manager.id}>
-                  {manager.first_name} {manager.last_name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <label htmlFor="projectDate"></label>
           <input
             type="date"
             id="projectDate"
-            className={styles.projectFormGroupSelectDate}
+            className={styles.writeProjectsText}
             onChange={handleInputChange}
             name="date_finish"
           />
         </div>
-
-        <label>Upload Project File</label>
-        <input
+<div className={styles.createProjectInputs}>
+        <select 
+            id="author"
+            name="authorId"
+            onChange={handleManagers}
+            value={chosenManager}
+            className={styles.author}
+          >
+            <option value="" disabled >
+            Project Manager
+            </option>
+            {managers.map((manager) => (
+              <option key={manager.id} value={manager.id}>
+                {manager.first_name} {manager.last_name}
+              </option>
+            ))}
+          </select>
+          <input style={{ borderColor: 'rgba(161, 0, 255, 0.19)' }} 
           type="file"
           accept="application/pdf"
           onChange={handlePdfChange}
@@ -163,11 +157,11 @@ export const CreateProject = () => {
               Open Your Project
             </a>
           )}
-        </div>
-
-        <button className={styles.projectSubmit} type="submit">
+          <button className={styles.projectSubmit} type="submit">
           Create project
         </button>
+        </div>
+        </div>
       </form>
     </div>
   );

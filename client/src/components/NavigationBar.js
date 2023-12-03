@@ -32,12 +32,6 @@ export const NavigationBar = () => {
         setUserId(response.data[0].person_id)
     }
 
-    
-    //Homepage component
-    //Logik i navbar med manager / employee
-
-    //
-
 
     useEffect(() => {
         fetchUser()
