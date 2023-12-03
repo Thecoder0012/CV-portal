@@ -34,10 +34,17 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
   try {
     const { title, description, date_finish, manager_id } = req.body;
     const projectFile = req.file ? req.file.filename : null;
-    const user_id = req.session.user.user_id;
-    const [user] = await db.query("SELECT * FROM users WHERE user_id = ?", [
-      user_id,
-    ]);
+
+    let [projectCount] = await db.query(
+      "SELECT COUNT(*) as count FROM project"
+    );
+    projectCount = projectCount[0].count;
+
+    if (projectCount >= 20) {
+      return res.status(400).send({
+        message: "Project limit reached.",
+      });
+    }
 
     const createProjectQuery = `
         INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
@@ -76,7 +83,6 @@ router.get("/projects/:id", async (req, res) => {
     res.status(500).send({ message: "Error while creating the project" });
   }
 });
-
 
 router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
   try {
