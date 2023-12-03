@@ -156,6 +156,12 @@ export const UpdateEmployee = () => {
   return (
     <div className={styles.mainContainer}>
       <NavigationBar />
+      <ToastContainer
+        autoClose={15000}
+        closeOnClick={true}
+        position={toast.POSITION.TOP_CENTER}
+        limit={1}
+      />
       <div className={styles.cvContainer}>
         <div className={styles.register}>
           <span className={styles.registerTitle}>Update profile</span>
