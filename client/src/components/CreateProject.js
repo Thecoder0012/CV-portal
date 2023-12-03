@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { NavigationBar } from "./NavigationBar.js";
 
 export const CreateProject = () => {
   const [project, setProject] = useState({
@@ -88,6 +89,7 @@ export const CreateProject = () => {
 
   return (
     <div className={styles.createProjects}>
+    <NavigationBar/>
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}

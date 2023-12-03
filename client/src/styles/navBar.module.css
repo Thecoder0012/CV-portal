@@ -20,6 +20,7 @@
     cursor: pointer;
 }
 
+
 .dropdown {
     display: inline-block;
     position: relative;
@@ -58,10 +59,28 @@ h4 {
     font-family: 'Roboto Mono', monospace;
 }
 
-.Link{
+.Link {
+    position: relative;
     text-decoration: none;
+    transition: color 0.3s ease;
+    padding-bottom: 5px;
 }
 
-.Link:hover{
+.Link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background-color: #A100FF;
+    transition: width 0.3s ease;
+}
+
+.Link:hover {
     color: black;
+}
+
+.Link:hover::before {
+    width: 100%; /* Expand the width on hover */
 }

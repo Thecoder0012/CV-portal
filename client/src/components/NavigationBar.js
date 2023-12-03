@@ -96,7 +96,7 @@ export const NavigationBar = () => {
         )}
         <div className={Navbar.iconWrapper}>
             <li className={Navbar.dropdown}>
-            <h4>{auth} / {role} </h4>
+            <h4 onClick={() => setDropdownVisible(!dropdownVisible)}>{auth} / {role} </h4>
                 <FontAwesomeIcon
                     icon={faCaretDown}
                     className={Navbar.dropbtnArrow}
@@ -108,7 +108,6 @@ export const NavigationBar = () => {
                     <div className={Navbar.dropdownContent}>
                         <Link to="/login" onClick={handleSignOut}>Sign out</Link>
                         <Link to={`/profile/update/${userId}`}>Update Profile</Link>
-                        
                     </div>
                 )}
 
