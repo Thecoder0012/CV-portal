@@ -20,20 +20,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/profile", async(req, res) => {
+router.get("/profile", async (req, res) => {
+  const userId = req.session.user.user_id;
 
-  const userId = req.session.user.user_id
-
- if(req.session.user.role_id === 1) {
- const [managerProfile] = await db.query( `SELECT *
+  if (req.session.user.role_id === 1) {
+    const [managerProfile] = await db.query(
+      `SELECT *
   FROM users
   INNER JOIN manager ON users.user_id = manager.user_id
   INNER JOIN person ON manager.person_id = person.person_id
   WHERE manager.user_id = ?;`,
-  [userId]
-  )
-  return res.status(200).send(managerProfile)
- }
+      [userId]
+    );
+    return res.status(200).send(managerProfile);
+  }
   const [fetchProfile] = await db.query(
     `SELECT *
       FROM users
@@ -43,21 +43,11 @@ router.get("/profile", async(req, res) => {
     [userId]
   );
 
-
-
-
   return res.status(200).send(fetchProfile);
-
-
-})
+});
 
 router.get("/profile/:id", async (req, res) => {
-
-
-  const personid = req.params.id
-
-
-
+  const personid = req.params.id;
 
   const [fetchProfile] = await db.query(
     `SELECT * FROM person
@@ -66,7 +56,7 @@ router.get("/profile/:id", async (req, res) => {
     [personid]
   );
 
-  const employee_id = fetchProfile.employee_id;
+  const employee_id = fetchProfile[0].employee_id;
   const [fetchProfileSkills] = await db.query(
     `SELECT *
       FROM employee_skills
@@ -155,8 +145,8 @@ router.post("/profile", upload.single("file"), async (req, res) => {
   }
 });
 
-router.put("/profile", async (req, res) => {
-  const userId = req.session.user.user_id;
+router.put("/profile/:id", async (req, res) => {
+  const person_id = req.params.id;
   try {
     const {
       first_name,
@@ -172,12 +162,11 @@ router.put("/profile", async (req, res) => {
       FROM users
       INNER JOIN employee ON users.user_id = employee.user_id
       INNER JOIN person ON employee.person_id = person.person_id
-      WHERE employee.user_id = ?;`,
-      [userId]
+      WHERE employee.person_id = ?;`,
+      [person_id]
     );
 
     const employee_id = fetchProfile[0].employee_id;
-    const person_id = fetchProfile[0].person_id;
 
     if (!person_id) {
       return res
@@ -195,16 +184,18 @@ router.put("/profile", async (req, res) => {
       [department_id, employee_id]
     );
 
-    const deleteSkills = await db.query(
-      "DELETE FROM employee_skills WHERE employee_id = ?",
-      [employee_id]
-    );
-
-    for (const skill of skills) {
-      await db.query(
-        "INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)",
-        [employee_id, skill]
+    if (skills && skills.length > 0) {
+      const deleteSkills = await db.query(
+        "DELETE FROM employee_skills WHERE employee_id = ?",
+        [employee_id]
       );
+
+      for (const skill_id of skills) {
+        await db.query(
+          "INSERT INTO employee_skills (employee_id, skills_id) VALUES (?,?)",
+          [employee_id, skill_id]
+        );
+      }
     }
     if (
       updateProfile[0].affectedRows > 0 &&
@@ -256,14 +247,14 @@ router.get("/api/address", async (req, res) => {
 
 router.get("/api/projects", async (req, res) => {
   try {
-    const [projects] = await db.query("SELECT * FROM project WHERE done = 0 LIMIT 20");
+    const [projects] = await db.query(
+      "SELECT * FROM project WHERE done = 0 LIMIT 20"
+    );
     res.status(200).send({ projects });
   } catch (error) {
     console.error("Error finding projects:", error);
     res.status(500).send({ error: "Internal server error" });
   }
 });
-
-
 
 export default router;

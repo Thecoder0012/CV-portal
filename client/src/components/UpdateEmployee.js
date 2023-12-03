@@ -6,11 +6,8 @@ import { API_URL } from "../config/apiUrl";
 import { NavigationBar } from "./NavigationBar";
 import { useParams } from "react-router-dom";
 
-
-
 export const UpdateEmployee = () => {
   const [skills, setSkills] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
   const [profile, setProfile] = useState({
     first_name: "",
     last_name: "",
@@ -18,12 +15,13 @@ export const UpdateEmployee = () => {
     phone_number: "",
     department_id: "",
     skills: [],
-    pdf_file: null,
   });
+  const [selectedSkills, setSelectedSkills] = useState([]);
+
+  const skills_ids = selectedSkills.map(Number);
 
   const [departments, setDepartments] = useState([]);
-  const [chosenDepartment, setChosenDepartment] = useState("");
-  const [number_taken, set_number_taken] = useState(false);
+
   const { id } = useParams();
 
   const { first_name, last_name, date_of_birth, phone_number, department_id } =
@@ -31,27 +29,36 @@ export const UpdateEmployee = () => {
   const WITH_CREDENTIALS = { withCredentials: true };
 
   async function getProfileData() {
-    const response = await axios.get(API_URL + "/profile/" + id, WITH_CREDENTIALS);
-    if (response.status === 200) {
-      const userProfile = response.data[0];
-      setProfile({
-        ...profile,
-        first_name: userProfile.first_name,
-        last_name: userProfile.last_name,
-        date_of_birth: userProfile.date_of_birth,
-        phone_number: userProfile.phone_number,
-        skills: response.data.skills,
-      });
-    } else {
-      console.log(response.status);
+    try {
+      const response = await axios.get(
+        API_URL + "/profile/" + id,
+        WITH_CREDENTIALS
+      );
+      if (response.status === 200) {
+        const userProfile = response.data[0];
+        setProfile({
+          ...profile,
+          first_name: userProfile.first_name,
+          last_name: userProfile.last_name,
+          date_of_birth: userProfile.date_of_birth,
+          phone_number: userProfile.phone_number,
+          department_id: userProfile.department_id,
+          skills: response.data.skills,
+        });
+      }
+    } catch (error) {
+      toast.error(error);
     }
   }
-
   useEffect(() => {
     getProfileData();
     fetchDepartments();
     fetchSkills();
   }, []);
+
+  useEffect(() => {
+    setSelectedSkills(profile.skills);
+  }, [profile]);
 
   const handleInputChange = (event) => {
     setProfile((prevProfile) => ({
@@ -64,29 +71,23 @@ export const UpdateEmployee = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        API_URL + "/profile",
+        API_URL + "/profile/" + id,
         {
           first_name: first_name,
           last_name: last_name,
           date_of_birth: formatDate(date_of_birth),
           phone_number: phone_number,
           department_id: department_id,
-          skills: selectedSkills,
+          skills: skills_ids,
         },
         WITH_CREDENTIALS
       );
 
       if (response.status === 200) {
-        set_number_taken(false);
         toast.success(response.data.message);
       }
     } catch (err) {
       toast.error(err.response.data.message);
-      set_number_taken(false);
-
-      if (err.response.data.phone_state === false) {
-        set_number_taken(true);
-      }
     }
   };
 
@@ -103,7 +104,6 @@ export const UpdateEmployee = () => {
     }
   };
   const handleDepartments = (event) => {
-    setChosenDepartment(event.target.value);
     setProfile((prevProfile) => ({
       ...prevProfile,
       department_id: event.target.value,
@@ -135,19 +135,27 @@ export const UpdateEmployee = () => {
   };
 
   const handleSkills = (event) => {
-    const selectedSkill = event.target.value;
-    if (selectedSkills.includes(selectedSkill)) {
-      setSelectedSkills((prevSkills) =>
-        prevSkills.filter((skill) => skill !== selectedSkill)
-      );
-    } else {
-      setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
-    }
+    const selectedSkill = +event.target.value;
+
+    setSelectedSkills((prevSkills) => {
+      if (prevSkills.includes(selectedSkill)) {
+        return prevSkills.filter((skill) => skill !== selectedSkill);
+      } else {
+        return [...prevSkills, selectedSkill];
+      }
+    });
+
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      skills: prevProfile.skills.includes(selectedSkill)
+        ? prevProfile.skills.filter((skill) => skill !== selectedSkill)
+        : [...prevProfile.skills, selectedSkill],
+    }));
   };
 
   return (
     <div className={styles.mainContainer}>
-    <NavigationBar/>
+      <NavigationBar />
       <div className={styles.cvContainer}>
         <div className={styles.register}>
           <span className={styles.registerTitle}>Update profile</span>
@@ -183,19 +191,14 @@ export const UpdateEmployee = () => {
               name="phone_number"
               value={profile.phone_number}
               onChange={handleInputChange}
-              style={{ borderColor: number_taken ? "red" : "" }}
             />
-            {number_taken && (
-              <p style={{ fontSize: "13px", color: "red" }}>
-                Change phone number.
-              </p>
-            )}
+
             <label>Department</label>
             <select
               className={styles.registerInput}
               name="department_id"
               onChange={handleDepartments}
-              value={chosenDepartment}
+              value={profile.department_id}
               required
             >
               <option value="" disabled>
@@ -209,20 +212,20 @@ export const UpdateEmployee = () => {
             </select>
 
             <div className={styles.checkboxContainer}>
-            <label>Skills</label>
-            {skills.map((skill) => (
-              <div key={skill.id} className={styles.checkboxItem}>
-                <input
-                  type="checkbox"
-                  id={skill.id}
-                  name="skills"
-                  value={skill.id}
-                  onChange={handleSkills}
-                  defaultChecked={selectedSkills.includes(skill.id)}
-                />
-                <label htmlFor={skill.id}>{skill.name}</label>
-              </div>
-            ))}
+              <label>Skills</label>
+              {skills.map((skill) => (
+                <div key={skill.id} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    id={skill.id}
+                    name="skills"
+                    value={skill.id}
+                    onChange={handleSkills}
+                    checked={selectedSkills.includes(skill.id)}
+                  />
+                  <label htmlFor={skill.id}>{skill.name}</label>
+                </div>
+              ))}
             </div>
             <input
               className={styles.registerButton}
