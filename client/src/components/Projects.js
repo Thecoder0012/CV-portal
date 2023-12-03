@@ -52,7 +52,7 @@ return (
   <div className={mainCss.mainContainer}>
 <NavigationBar/>
     <h1 className={mainCss.Headline}>Projects</h1>
-    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center' }}>
+    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center', cursor: "pointer" }}>
       {projects.map((project, i) => (
         <div key={i} className={mainCss.projectBox} onClick={() => {
           navigate(`/project/${project.id}`);
@@ -61,8 +61,6 @@ return (
           <div className={mainCss.projectDetailsContainer}>
           <h2 className={mainCss.h2}>{project.title}</h2>
   <p className={mainCss.projectDetails}>
-    <strong>Author:</strong> {project.author}
-    <br />
     <strong>Status:</strong> {project.done ? "Finished" : "Not finished"}
     <br />
     <strong>Project first date:</strong>{" "}
@@ -70,20 +68,18 @@ return (
     <br />
     <strong>Project finished date:</strong>{" "}
     {new Date(project.date_finish).toLocaleDateString()}
+    
     <br />
-    <strong>PDF:</strong>{" "}
     {project.file_path && (
       <a
         href={API_URL + "/uploads/" + project.file_path}
         target="_blank"
+        className={mainCss.pdfButton}
         rel="noopener noreferrer"
       >
         View PDF
       </a>
     )}
-    <p>
-      <Link to={`/project/${project.id}`}>View project</Link>
-    </p>
   </p>
 </div>
 

@@ -31,6 +31,7 @@ import React, { useState, useEffect } from "react";
      }
    };
 
+
    useEffect(() => {
      getProject();
    }, [id]);
