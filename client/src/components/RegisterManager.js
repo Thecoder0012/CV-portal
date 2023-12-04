@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { NavigationBar } from "./NavigationBar.js";
 import axios from "axios";
 import { API_URL } from "../api/url.js";
 
@@ -43,6 +44,8 @@ export const RegisterManager = () => {
 
   return (
     <div className={styles.mainContainer}>
+    <NavigationBar/>
+
  <ToastContainer
    autoClose={3000}
    closeOnClick={true}

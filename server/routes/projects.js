@@ -149,76 +149,78 @@ router.post('/assignProject', async (req, res) => {
 
 
 
-router.post(
-  "/createProject",
-  upload.single("projectFile"),
-  async (req, res) => {
-    try {
-      const { title, description, author, manager_id } =
-        req.body;
-      const projectFile = req.file;
+const isManager = (req, res, next) => {
+  if (req.session.user && req.session.user.role_id === 1) {
+    next();
+  } else {
+    res
+      .status(403)
+      .send({ message: "Forbidden route! You are not authorized" });
+  }
+};
 
-      const [manager] = await db.query(
-        "SELECT * FROM manager WHERE manager_id = ?",
-        [manager_id]
-      );
-      if (!manager) {
-        return res
-          .status(403)
-          .send("Sorry, You have no right to create a project");
-      }
+router.post("/projects", isManager, upload.single("file"), async (req, res) => {
+  try {
+    const { title, description, date_finish, manager_id } = req.body;
+    const projectFile = req.file ? req.file.filename : null;
 
-      const createProjectQuery = `
-        INSERT INTO project (title, description, author, done, date_made, date_finish, file_path)
-        VALUES (?, ?, ?, false, CURDATE(), null, ?)
+    let [projectCount] = await db.query(
+      "SELECT COUNT(*) as count FROM project"
+    );
+    projectCount = projectCount[0].count;
+
+    if (projectCount >= 20) {
+      return res.status(400).send({
+        message: "Project limit reached.",
+      });
+    }
+
+    const createProjectQuery = `
+        INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
+        VALUES (?, ?, false, CURDATE(), ?, ?,?)
         `;
 
-      const result = await db.query(createProjectQuery, [
-        title,
-        description,
-        author,
-        projectFile ? projectFile.path : null,
-      ]);
+    const result = await db.query(createProjectQuery, [
+      title,
+      description,
+      date_finish,
+      projectFile,
+      manager_id,
+    ]);
 
-      res.status(201).send("Project succesfully created");
-    } catch (error) {
-      console.error("Error while creating the project:", error);
-      res.status(500).send("Error while creating the project");
-    }
+    res.status(200).send({ message: "Project succesfully created" });
+  } catch (error) {
+    console.error("Error while creating the project:", error);
+    res.status(500).send({ message: "Error while creating the project" });
   }
-);
+});
 
-router.get("/getProject/:id", async (req, res) => {
+router.get("/projects/:id", async (req, res) => {
   try {
-    const projectId = req.params.id;
-
-    const [project] = await db.query(
-      "SELECT * FROM project WHERE project_id = ?",
-      [projectId]
-    );
-
+    const project_id = req.params.id;
+    const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
+      project_id,
+    ]);
     if (!project) {
       return res.status(404).send("Sorry, Project not found");
     }
 
-    res.status(200).json(project);
+    const getProject = project[0];
+    res.status(200).json(getProject);
   } catch (error) {
-    console.error("Error while fetching project:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error while creating the project:", error);
+    res.status(500).send({ message: "Error while creating the project" });
   }
 });
 
-router.put(
-  "/updateProject/:id",
-  upload.single("projectFile"),
-  async (req, res) => {
-    try {
-      const projectId = req.params.id;
-      const { title, description, done, date_finish } =
-        req.body;
-      const projectFile = req.file;
+router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { project_title, project_description, project_done, date_finish } =
+      req.body;
+    const projectFile = req.file;
 
-      const updateProjectQuery = `
+    const updateProjectQuery = `
             UPDATE project 
             SET title = ?, 
                 description = ?, 
@@ -237,28 +239,38 @@ router.put(
         projectId,
       ]);
 
-      res.status(200).send("Project updated successfully");
-    } catch (error) {
-      console.error("Error while updating project:", error);
-      res.status(500).send("Internal Server Error");
-    }
+    res.status(200).send("Project updated successfully");
+  } catch (error) {
+    console.error("Error while updating project:", error);
+    res.status(500).send("Internal Server Error");
   }
-);
+});
 
-router.delete("/deleteProject/:project_id", async (req, res) => {
+router.delete("/projects/:id", async (req, res) => {
   try {
-    const projectId = req.params.project_id;
-
-    const deleteProjectQuery = `
-        DELETE FROM project WHERE project_id = ?
-        `;
-
-    await db.query(deleteProjectQuery, [projectId]);
-
+    const project_id = req.params.id;
+    const deleteProject = await db.query("DELETE FROM project WHERE id = ?", [
+      project_id,
+    ]);
     res.status(200).send("Project deleted successfully");
   } catch (error) {
     console.error("Error deleting the project:", error);
     res.status(500).send("Error deleting the project");
+  }
+});
+
+router.get("/api/managers", async (req, res) => {
+  try {
+    const [managers] = await db.query(`
+    SELECT person.first_name, person.last_name,manager.id
+    FROM users
+    INNER JOIN manager ON users.user_id = manager.user_id
+    INNER JOIN person ON manager.person_id = person.person_id`);
+
+    res.status(200).send({ managers });
+  } catch (error) {
+    console.error("Error finding managers:", error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
 

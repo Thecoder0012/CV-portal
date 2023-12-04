@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+.navContainer {
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Graphik', Arial, Helvetica, sans-serif;
+}
+
+.logo {
+    width: 115px;
+    height: auto;
+}
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+    left: 0;
+}
+
+.Options{
+    display: contents;
+}
+
+.dropdownContent {
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdownContent a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdownContent a:hover {
+    background-color: #a200ff39;
+}
+
+h4 {
+    margin: 0;
+    font-size: 16px; 
+    color: black;
+    margin-right: 20px;
+    text-decoration: none;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.Link {
+    position: relative;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    padding-bottom: 5px;
+}
+
+.Link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background-color: #A100FF;
+    transition: width 0.3s ease;
+}
+
+.Link:hover {
+    color: black;
+}
+
+.Link:hover::before {
+    width: 100%; /* Expand the width on hover */
+}

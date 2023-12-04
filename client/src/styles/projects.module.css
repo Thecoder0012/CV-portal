@@ -1,0 +1,157 @@
+.project {
+  padding-top: 50px;
+}
+
+.createProjects {
+  position: relative;
+}
+
+.projectImg {
+  margin-left: 150px;
+  width: 70vw;
+  height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.projectForm {
+ text-align: center;
+ margin-top: 50px;
+}
+
+
+
+.projectIcon {
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+  border: 1px solid;
+  border-radius: 50%;
+  color: rgb(129, 125, 125);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.projectInput {
+  font-size: 30px;
+  border: none;
+  padding: 20px;
+  width: 70vw;
+  margin-top: 0%;
+}
+
+.projectInput::placeholder {
+  color: rgb(189, 185, 185);
+  font-weight: 400;
+}
+
+.projectInput:focus {
+  outline-style: none;
+}
+
+.projectFile {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.customFileButton {
+  background-color: #de11e3;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+
+
+.writeProjects {
+  font-size: 20px;
+  border: none;
+  padding: 20px;
+  width: 70vw;
+}
+
+.writeProjectsText {
+  font-family: inherit;
+  font-size: 20px;
+  padding: 10px;
+  width: 70vw;
+  height: 4vh;
+  margin: 10px;
+  border-color: rgba(161, 0, 255, 0.19);
+}
+
+
+
+.projectFormGroupSelectStatus {
+  width: 70.4vw;
+  height: 8vh;
+  font-family: inherit;
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+.projectFormGroupSelectDate {
+  width: 69.2vw;
+  height: 4vh;
+  font-family: inherit;
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+.projectSubmit {
+  width: -webkit-fill-available; 
+  width: fill-available; 
+  background-color: #A100FF;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+
+.imagePreview {
+  position: relative;
+    top: 30px;
+    left: 9%;
+    width: 100%;
+    max-height: 25vw;
+    max-width: 70vw;
+    margin-top: 10px;
+    object-fit: cover;
+    border-radius: 26px;
+}
+
+.pdfPreview {
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.pdfPreview img{
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.author{
+  margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    border-color: rgba(161, 0, 255, 0.19);
+}
+
+.createProjectInputs{
+  display: inline-grid;
+  margin-top: 10px;
+}
+
