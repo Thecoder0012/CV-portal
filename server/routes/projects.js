@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import transporter from "../mail/mailConfig.js";
 import multer from "multer";
 import path from "path";
 import { Router } from "express";
@@ -21,134 +21,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// TODO SMTP Skal oprettes før det virker:
-const transporter = nodemailer.createTransport({
-  host: 'your-smtp-host',
-  port: 587,
-  secure: false, 
-  auth: {
-    user: 'your-smtp-username',
-    pass: 'your-smtp-password',
-  },
-});
-
-const sendNotification = async (to, subject, text) => {
-  try {
-    await transporter.sendMail({
-      from: 'your-sender-email@example.com',
-      to,
-      subject,
-      text,
-    });
-    console.log('Notification sent successfully');
-  } catch (error) {
-    console.error('Error sending notification:', error);
-  }
-};
-
-// Den her virker. Hvor man kan assigne et projekt til en employee. Problemet er, at det kun skal være en manager der skal kunne gøre det
-// UDEN Auth
-
-/*router.post('/assignProject', async (req, res) => {
-  try {
-    const { projectId, employeeId } = req.body;
-
-
-    const [project] = await db.query(
-      'SELECT * FROM project WHERE id = ?',
-      [projectId]
-    );
-
-    
-    const updateEmployeeProjectPathQuery = `
-      UPDATE employee
-      SET project_id = ?
-      WHERE employee_id = ?
-    `;
-  
-    const result = await db.query(updateEmployeeProjectPathQuery, [
-      projectId,
-      employeeId
-    ]);
-
-    //Hent medarbejderens e-mail for at sende meddelelse
-    const [employee] = await db.query(
-      'SELECT users.email FROM employee JOIN users ON employee.user_id = users.user_id WHERE employee_id = ?',
-      [employeeId]
-    );
-
-    // Send notifikation
-    const notificationText = `You have been assigned a new project. Check your dashboard for details.`;
-    await sendNotification(employee[0].email, 'New Project Assignment', notificationText);
-
-    res.status(201).send('Project assigned successfully');
-  } catch (error) {
-    console.error('Error assigning project:', error);
-    res.status(500).send('Error assigning project');
-  }
-});*/
-
-
-
-// MED Aut - Men kan ikke få det til at virke i postman.
-router.post('/assignProject', async (req, res) => {
-  try {
-    const { projectId, employeeId } = req.body;
-
-    const managerId = req.session.user?.manager_id;
-
-    if (!managerId) {
-      return res.status(403).send("Sorry, you do not have the permission to assign a project");
-    }
-
-    const [manager] = await db.query(
-      'SELECT * FROM manager WHERE manager_id = ?',
-      [managerId]
-    );
-
-    if (!manager || manager.length === 0) {
-      return res.status(403).send("Sorry, you do not have the permission to assign a project");
-    }
-
-    const [project] = await db.query(
-      'SELECT * FROM project WHERE id = ?',
-      [projectId]
-    );
-
-    if (!project || project.length === 0) {
-      return res.status(404).send("Project not found");
-    }
-
-    const updateEmployeeProjectPathQuery = `
-      UPDATE employee
-      SET project_id = ?
-      WHERE employee_id = ?
-    `;
-  
-    const result = await db.query(updateEmployeeProjectPathQuery, [
-      projectId,
-      employeeId
-    ]);
-
-
-    const [employee] = await db.query(
-      'SELECT users.email FROM employee JOIN users ON employee.user_id = users.user_id WHERE employee_id = ?',
-      [employeeId]
-    );
-
-    const notificationText = `You have been assigned a new project. Check your dashboard for details.`;
-    await sendNotification(employee[0].email, 'New Project Assignment', notificationText);
-
-    res.status(201).send('Project assigned successfully');
-  } catch (error) {
-    console.error('Error assigning project:', error);
-    res.status(500).send('Error assigning project');
-  }
-});
-
-
-
-
 const isManager = (req, res, next) => {
   if (req.session.user && req.session.user.role_id === 1) {
     next();
@@ -158,6 +30,80 @@ const isManager = (req, res, next) => {
       .send({ message: "Forbidden route! You are not authorized" });
   }
 };
+
+router.post("/project-assignment", async (req, res) => {
+  try {
+    const user_id = req.session.user.user_id;
+    const [manager] = await db.query(
+      `SELECT first_name,last_name,email
+       FROM users
+       INNER JOIN manager ON users.user_id = manager.user_id
+       INNER JOIN person ON manager.person_id = person.person_id
+       WHERE manager.user_id = ?;`,
+      [user_id]
+    );
+
+    const { project_id, employee_id } = req.body;
+
+    const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
+      project_id,
+    ]);
+
+    if (!project || project.length === 0) {
+      return res.status(404).send({ message: "Project not found" });
+    }
+
+    const result = await db.query(
+      `
+      UPDATE employee
+      SET project_id = ?
+      WHERE employee_id = ?`,
+      [project_id, employee_id]
+    );
+
+    const [employee] = await db.query(
+      `
+      SELECT first_name,last_name,email,title from employee
+        INNER JOIN person
+        on employee.person_id = person.person_id
+        INNER JOIN users
+        on employee.user_id = users.user_id
+        INNER join project
+        on employee.project_id = project.id
+        WHERE employee_id = ?`,
+      [employee_id]
+    );
+
+    const employee_name = employee[0].first_name + " " + employee[0].last_name;
+    const manager_name = manager[0].first_name + " " + manager[0].last_name;
+
+    const mailInfo = transporter.sendMail(
+      {
+        from: manager[0].email,
+        to: employee[0].email,
+        subject: "Project assignment to " + employee_name,
+        text: `Hello ${employee_name}! Project ${employee[0].title} is now assigned to you.\n \n
+        Best regards \n
+        Team Manager:
+        ${manager_name}`,
+      },
+      (error, info) => {
+        if (error) {
+          console.error(error);
+        } else {
+          res
+            .status(200)
+            .send({ message: "You have successfully sent a message!" });
+        }
+      }
+    );
+
+    res.status(200).send({message:"Project assigned successfully"});
+  } catch (error) {
+    console.error("Error assigning project:", error);
+    res.status(500).send("Error assigning project");
+  }
+});
 
 router.post("/projects", isManager, upload.single("file"), async (req, res) => {
   try {
@@ -230,14 +176,14 @@ router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
             WHERE project_id = ?
         `;
 
-      await db.query(updateProjectQuery, [
-        title,
-        description,
-        projectFile ? projectFile.path : null,
-        done,
-        date_finish,
-        projectId,
-      ]);
+    await db.query(updateProjectQuery, [
+      title,
+      description,
+      projectFile ? projectFile.path : null,
+      done,
+      date_finish,
+      projectId,
+    ]);
 
     res.status(200).send("Project updated successfully");
   } catch (error) {
