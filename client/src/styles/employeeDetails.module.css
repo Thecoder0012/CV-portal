@@ -1,0 +1,40 @@
+/* EmployeeDetails.module.css */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContent {
+    background: white;
+    padding: 30px; /* Increased padding for a bigger modal box */
+    border-radius: 10px; /* Increased border radius for rounded corners */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    max-width: 500px; /* Adjust the max-width as needed */
+    width: 100%;
+    margin-bottom: 15%;
+    font-size: 1.3em;
+
+}
+  
+  .closeButton {
+    background-color: #ff5757; /* Red color for the close button */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+  }
+  
+  .closeButton:hover {
+    background-color: #d93f3f; /* Darker red on hover */
+  }
+  

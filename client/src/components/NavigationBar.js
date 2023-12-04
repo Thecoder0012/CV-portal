@@ -77,7 +77,7 @@ export const NavigationBar = () => {
             <Link className={Navbar.Link} to="/createProject">
               <h4>Create Project</h4>
             </Link>
-            <Link className={Navbar.Link}>
+            <Link className={Navbar.Link} to="/searchSkills">
               <h4>Search Employee Skills</h4>
             </Link>
           </div>
