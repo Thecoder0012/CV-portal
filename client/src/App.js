@@ -10,6 +10,7 @@ import {Projects} from "./components/Projects.js";
 import { MainPage } from "./components/MainPage.js";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes.js";
 import { NotFound } from "./utils/NotFound.js";
+import { ManagerProjects } from "./components/ManagerProjects.js";
 
 
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/project/:id" element={<ProjectDetails/>}/>
         <Route path="/projects" element={<Projects />} />
         <Route path="/main" element={<MainPage/>} />
+        <Route path="/manager/projects" element={<ManagerProjects/>}/>
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
