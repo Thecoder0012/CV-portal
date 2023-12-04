@@ -66,7 +66,7 @@ router.get("/profile/:id", async (req, res) => {
     [personid]
   );
 
-  const employee_id = fetchProfile.employee_id;
+  const employee_id = fetchProfile[0].employee_id;
   const [fetchProfileSkills] = await db.query(
     `SELECT *
       FROM employee_skills

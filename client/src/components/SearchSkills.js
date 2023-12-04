@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { NavigationBar } from './NavigationBar.js';
+import { NavigationBar } from "./NavigationBar.js";
 import styles from "../styles/searchSkills.module.css";
+import axios from "axios";
+import EmployeeDetails from "./EmployeeDetails.js";
 
 export const SearchSkills = () => {
   const [employeesData, setEmployeesData] = useState([]);
@@ -8,37 +10,41 @@ export const SearchSkills = () => {
   const [personData, setPersonData] = useState([]);
   const [employeeSkillsData, setEmployeeSkillsData] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [displayRows, setDisplayRows] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const [SelectedPersonId, setSelectedPersonId] = useState(null);
+
+  const handleRowClick = (person_id) => {
+    setSelectedPersonId(person_id);
+  };
+
+  const closePopup = () => {
+    setSelectedPersonId(null);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch employees data
-        const employeesResponse = await fetch(
+        const employeesResponse = await axios.get(
           "http://localhost:8080/api/employees"
         );
-        const employeesData = await employeesResponse.json();
-        setEmployeesData(employeesData);
+        setEmployeesData(employeesResponse.data);
 
-        // Fetch skills data
-        const skillsResponse = await fetch("http://localhost:8080/api/skills");
-        const skillsData = await skillsResponse.json();
-        setSkillsData(skillsData);
+        const skillsResponse = await axios.get(
+          "http://localhost:8080/api/skills"
+        );
+        setSkillsData(skillsResponse.data);
 
-        // Fetch employee-skills data
-        const employeeSkillsResponse = await fetch(
+        const employeeSkillsResponse = await axios.get(
           "http://localhost:8080/api/employee-skills"
         );
-        const employeeSkillsData = await employeeSkillsResponse.json();
-        setEmployeeSkillsData(employeeSkillsData);
+        setEmployeeSkillsData(employeeSkillsResponse.data);
 
-        // Fetch person data
-        const personResponse = await fetch("http://localhost:8080/api/person");
-        const personData = await personResponse.json();
-        setPersonData(personData);
-
-        // Initially, display all rows
-        setDisplayRows(employeesData.map(() => true));
+        const personResponse = await axios.get(
+          "http://localhost:8080/api/person"
+        );
+        setPersonData(personResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -50,48 +56,55 @@ export const SearchSkills = () => {
   const handleInputChange = (event) => {
     const value = event.target.value.toLowerCase();
     setInputValue(value);
-
-    // Update the displayRows based on the input value
-    setDisplayRows((prevDisplayRows) =>
-      employeesData.map((employee) => {
-        const employeeSkills = employeeSkillsData.filter(
-          (es) => es.employee_id === employee.employee_id
-        );
-        const employeeSkillNames = employeeSkills.map((es) => {
-          const skill = skillsData.find((skill) => skill.id === es.skills_id);
-          return skill ? skill.name.toLowerCase() : "";
-        });
-
-        // Find the corresponding person in personData
-        const person = personData.find(
-          (person) => person.person_id === employee.person_id
-        );
-
-        return (
-          (employee.employee_id &&
-            employee.employee_id.toString().includes(value)) ||
-          (employee.person_id &&
-            employee.person_id.toString().includes(value)) ||
-          (employee.user_id && employee.user_id.toString().includes(value)) ||
-          (employee.department_id &&
-            employee.department_id.toString().includes(value)) ||
-          (employee.project_id &&
-            employee.project_id.toString().includes(value)) ||
-          (person &&
-            person.first_name &&
-            person.first_name.toLowerCase().includes(value)) ||
-          (person &&
-            person.last_name &&
-            person.last_name.toLowerCase().includes(value)) ||
-          employeeSkillNames.some((name) => name.includes(value))
-        );
-      })
-    );
+    setCurrentPage(1);
   };
+
+  const filteredRows = employeesData.filter((employee) => {
+    const employeeSkills = employeeSkillsData.filter(
+      (es) => es.employee_id === employee.employee_id
+    );
+    const employeeSkillNames = employeeSkills.map((es) => {
+      const skill = skillsData.find((skill) => skill.id === es.skills_id);
+      return skill ? skill.name.toLowerCase() : "";
+    });
+
+    const person = personData.find(
+      (person) => person.person_id === employee.person_id
+    );
+
+    return (
+      (employee.employee_id &&
+        employee.employee_id.toString().includes(inputValue)) ||
+      (employee.person_id &&
+        employee.person_id.toString().includes(inputValue)) ||
+      (employee.user_id && employee.user_id.toString().includes(inputValue)) ||
+      (employee.department_id &&
+        employee.department_id.toString().includes(inputValue)) ||
+      (employee.project_id &&
+        employee.project_id.toString().includes(inputValue)) ||
+      (person &&
+        person.first_name &&
+        person.first_name.toLowerCase().includes(inputValue)) ||
+      (person &&
+        person.last_name &&
+        person.last_name.toLowerCase().includes(inputValue)) ||
+      employeeSkillNames.some((name) => name.includes(inputValue))
+    );
+  });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDisplayRows = filteredRows.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className={styles.searchSkills}>
-        <NavigationBar/>
+      <NavigationBar />
+      <h1 className={styles.header}>Search for any employees</h1>
       <input
         type="text"
         placeholder="Search.."
@@ -99,53 +112,75 @@ export const SearchSkills = () => {
         value={inputValue}
         className={styles.searchInput}
       />
-      <table className={styles.skillsTable}>
-        <thead>
-          <tr>
-            <th className={styles.tableHeader}>Employee ID</th>
-            <th className={styles.tableHeader}>First Name</th>
-            <th className={styles.tableHeader}>Last Name</th>
-            <th className={styles.tableHeader}>Skills</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(employeesData) && employeesData.length > 0 ? (
-            employeesData.map((employee, index) => (
-              <tr
-                key={index}
-                style={{ display: displayRows[index] ? "table-row" : "none" }}
-              >
-                <td>{employee.employee_id}</td>
-                <td>
-                  {personData.find(
-                    (person) => person.person_id === employee.person_id
-                  )?.first_name || ""}
-                </td>
-                <td>
-                  {personData.find(
-                    (person) => person.person_id === employee.person_id
-                  )?.last_name || ""}
-                </td>
-                <td>
-                  {employeeSkillsData
-                    .filter((es) => es.employee_id === employee.employee_id)
-                    .map((es) => {
-                      const skill = skillsData.find(
-                        (skill) => skill.id === es.skills_id
-                      );
-                      return skill ? skill.name : "";
-                    })
-                    .join(", ")}
-                </td>
-              </tr>
-            ))
-          ) : (
+      <div className={styles.tableContainer}>
+        <table className={styles.skillsTable}>
+          <thead>
             <tr>
-              <td colSpan="4">No employee data available</td>
+              <th className={styles.tableHeader}>ID</th>
+              <th className={styles.tableHeader}>First Name</th>
+              <th className={styles.tableHeader}>Last Name</th>
+              <th className={styles.tableHeader}>Skills</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Array.isArray(currentDisplayRows) &&
+            currentDisplayRows.length > 0 ? (
+              currentDisplayRows.map((employee, index) => (
+                <tr
+                  key={index}
+                  className={styles.tableRow}
+                  onClick={() => handleRowClick(employee.person_id)}
+                >
+                  <td>{employee.employee_id}</td>
+                  <td>
+                    {personData.find(
+                      (person) => person.person_id === employee.person_id
+                    )?.first_name || ""}
+                  </td>
+                  <td>
+                    {personData.find(
+                      (person) => person.person_id === employee.person_id
+                    )?.last_name || ""}
+                  </td>
+                  <td>
+                    {employeeSkillsData
+                      .filter((es) => es.employee_id === employee.employee_id)
+                      .map((es, skillIndex) => (
+                        <span key={skillIndex} className={styles.skill}>
+                          {
+                            skillsData.find(
+                              (skill) => skill.id === es.skills_id
+                            )?.name
+                          }
+                        </span>
+                      ))}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">No employee data available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className={styles.pagination}>
+        {Array.from({
+          length: Math.ceil(filteredRows.length / itemsPerPage),
+        }).map((_, index) => (
+          <button
+            className={index + 1 === currentPage ? styles.active : ""}
+            key={index}
+            onClick={() => paginate(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+      {SelectedPersonId && (
+        <EmployeeDetails onClose={closePopup} id={SelectedPersonId} />
+      )}
     </div>
   );
 };
