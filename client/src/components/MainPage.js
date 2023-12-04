@@ -12,13 +12,16 @@ export const MainPage = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add(main.show);
+          } else {
+            entry.target.classList.remove(main.show);
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
 
     const accentureFacts = accentureFactsRef.current;
+
     if (accentureFacts) {
       observer.observe(accentureFacts);
     }
@@ -32,7 +35,7 @@ export const MainPage = () => {
 
   return (
     <div>
-      <NavigationBar />
+      <NavigationBar className={main.NavBar} />
       <div className={main.mainDiv}>
         <video autoPlay loop muted className={main.backgroundVideo}>
           <source src={videoSrc} type="video/mp4" />
