@@ -44,7 +44,7 @@ const EmployeeDetails = ({ onClose, id }) => {
             <p>Phone Number: {profile.phone_number}</p>
 
             <p>Skills: {skillNames.join(", ")}</p>
-            {/* Add other profile information as needed */}
+            
           </div>
         )}
         <button className={styles.closeButton} onClick={onClose}>

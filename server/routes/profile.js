@@ -26,28 +26,51 @@ router.get("/profile", async (req, res) => {
   if (req.session.user.role_id === 1) {
     const [managerProfile] = await db.query(
       `SELECT *
-  FROM users
-  INNER JOIN manager ON users.user_id = manager.user_id
-  INNER JOIN person ON manager.person_id = person.person_id
-  WHERE manager.user_id = ?;`,
+       FROM users
+       INNER JOIN manager ON users.user_id = manager.user_id
+       INNER JOIN person ON manager.person_id = person.person_id
+       WHERE manager.user_id = ?;`,
+      [userId]
+    );
+    return res.status(200).send(managerProfile);
+  } else if(req.session.user.role_id === 2) {
+    try {
+      const [fetchProfile] = await db.query(
+        `SELECT *
+         FROM users
+         INNER JOIN employee ON users.user_id = employee.user_id
+         INNER JOIN person ON employee.person_id = person.person_id
+         WHERE employee.user_id = ?;`,
+        [userId]
+      );
+
+      return res.status(200).send(fetchProfile);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      return res.status(500).send("Internal Server Error");
+    }
+  }
+});
+
+
+router.get("/profile/:id", async (req, res) => {
+
+  const userId = req.session.user.user_id;
+  const personid = req.params.id;
+
+
+  if (req.session.user.role_id === 1) {
+    const [managerProfile] = await db.query(
+      `SELECT *
+       FROM users
+       INNER JOIN manager ON users.user_id = manager.user_id
+       INNER JOIN person ON manager.person_id = person.person_id
+       WHERE manager.user_id = ?;`,
       [userId]
     );
     return res.status(200).send(managerProfile);
   }
-  const [fetchProfile] = await db.query(
-    `SELECT *
-      FROM users
-      INNER JOIN employee ON users.user_id = employee.user_id
-      INNER JOIN person ON employee.person_id = person.person_id
-      WHERE employee.user_id = ?;`,
-    [userId]
-  );
 
-  return res.status(200).send(fetchProfile);
-});
-
-router.get("/profile/:id", async (req, res) => {
-  const personid = req.params.id;
 
   const [fetchProfile] = await db.query(
     `SELECT * FROM person
@@ -145,8 +168,9 @@ router.post("/profile", upload.single("file"), async (req, res) => {
   }
 });
 
-router.put("/profile/:id", async (req, res) => {
+router.put("/profile/employee/:id", async (req, res) => {
   const person_id = req.params.id;
+  console.log(person_id)
   try {
     const {
       first_name,
@@ -214,6 +238,20 @@ router.put("/profile/:id", async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 });
+
+router.put("/profile/manager/:id", async (req, res) => {
+  const person_id = req.params.id;
+
+  const {first_name, last_name, date_of_birth, phone_number} = req.body
+  
+  const [updateManager] = await db.query('UPDATE person SET first_name=?, last_name=?, date_of_birth=?, phone_number=? WHERE person_id=?',
+      [first_name, last_name, date_of_birth, phone_number, person_id])
+
+      console.log("UpdateManage", updateManager)
+
+
+  return res.status(200).send({message: "Message"})
+})
 
 router.get("/api/person", async (req, res) => {
   try {
