@@ -67,10 +67,10 @@ h4 {
 }
 
 .Link::before {
+
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
     width: 0;
     height: 1.5px;
     background-color: #A100FF;
@@ -82,5 +82,5 @@ h4 {
 }
 
 .Link:hover::before {
-    width: 100%; /* Expand the width on hover */
+    width: 100%;
 }
