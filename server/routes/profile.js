@@ -236,9 +236,10 @@ router.get("/api/departments", async (req, res) => {
 });
 
 router.get("/api/skills", async (req, res) => {
+  
   try {
     const [skills] = await db.query("SELECT * FROM skills");
-    res.status(200).send( skills );
+    res.status(200).send({skills});
   } catch (error) {
     console.error("Error finding skills:", error);
     res.status(500).send({ error: "Internal server error" });
