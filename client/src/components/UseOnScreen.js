@@ -8,7 +8,6 @@ export function useOnScreen(ref) {
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       ([entry]) => {
-        console.log(entry.isIntersecting);
         if (entry.isIntersecting) {
           entry.target.classList.add(main.show);
         } else {

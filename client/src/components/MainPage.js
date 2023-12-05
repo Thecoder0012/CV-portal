@@ -11,48 +11,10 @@ export const MainPage = () => {
 
 
 
-  console.log({ isOnScreen });
 
   if({isOnScreen}) {
     
   }
-
-  /*
-  useEffect(() => {
-  const observer = new IntersectionObserver(
-
-      (entries) => {
-        entries.forEach((entry) => {
-
-          
-          if (entry.isIntersecting) {
-            console.log("AA")
-            entry.target.classList.add(main.show);
-          }
-          if(!entry.isIntersecting) {
-
-            console.log("Classlist", entry.target.classList)
-            entry.target.classList.remove(main.show);
-          } 
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-
-    const accentureFacts = accentureFactsRef.current;
-
-    if (accentureFacts) {
-      observer.observe(accentureFacts);
-    }
-
-    return () => {
-      if (accentureFacts) {
-        observer.unobserve(accentureFacts);
-      }
-    };
-  }, []);*/
-
   return (
     <div>
       <NavigationBar className={main.NavBar} />

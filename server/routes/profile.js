@@ -218,7 +218,7 @@ router.put("/profile/:id", async (req, res) => {
 router.get("/api/person", async (req, res) => {
   try {
     const [person] = await db.query("SELECT * FROM person");
-    res.status(200).send( person );
+    res.status(200).send( {person} );
   } catch (error) {
     console.error("Error finding person:", error);
     res.status(500).send({ error: "Internal server error" });
@@ -249,7 +249,7 @@ router.get("/api/skills", async (req, res) => {
 router.get("/api/employees", async (req, res) => {
   try {
     const [employees] = await db.query("SELECT * FROM employee");
-    res.status(200).send(employees); 
+    res.status(200).send({employees}); 
   } catch (error) {
     console.error("Error finding employee:", error);
     res.status(500).send({ error: "Internal server error" });
@@ -260,7 +260,7 @@ router.get("/api/employees", async (req, res) => {
 router.get("/api/employee-skills", async (req, res) => {
   try {
     const [employeeSkills] = await db.query("SELECT * FROM employee_skills");
-    res.status(200).send(employeeSkills);
+    res.status(200).send({employeeSkills});
   } catch (error) {
     console.error("Error finding employeeSkills:", error);
     res.status(500).send({ error: "Internal server error" });

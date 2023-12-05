@@ -3,6 +3,7 @@ import { NavigationBar } from "./NavigationBar.js";
 import styles from "../styles/searchSkills.module.css";
 import axios from "axios";
 import EmployeeDetails from "./EmployeeDetails.js";
+import { API_URL } from "../config/apiUrl.js";
 
 export const SearchSkills = () => {
   const [employeesData, setEmployeesData] = useState([]);
@@ -27,24 +28,31 @@ export const SearchSkills = () => {
     const fetchData = async () => {
       try {
         const employeesResponse = await axios.get(
-          "http://localhost:8080/api/employees"
+                    API_URL + "/api/employees"
+
+
         );
-        setEmployeesData(employeesResponse.data);
+
+        console.log("E respnse", employeesResponse)
+        setEmployeesData(employeesResponse.data.employees);
 
         const skillsResponse = await axios.get(
-          "http://localhost:8080/api/skills"
+          API_URL + "/api/skills"
+
         );
-        setSkillsData(skillsResponse.data);
+        setSkillsData(skillsResponse.data.skills);
 
         const employeeSkillsResponse = await axios.get(
-          "http://localhost:8080/api/employee-skills"
+          API_URL + "/api/employee-skills"
+
         );
-        setEmployeeSkillsData(employeeSkillsResponse.data);
+        setEmployeeSkillsData(employeeSkillsResponse.data.employeeSkills);
 
         const personResponse = await axios.get(
-          "http://localhost:8080/api/person"
+          API_URL + "/api/person"
+
         );
-        setPersonData(personResponse.data);
+        setPersonData(personResponse.data.person);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
