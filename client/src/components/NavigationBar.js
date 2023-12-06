@@ -77,7 +77,7 @@ export const NavigationBar = () => {
             <Link className={Navbar.Link} to="/createProject">
               <h4>Create Project</h4>
             </Link>
-            <Link className={Navbar.Link}>
+            <Link className={Navbar.Link} to="/searchSkills">
               <h4>Search Employee Skills</h4>
             </Link>
           </div>
@@ -109,7 +109,7 @@ export const NavigationBar = () => {
                   Sign out
                 </Link>
                 <Link to={`/profile/update/${userId}`}>Update Profile</Link>
-                <Link to={`/profile/update/${userId}`}>Create Manager</Link>
+                <Link to={`/registerManager`}>Create Manager</Link>
                 <Link to={""}>View Managers / Employees</Link>
                 <Link to={"/manager/projects"}>View Projects</Link>
               </div>

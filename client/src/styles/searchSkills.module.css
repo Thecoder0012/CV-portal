@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,400&family=Roboto+Mono&display=swap');
+
+
+
+.header{
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  display: block;
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+font-family: 'Roboto Mono', monospace;
+}
+.searchInput {
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-left: 22%;
+  margin-top: 3.5%;
+  border: 1px solid #ddd; 
+  border-radius: 5px;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  font-size: 1.5em;
+  width: 56%;
+  margin-left: 22%;
+  border: 1px solid #ddd; 
+  border-radius: 5px;
+}
+
+.skillsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  background-color: rgba(161, 0, 255, 0.77);
+  padding: 12px;
+  color: white;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tableRow {
+  border-bottom: 1px solid #ddd;
+}
+
+.tableRow:hover {
+  background-color: #e0e0e0;
+}
+
+.skill {
+  display: inline-block;
+  padding: 5px;
+  margin: 2px;
+  background-color: rgba(161, 0, 255, 0.73);
+  color: white;
+  border-radius: 3px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: rgba(161, 0, 255, 0.77);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  width: 3%;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.pagination button:hover {
+  background-color: rgb(93, 13, 139);
+}
+
+.pagination button.active {
+  background-color: rgb(93, 13, 139);
+}

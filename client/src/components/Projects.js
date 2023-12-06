@@ -1,12 +1,11 @@
 import React from 'react'
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+
 import { NavigationBar } from './NavigationBar.js';
 import mainCss from "../styles/auth.module.css"
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../config/apiUrl.js";
-import { Link } from "react-router-dom";
 import { useNavigate} from "react-router-dom";
 
 
@@ -23,11 +22,6 @@ export const Projects = () => {
  }]);
 
  const navigate = useNavigate()
-
- //Opdater projekt knap
- // Add project members knap
- // Hover effekt når du hover over boksene
- // 
 
      const fetchProjects = async () => {
        try {
