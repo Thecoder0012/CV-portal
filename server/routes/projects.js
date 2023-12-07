@@ -75,12 +75,15 @@ router.post("/project-assignment", async (req, res) => {
     );
 
     const employee_name = employee[0].first_name + " " + employee[0].last_name;
+    const employee_email = employee[0].email;
+
     const manager_name = manager[0].first_name + " " + manager[0].last_name;
+    const manager_email = manager[0].email;
 
     const mailInfo = transporter.sendMail(
       {
-        from: manager[0].email,
-        to: employee[0].email,
+        from: manager_email,
+        to: employee_email,
         subject: "Project assignment to " + employee_name,
         text: `Hello ${employee_name}! Project ${employee[0].title} is now assigned to you.\n \n
         Best regards \n
@@ -98,7 +101,7 @@ router.post("/project-assignment", async (req, res) => {
       }
     );
 
-    res.status(200).send({message:"Project assigned successfully"});
+    res.status(200).send({ message: "Project assigned successfully" });
   } catch (error) {
     console.error("Error assigning project:", error);
     res.status(500).send("Error assigning project");
