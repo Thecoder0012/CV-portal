@@ -30,7 +30,7 @@ export const Login = () => {
       );
 
       if (response.status === 200) {
-        navigate("/cv");
+        navigate("/main");
       }
     } catch (error) {
       toast.error(error.response.data.message);

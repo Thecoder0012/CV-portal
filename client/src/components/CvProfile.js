@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/auth.module.css";
 import { API_URL } from "../config/apiUrl.js";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const CvProfile = () => {
   const [profile, setProfile] = useState({
@@ -24,39 +24,16 @@ export const CvProfile = () => {
   const [departments, setDepartments] = useState([]);
   const [chosenDepartment, setChosenDepartment] = useState("");
   const [number_taken, set_number_taken] = useState(false);
-  const [hasProfile, setHasProfile] = useState([]);
-  const [profileCheck, setProfileCheck] = useState(false);
 
   const { first_name, last_name, date_of_birth, phone_number, department_id } =
     profile;
 
-  const WITH_CREDENTIALS = { withCredentials: true };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkProfileStatus = async () => {
-      try {
-        const response = await axios.get(
-          API_URL + "/profile",
-          WITH_CREDENTIALS
-        );
-        setHasProfile(response.data);
-      } catch (error) {
-        console.error("Error checking profile status:", error);
-      } finally {
-        setProfileCheck(true);
-      }
-    };
-
-    checkProfileStatus();
     fetchDepartments();
     fetchSkills();
   }, []);
-
-
-
-  // if (hasProfile.length > 0) {
-  //   return <Navigate to="/main" />;
-  // }
 
   const handleInputChange = (event) => {
     setProfile((prevProfile) => ({
@@ -90,6 +67,9 @@ export const CvProfile = () => {
       if (response.status === 200) {
         set_number_taken(false);
         toast.success(response.data.message);
+        setTimeout(() => {
+          navigate("/main");
+        }, 1500);
       }
     } catch (err) {
       console.log(err);
@@ -149,120 +129,113 @@ export const CvProfile = () => {
     }));
   };
 
-return (
-  <div className={styles.mainContainer}>
-    <ToastContainer
-      autoClose={15000}
-      closeOnClick={true}
-      position={toast.POSITION.TOP_CENTER}
-      limit={2}
-    />
-    {profileCheck && (
+  return (
+    <div className={styles.mainContainer}>
+      <ToastContainer
+        autoClose={15000}
+        closeOnClick={true}
+        position={toast.POSITION.TOP_CENTER}
+        limit={2}
+      />
       <div className={styles.cvContainer}>
-        {!hasProfile.length > 0 ? (
-          <div className={styles.register}>
-            <span className={styles.registerTitle}>
-              Enter Your User Information
-            </span>
-            <form className={styles.registerForm} onSubmit={handleSubmit}>
-              <input
-                type="text"
-                className="registerInput"
-                name="first_name"
-                placeholder="First Name"
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                className="registerInput"
-                name="last_name"
-                placeholder="Last Name"
-                onChange={handleInputChange}
-              />
-              <label>Date Of Birth</label>
-              <input
-                type="date"
-                className="registerInput"
-                name="date_of_birth"
-                placeholder="Date Of Birth"
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                className="registerInput"
-                name="phone_number"
-                placeholder="Phone Number"
-                onChange={handleInputChange}
-                style={{ borderColor: number_taken ? "red" : "" }}
-              />
-              {number_taken && (
-                <p style={{ fontSize: "13px", color: "red" }}>
-                  Change phone number
-                </p>
-              )}
-              <select
-                className={styles.registerInput}
-                name="department_id"
-                onChange={handleDepartments}
-                value={chosenDepartment}
-              >
-                <option value="" disabled>
-                  Select a Department
+        <div className={styles.register}>
+          <span className={styles.registerTitle}>
+            Enter Your User Information
+          </span>
+          <form className={styles.registerForm} onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className="registerInput"
+              name="first_name"
+              placeholder="First Name"
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              className="registerInput"
+              name="last_name"
+              placeholder="Last Name"
+              onChange={handleInputChange}
+            />
+            <label>Date Of Birth</label>
+            <input
+              type="date"
+              className="registerInput"
+              name="date_of_birth"
+              placeholder="Date Of Birth"
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              className="registerInput"
+              name="phone_number"
+              placeholder="Phone Number"
+              onChange={handleInputChange}
+              style={{ borderColor: number_taken ? "red" : "" }}
+            />
+            {number_taken && (
+              <p style={{ fontSize: "13px", color: "red" }}>
+                Change phone number
+              </p>
+            )}
+            <select
+              className={styles.registerInput}
+              name="department_id"
+              onChange={handleDepartments}
+              value={chosenDepartment}
+            >
+              <option value="" disabled>
+                Select a Department
+              </option>
+              {departments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}, {department.country}
                 </option>
-                {departments.map((department) => (
-                  <option key={department.id} value={department.id}>
-                    {department.name}, {department.country}
-                  </option>
-                ))}
-              </select>
+              ))}
+            </select>
 
-              <label>Upload Resume / CV</label>
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={handlePdfChange}
-              />
+            <label>Upload Resume / CV</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handlePdfChange}
+            />
 
-              {profile.pdf_file && (
-                <a
-                  href={URL.createObjectURL(profile.pdf_file)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Open Your PDF file
-                </a>
-              )}
+            {profile.pdf_file && (
+              <a
+                href={URL.createObjectURL(profile.pdf_file)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Your PDF file
+              </a>
+            )}
 
-              <div className={styles.checkboxContainer}>
-                <label>Skills</label>
-                {skills.map((skill) => (
-                  <div key={skill.id} className={styles.checkboxItem}>
-                    <input
-                      type="checkbox"
-                      id={skill.id}
-                      name="skills"
-                      value={skill.id}
-                      onChange={handleSkills}
-                      defaultChecked={selectedSkills.includes(skill.id)}
-                    />
-                    <label htmlFor={skill.id}>{skill.name}</label>
-                  </div>
-                ))}
-              </div>
+            <div className={styles.checkboxContainer}>
+              <label>Skills</label>
+              {skills.map((skill) => (
+                <div key={skill.id} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    id={skill.id}
+                    name="skills"
+                    value={skill.id}
+                    onChange={handleSkills}
+                    defaultChecked={selectedSkills.includes(skill.id)}
+                  />
+                  <label htmlFor={skill.id}>{skill.name}</label>
+                </div>
+              ))}
+            </div>
 
-              <input
-                className={styles.registerButton}
-                type="submit"
-                value="Create"
-              />
-            </form>
-          </div>
-        ) : (
-          <Navigate to="/main" />
-        )}
+            <input
+              className={styles.registerButton}
+              type="submit"
+              value="Create"
+            />
+          </form>
+        </div>
       </div>
-    )}
-  </div>
-);
-
+    </div>
+  );
 };
