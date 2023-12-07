@@ -17,7 +17,6 @@ export const CreateProject = () => {
   });
   const [managers, setManagers] = useState([]);
   const [chosenManager, setChosenManager] = useState([]);
-  console.log(managers);
 
   const { title, description, date_finish, manager_id, file_path } = project;
 
