@@ -47,9 +47,9 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
     }
 
     const createProjectQuery = `
-        INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
-        VALUES (?, ?, false, CURDATE(), ?, ?,?)
-        `;
+        INSERT INTO project (title, description, done, date_made, date_finish, file_path, manager_id)
+        VALUES (?, ?, false, CURDATE(), ?, ?, ?)
+    `;
 
     const result = await db.query(createProjectQuery, [
       title,
@@ -79,33 +79,33 @@ router.get("/projects/:id", async (req, res) => {
     const getProject = project[0];
     res.status(200).json(getProject);
   } catch (error) {
-    console.error("Error while creating the project:", error);
-    res.status(500).send({ message: "Error while creating the project" });
+    console.error("Error while fetching the project:", error);
+    res.status(500).send({ message: "Error while fetching the project" });
   }
 });
 
-router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
+router.put("/projects/:id", upload.single("file"), async (req, res) => {
   try {
     const projectId = req.params.id;
-    const { project_title, project_description, project_done, date_finish } =
-      req.body;
+    const { title, description, done, date_finish } = 
+    req.body;
     const projectFile = req.file;
 
     const updateProjectQuery = `
-            UPDATE project 
-            SET title = ?, 
-                description = ?, 
-                file_path = ?,
-                done = ?,
-                date_finish = ?
-            WHERE project_id = ?
-        `;
+        UPDATE project 
+        SET title = ?, 
+            description = ?, 
+            file_path = ?,
+            done = ?,
+            date_finish = ?
+        WHERE id = ?
+    `;
 
     await db.query(updateProjectQuery, [
-      project_title,
-      project_description,
+      title,
+      description,
       projectFile ? projectFile.path : null,
-      project_done,
+      done,
       date_finish,
       projectId,
     ]);
@@ -118,15 +118,33 @@ router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
 });
 
 router.delete("/projects/:id", async (req, res) => {
+  const projectId = req.params.id;
+  let connection;
+
   try {
-    const project_id = req.params.id;
-    const deleteProject = await db.query("DELETE FROM project WHERE id = ?", [
-      project_id,
-    ]);
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    const deleteEmployeeProjectQuery = "UPDATE employee SET project_id = NULL WHERE project_id = ?";
+    await connection.query(deleteEmployeeProjectQuery, [projectId]);
+
+    const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
+    await connection.query(deleteProjectQuery, [projectId]);
+
+    await connection.commit();
+
     res.status(200).send("Project deleted successfully");
   } catch (error) {
+    if (connection) {
+      await connection.rollback();
+    }
+
     console.error("Error deleting the project:", error);
-    res.status(500).send("Error deleting the project");
+    res.status(500).send(`Error deleting the project: ${error.message}`);
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 });
 
