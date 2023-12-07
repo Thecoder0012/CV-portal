@@ -37,8 +37,6 @@ export const CvProfile = () => {
     setAuth(response.data.user.username);
   }
 
-
-
   useEffect(() => {
     authName();
     fetchDepartments();
@@ -137,9 +135,15 @@ export const CvProfile = () => {
     }));
   };
 
+  const activeLinkStyle = {
+  textDecoration: "underline",
+  // Add any other styles you want for the underline effect
+};
+
   return (
+    <div className="test">
+    <NavigationBar />
     <div className={styles.mainContainer}>
-      <NavigationBar />
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}
@@ -203,6 +207,8 @@ export const CvProfile = () => {
               ))}
             </select>
 
+            
+
             <label>Upload Resume / CV</label>
             <input
               type="file"
@@ -245,6 +251,7 @@ export const CvProfile = () => {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 };

@@ -24,33 +24,28 @@ export const SearchSkills = () => {
     setSelectedPersonId(null);
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const employeesResponse = await axios.get(
                     API_URL + "/api/employees"
-
-
         );
 
-        console.log("E respnse", employeesResponse)
         setEmployeesData(employeesResponse.data.employees);
 
         const skillsResponse = await axios.get(
           API_URL + "/api/skills"
-
         );
         setSkillsData(skillsResponse.data.skills);
 
         const employeeSkillsResponse = await axios.get(
           API_URL + "/api/employee-skills"
-
         );
         setEmployeeSkillsData(employeeSkillsResponse.data.employeeSkills);
 
         const personResponse = await axios.get(
           API_URL + "/api/person"
-
         );
         setPersonData(personResponse.data.person);
       } catch (error) {
@@ -79,6 +74,8 @@ export const SearchSkills = () => {
     const person = personData.find(
       (person) => person.person_id === employee.person_id
     );
+
+
 
     return (
       (employee.employee_id &&
