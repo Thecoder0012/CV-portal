@@ -1,117 +1,127 @@
 import React, { useState, useEffect } from "react";
- import { useLocation, Link } from "react-router-dom";
- import axios from "axios";
- import { ToastContainer, toast } from "react-toastify";
- import "react-toastify/dist/ReactToastify.css";
- import styles from "../styles/projectDetails.module.css";
- import { API_URL } from "../config/apiUrl.js";
- import { useParams } from "react-router-dom";
- import { NavigationBar } from "./NavigationBar.js";
+import axios from "axios";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import styles from "../styles/projectDetails.module.css";
+import { API_URL } from "../config/apiUrl.js";
+import { NavigationBar } from "./NavigationBar.js";
+import Swal from "sweetalert2";
+
+export const ProjectDetails = () => {
+  const [project, setProject] = useState({
+    title: "",
+    description: "",
+    author: "",
+    done: 0,
+    date_made: "",
+    date_finish: "",
+    file_path: null,
+  });
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const getProject = async () => {
+    try {
+      const response = await axios.get(API_URL + "/projects/" + id);
+      setProject(response.data);
+    } catch (error) {
+      console.error("Error fetching project:", error);
+    }
+  };
+
+  useEffect(() => {
+    getProject();
+  }, [id]);
+
+  const handleDelete = async (project_id) => {
+    const loadingAlert = Swal.fire({
+      title: "Please wait...",
+      text: "You are being redirected back to the project list.",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      const isConfirmed = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#a100ff",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (isConfirmed.isConfirmed) {
+        await axios.delete(API_URL + "/projects/" + project_id);
+
+        Swal.fire({
+          title: "Deleted!",
+          text: "The project was successfully deleted.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 3000,
+        }).then(() => {
+          loadingAlert.close();
+          navigate(location.state ? location.state.from : "/manager/projects");
+        });
+      } else {
+        loadingAlert.close();
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      loadingAlert.close();
+    }
+  };
+
+  return (
+    <div>
+      <NavigationBar />
+      <div className={styles.singleProject}>
+        <h1 className={styles.projectTitle}>{project.title}</h1>
+        <div className={styles.projectDetails}>
+          <p>
+            <strong>Description:</strong> {project.description}
+          </p>
+          <p>
+            <strong>Author:</strong> {project.author}
+          </p>
+          <p>
+            <strong>Status:</strong> {project.done ? "Finished" : "Not finished"}
+          </p>
+          <p>
+            <strong>Date Made:</strong>{" "}
+            {new Date(project.date_made).toLocaleDateString()}
+          </p>
+          <p>
+            <strong>Date Finish:</strong>{" "}
+            {new Date(project.date_finish).toLocaleDateString()}
+          </p>
+          <p>
+            <strong>Pdf:</strong> {project.file_path}
+          </p>
+          {project.file_path && (
+            <a
+              href={API_URL + "/uploads/" + project.file_path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.viewPdfLink}
+            >
+              View Project PDF
+            </a>
+          )}
+          <button className={styles.deleteButton} onClick={() => handleDelete(project.id)}>
+            Delete This Project
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 
- export const ProjectDetails = () => {
-   const [project, setProject] = useState({
-     title: "",
-     description: "",
-     author: "",
-     done: 0,
-     date_made: "",
-     date_finish: "",
-     file_path: null,
-   });
-
-   const { id } = useParams();
-
-   const getProject = async () => {
-     try {
-       const response = await axios.get(API_URL + "/projects/" + id);
-       setProject(response.data);
-     } catch (error) {
-       console.error("Error fetching project:", error);
-     }
-   };
 
 
-   useEffect(() => {
-     getProject();
-   }, [id]);
-
-      const handleDelete = async (project_id) => {
-        try {
-          await axios.delete(API_URL + "/projects/" + project_id);
-        } catch (error) {
-          console.error("Error deleting project:", error);
-        }
-      };
-
-   //    const handleUpdate = async () => {
-   //      try {
-   //        await axios.put(`${API_URL}/projects/updateProject/${path}`, {
-   //          project_title: title,
-   //          project_description: desc,
-   //        });
-   //      } catch (error) {
-   //        console.error("Error updating project:", error);
-   //      }
-   //    };
-
-   return (
-     <div className="singleProject">
-     <NavigationBar/>
-       <div>
-         <h1>{project.title}</h1>
-         <p>Description: {project.description}</p>
-         <p>Author: {project.author}</p>
-         <p>Status: {project.done ? "Finished" : "Not finished"}</p>
-         <p>Date Made: {new Date(project.date_made).toLocaleDateString()}</p>
-         <p>
-           Date Finish: {new Date(project.date_finish).toLocaleDateString()}
-         </p>
-         <strong>Pdf:</strong> {project.file_path}
-         {project.file_path && (
-           <a
-             href={API_URL + "/uploads/" + project.file_path}
-             target="_blank"
-             rel="noopener noreferrer"
-           >
-             View PDF
-           </a>
-         )}
-        <button onClick={() => handleDelete(project.id)}>Delete</button>
-       </div>
-
-       {/* <div className="singleProjectWrapper">
-         <img src={project.photo} alt="" className="singleProjectImg" />
-         <input
-           type="text"
-           value={title}
-           className="singleProjectTitleInput"
-           autoFocus
-           onChange={(e) => setTitle(e.target.value)}
-         />
-         <h1 className="singleProjectTitle">{title}</h1>
-         <div className="singleProjectInfo">
-           <span className="singleProjectAuthor">
-             Author:
-             <Link to={`/?user=${project.username}`} className="link">
-               <b> {project.username}</b>
-             </Link>
-           </span>
-
-           <span className="singleProjectDate">
-             {new Date(Date.parse(project.createdAt)).toDateString()}
-           </span>
-         </div>
-         <textarea
-           className="singleProjectDescInput"
-           value={desc}
-           onChange={(e) => setDesc(e.target.value)}
-         />
-         <p className="singleProjectDesc">{desc}</p>
-         <button className="singleProjectButton" onClick={handleUpdate}>
-           Update
-         </button>
-       </div> */}
-     </div>
-   );
- }

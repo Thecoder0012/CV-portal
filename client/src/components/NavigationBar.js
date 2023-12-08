@@ -111,6 +111,7 @@ export const NavigationBar = () => {
                 <Link to={`/profile/update/${userId}`}>Update Profile</Link>
                 <Link to={`/registerManager`}>Create Manager</Link>
                 <Link to={""}>View Managers / Employees</Link>
+                <Link to={"/manager/projects"}>View Projects</Link>
               </div>
             )}
           </li>
