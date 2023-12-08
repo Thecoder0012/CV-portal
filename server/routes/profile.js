@@ -301,4 +301,21 @@ router.get("/api/all-projects", async (req, res) => {
   }
 });
 
+
+router.get("/api/person/employees", async (req, res) => {
+  try {
+    const [employees] = await db.query(`
+    SELECT * 
+    FROM employee
+    INNER JOIN
+    person on employee.person_id = person.person_id;
+`);
+    res.status(200).send({ employees });
+  } catch (error) {
+    console.error("Error finding employees:", error);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+
 export default router;
