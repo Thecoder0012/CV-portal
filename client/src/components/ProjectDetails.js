@@ -17,6 +17,8 @@ export const ProjectDetails = () => {
     file_path: null,
   });
 
+  const WITH_CREDENTIALS = { withCredentials: true };
+
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,7 +58,7 @@ export const ProjectDetails = () => {
       });
 
       if (isConfirmed.isConfirmed) {
-        await axios.delete(API_URL + "/projects/" + project_id);
+        await axios.delete(API_URL + "/projects/" + project_id, WITH_CREDENTIALS );
 
         Swal.fire({
           title: "Deleted!",
