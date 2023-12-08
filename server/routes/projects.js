@@ -127,7 +127,7 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
     const createProjectQuery = `
         INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
         VALUES (?, ?, false, CURDATE(), ?, ?,?)
-        `;
+    `;
 
     const result = await db.query(createProjectQuery, [
       title,
@@ -157,27 +157,26 @@ router.get("/projects/:id", async (req, res) => {
     const getProject = project[0];
     res.status(200).json(getProject);
   } catch (error) {
-    console.error("Error while creating the project:", error);
-    res.status(500).send({ message: "Error while creating the project" });
+    console.error("Error while fetching the project:", error);
+    res.status(500).send({ message: "Error while fetching the project" });
   }
 });
 
-router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
+router.put("/projects/:id", upload.single("file"), async (req, res) => {
   try {
     const projectId = req.params.id;
-    const { project_title, project_description, project_done, date_finish } =
-      req.body;
+    const { title, description, done, date_finish } = req.body;
     const projectFile = req.file;
 
     const updateProjectQuery = `
-            UPDATE project 
-            SET title = ?, 
-                description = ?, 
-                file_path = ?,
-                done = ?,
-                date_finish = ?
-            WHERE project_id = ?
-        `;
+        UPDATE project 
+        SET title = ?, 
+            description = ?, 
+            file_path = ?,
+            done = ?,
+            date_finish = ?
+        WHERE id = ?
+    `;
 
     await db.query(updateProjectQuery, [
       title,
@@ -196,15 +195,31 @@ router.put("/projects/:id", upload.single("projectFile"), async (req, res) => {
 });
 
 router.delete("/projects/:id", async (req, res) => {
+  const projectId = req.params.id;
+  const user_id = req.session.user.user_id;
+
+  const [managerProfile] = await db.query(
+    `SELECT *
+FROM users
+INNER JOIN manager ON users.user_id = manager.user_id
+INNER JOIN person ON manager.person_id = person.person_id
+WHERE manager.user_id = ?;`,
+    [user_id]
+  );
+  console.log(managerProfile[0].id);
+
   try {
-    const project_id = req.params.id;
-    const deleteProject = await db.query("DELETE FROM project WHERE id = ?", [
-      project_id,
-    ]);
+    const deleteEmployeeProjectQuery =
+      "UPDATE project SET manager_id = NULL WHERE manager_id = ?";
+    await db.query(deleteEmployeeProjectQuery, [managerProfile[0].id]);
+
+    const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
+    await db.query(deleteProjectQuery, [projectId]);
+
     res.status(200).send("Project deleted successfully");
   } catch (error) {
     console.error("Error deleting the project:", error);
-    res.status(500).send("Error deleting the project");
+    res.status(500).send(`Error deleting the project: ${error.message}`);
   }
 });
 
