@@ -123,7 +123,7 @@ export const ManagerProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(API_URL + "/api/projects");
+      const response = await axios.get(API_URL + "/api/all-projects");
       if (response.status === 200) {
         setProjects(response.data.projects);
       } else {
