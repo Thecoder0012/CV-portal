@@ -135,13 +135,8 @@ export const CvProfile = () => {
     }));
   };
 
-  const activeLinkStyle = {
-  textDecoration: "underline",
-  // Add any other styles you want for the underline effect
-};
-
   return (
-    <div className="test">
+    <div className="mainDiv">
     <NavigationBar />
     <div className={styles.mainContainer}>
       <ToastContainer

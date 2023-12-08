@@ -243,10 +243,9 @@ router.put("/profile/manager/:id", async (req, res) => {
   const [updateManager] = await db.query('UPDATE person SET first_name=?, last_name=?, date_of_birth=?, phone_number=? WHERE person_id=?',
       [first_name, last_name, date_of_birth, phone_number, person_id])
 
-      console.log("UpdateManage", updateManager)
 
 
-  return res.status(200).send({message: "Message"})
+  return res.status(200).send({message: "Your profile was updated"})
 })
 
 router.get("/api/person", async (req, res) => {
