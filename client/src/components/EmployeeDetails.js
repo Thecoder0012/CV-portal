@@ -17,7 +17,7 @@ const EmployeeDetails = ({ onClose, id }) => {
 
         const personSkills = profile.data.skills.map(
           (skillId) =>
-            skills.data.find((skill) => skill.id === skillId).name || ""
+            skills.data.skills.find((skill) => skill.id === skillId).name || ""
         );
 
         setSkillNames(personSkills);
@@ -44,7 +44,7 @@ const EmployeeDetails = ({ onClose, id }) => {
             <p>Phone Number: {profile.phone_number}</p>
 
             <p>Skills: {skillNames.join(", ")}</p>
-            {/* Add other profile information as needed */}
+            
           </div>
         )}
         <button className={styles.closeButton} onClick={onClose}>

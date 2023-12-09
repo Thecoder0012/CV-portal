@@ -24,33 +24,28 @@ export const SearchSkills = () => {
     setSelectedPersonId(null);
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const employeesResponse = await axios.get(
                     API_URL + "/api/employees"
-
-
         );
 
-        console.log("E respnse", employeesResponse)
         setEmployeesData(employeesResponse.data.employees);
 
         const skillsResponse = await axios.get(
           API_URL + "/api/skills"
-
         );
         setSkillsData(skillsResponse.data.skills);
 
         const employeeSkillsResponse = await axios.get(
           API_URL + "/api/employee-skills"
-
         );
         setEmployeeSkillsData(employeeSkillsResponse.data.employeeSkills);
 
         const personResponse = await axios.get(
           API_URL + "/api/person"
-
         );
         setPersonData(personResponse.data.person);
       } catch (error) {
@@ -79,6 +74,8 @@ export const SearchSkills = () => {
     const person = personData.find(
       (person) => person.person_id === employee.person_id
     );
+
+
 
     return (
       (employee.employee_id &&
@@ -112,17 +109,17 @@ export const SearchSkills = () => {
   return (
     <div className={styles.searchSkills}>
       <NavigationBar />
-      <h1 className={styles.header}>Search for any employees</h1>
+      <h1 className={styles.header}>Find Employee</h1>
+      <div className={styles.tableContainer}>
       <input
         type="text"
-        placeholder="Search.."
+        placeholder="Search for a name or a skill.."
         onChange={handleInputChange}
         value={inputValue}
         className={styles.searchInput}
       />
-      <div className={styles.tableContainer}>
         <table className={styles.skillsTable}>
-          <thead>
+          <thead className={styles.thead}>
             <tr>
               <th className={styles.tableHeader}>ID</th>
               <th className={styles.tableHeader}>First Name</th>
@@ -184,7 +181,7 @@ export const SearchSkills = () => {
           >
             {index + 1}
           </button>
-        ))}
+        ))} 
       </div>
       {SelectedPersonId && (
         <EmployeeDetails onClose={closePopup} id={SelectedPersonId} />

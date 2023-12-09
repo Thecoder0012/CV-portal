@@ -20,7 +20,6 @@
     cursor: pointer;
 }
 
-
 .dropdown {
     display: inline-block;
     position: relative;
@@ -63,8 +62,9 @@ h4 {
     position: relative;
     text-decoration: none;
     transition: color 0.3s ease;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
 }
+  
 
 .Link::before {
 

@@ -6,8 +6,18 @@ import { API_URL } from "../config/apiUrl";
 import { NavigationBar } from "./NavigationBar";
 import { useParams } from "react-router-dom";
 
-export const UpdateEmployee = () => {
+export const UpdatePerson = () => {
   const [skills, setSkills] = useState([]);
+  const [role, setRole] = useState();
+  const [departments, setDepartments] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  async function fetchUser() {
+    const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
+
+    const userRole = response.data.user.role_id === 1 ? "Manager" : "Employee";
+    setRole(userRole);
+  }
+
   const [profile, setProfile] = useState({
     first_name: "",
     last_name: "",
@@ -16,11 +26,6 @@ export const UpdateEmployee = () => {
     department_id: "",
     skills: [],
   });
-  const [selectedSkills, setSelectedSkills] = useState([]);
-
-  const skills_ids = selectedSkills.map(Number);
-
-  const [departments, setDepartments] = useState([]);
 
   const { id } = useParams();
 
@@ -54,6 +59,7 @@ export const UpdateEmployee = () => {
     getProfileData();
     fetchDepartments();
     fetchSkills();
+    fetchUser();
   }, []);
 
   useEffect(() => {
@@ -69,25 +75,47 @@ export const UpdateEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.put(
-        API_URL + "/profile/" + id,
+    if (role === "Employee") {
+      try {
+        const skills_ids = selectedSkills.map(Number);
+        const response = await axios.put(
+          API_URL + "/profile/employee/" + id,
+          {
+            first_name: first_name,
+            last_name: last_name,
+            date_of_birth: formatDate(date_of_birth),
+            phone_number: phone_number,
+            department_id: department_id,
+            skills: skills_ids,
+          },
+          WITH_CREDENTIALS
+        );
+
+        if (response.status === 200) {
+          toast.success(response.data.message);
+        }
+      } catch (err) {
+        toast.error(err.response.data.message);
+      }
+    } else if (role === "Manager") {
+      try {
+        const response = await axios.put(API_URL + "/profile/manager/" + id,
         {
           first_name: first_name,
           last_name: last_name,
           date_of_birth: formatDate(date_of_birth),
-          phone_number: phone_number,
-          department_id: department_id,
-          skills: skills_ids,
+          phone_number: phone_number
         },
-        WITH_CREDENTIALS
-      );
+          WITH_CREDENTIALS
+        );
 
-      if (response.status === 200) {
-        toast.success(response.data.message);
+        if (response.status === 200) {
+          toast.success(response.data.message);
+        }
+      } catch (err) {
+        console.log(err)
+        toast.error(err.response.data.message);
       }
-    } catch (err) {
-      toast.error(err.response.data.message);
     }
   };
 
@@ -198,41 +226,44 @@ export const UpdateEmployee = () => {
               value={profile.phone_number}
               onChange={handleInputChange}
             />
+            {role === "Employee" && (
+              <div>
+                <label>Department</label>
+                <select
+                  className={styles.registerInput}
+                  name="department_id"
+                  onChange={handleDepartments}
+                  value={profile.department_id}
+                  required
+                >
+                  <option value="" disabled>
+                    Select a Department
+                  </option>
+                  {departments.map((department) => (
+                    <option key={department.id} value={department.id}>
+                      {department.name}, {department.country}
+                    </option>
+                  ))}
+                </select>
 
-            <label>Department</label>
-            <select
-              className={styles.registerInput}
-              name="department_id"
-              onChange={handleDepartments}
-              value={profile.department_id}
-              required
-            >
-              <option value="" disabled>
-                Select a Department
-              </option>
-              {departments.map((department) => (
-                <option key={department.id} value={department.id}>
-                  {department.name}, {department.country}
-                </option>
-              ))}
-            </select>
-
-            <div className={styles.checkboxContainer}>
-              <label>Skills</label>
-              {skills.map((skill) => (
-                <div key={skill.id} className={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    id={skill.id}
-                    name="skills"
-                    value={skill.id}
-                    onChange={handleSkills}
-                    checked={selectedSkills.includes(skill.id)}
-                  />
-                  <label htmlFor={skill.id}>{skill.name}</label>
+                <div className={styles.checkboxContainer}>
+                  <label>Skills</label>
+                  {skills.map((skill) => (
+                    <div key={skill.id} className={styles.checkboxItem}>
+                      <input
+                        type="checkbox"
+                        id={skill.id}
+                        name="skills"
+                        value={skill.id}
+                        onChange={handleSkills}
+                        checked={selectedSkills.includes(skill.id)}
+                      />
+                      <label htmlFor={skill.id}>{skill.name}</label>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
             <input
               className={styles.registerButton}
               type="submit"

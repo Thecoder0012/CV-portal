@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,400&family=Roboto+Mono&display=swap');
 
 
-
+.thead{
+  background-color: rgb(161, 0, 255);
+}
 .header{
   font-size: 1.5em;
   font-weight: bold;
@@ -12,22 +14,21 @@
 font-family: 'Roboto Mono', monospace;
 }
 .searchInput {
-  padding: 10px;
-  margin-bottom: 10px;
-  margin-left: 22%;
-  margin-top: 3.5%;
-  border: 1px solid #ddd; 
-  border-radius: 5px;
+  width: -webkit-fill-available;
 }
 
 .tableContainer {
   overflow-x: auto;
-  font-size: 1.5em;
-  width: 56%;
-  margin-left: 22%;
-  border: 1px solid #ddd; 
+  font-size: 1em;
+  margin: 0 auto; 
   border-radius: 5px;
+  text-align: center; 
+  width: 75%;
+  margin-top: 10%;
+  box-shadow: 0 2px 4px rgba(162, 0, 255, 0.227);
+  padding: 20px;
 }
+
 
 .skillsTable {
   width: 100%;
@@ -36,9 +37,8 @@ font-family: 'Roboto Mono', monospace;
 
 .tableHeader {
   background-color: rgba(161, 0, 255, 0.77);
-  padding: 12px;
+  padding: 5px;
   color: white;
-  text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
@@ -54,7 +54,7 @@ font-family: 'Roboto Mono', monospace;
   display: inline-block;
   padding: 5px;
   margin: 2px;
-  background-color: rgba(161, 0, 255, 0.73);
+  background-color: rgb(161, 0, 255);
   color: white;
   border-radius: 3px;
 }
