@@ -29,12 +29,14 @@ ul {
   background-color: #005b9d;
 }
 
-.mainContainer{
+.mainContainer {
   font-family: system-ui;
+  position: absolute;
+ display: contents;
 }
 
+
 .loginContainer, .registerContainer, .cvContainer {
-  margin-top: -5%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +47,7 @@ ul {
 
 
 .login, .register {
-  padding: 100px;
+  padding: 50px;
   border-radius: 8px;
   max-width: 600px;
   width: 100%;
