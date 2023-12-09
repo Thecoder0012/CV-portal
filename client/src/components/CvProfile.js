@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/auth.module.css";
-import {NavigationBar} from "./NavigationBar.js";
 import { API_URL } from "../config/apiUrl.js";
-
+import { useNavigate } from "react-router-dom";
 
 export const CvProfile = () => {
   const [profile, setProfile] = useState({
@@ -29,16 +28,9 @@ export const CvProfile = () => {
   const { first_name, last_name, date_of_birth, phone_number, department_id } =
     profile;
 
-  const [auth, setAuth] = useState();
-  const WITH_CREDENTIALS = { withCredentials: true };
-
-  async function authName() {
-    const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
-    setAuth(response.data.user.username);
-  }
+  const navigate = useNavigate();
 
   useEffect(() => {
-    authName();
     fetchDepartments();
     fetchSkills();
   }, []);
@@ -75,6 +67,9 @@ export const CvProfile = () => {
       if (response.status === 200) {
         set_number_taken(false);
         toast.success(response.data.message);
+        setTimeout(() => {
+          navigate("/main");
+        }, 1500);
       }
     } catch (err) {
       console.log(err);
@@ -82,7 +77,6 @@ export const CvProfile = () => {
       set_number_taken(false);
     }
   };
-
 
   const fetchDepartments = async () => {
     try {
@@ -136,8 +130,6 @@ export const CvProfile = () => {
   };
 
   return (
-    <div className="mainDiv">
-    <NavigationBar />
     <div className={styles.mainContainer}>
       <ToastContainer
         autoClose={15000}
@@ -202,8 +194,6 @@ export const CvProfile = () => {
               ))}
             </select>
 
-            
-
             <label>Upload Resume / CV</label>
             <input
               type="file"
@@ -222,20 +212,20 @@ export const CvProfile = () => {
             )}
 
             <div className={styles.checkboxContainer}>
-            <label>Skills</label>
-            {skills.map((skill) => (
-              <div key={skill.id} className={styles.checkboxItem}>
-                <input
-                  type="checkbox"
-                  id={skill.id}
-                  name="skills"
-                  value={skill.id}
-                  onChange={handleSkills}
-                  defaultChecked={selectedSkills.includes(skill.id)}
-                />
-                <label htmlFor={skill.id}>{skill.name}</label>
-              </div>
-            ))}
+              <label>Skills</label>
+              {skills.map((skill) => (
+                <div key={skill.id} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    id={skill.id}
+                    name="skills"
+                    value={skill.id}
+                    onChange={handleSkills}
+                    defaultChecked={selectedSkills.includes(skill.id)}
+                  />
+                  <label htmlFor={skill.id}>{skill.name}</label>
+                </div>
+              ))}
             </div>
 
             <input
@@ -246,7 +236,6 @@ export const CvProfile = () => {
           </form>
         </div>
       </div>
-    </div>
     </div>
   );
 };

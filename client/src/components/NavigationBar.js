@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation, matchPath } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../config/apiUrl.js";
 import logo from "../images/logo.png";
@@ -8,8 +8,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-
-
 
 export const NavigationBar = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -25,7 +23,6 @@ export const NavigationBar = () => {
     setRole(userRole);
   }
 
-
   async function fetchProfile() {
     const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
     setAuth(response.data[0].first_name);
@@ -36,8 +33,6 @@ export const NavigationBar = () => {
     fetchUser();
     fetchProfile();
   }, []);
-
-
 
   const handleSignOut = async () => {
     const response = await axios.get(API_URL + "/logout", WITH_CREDENTIALS);
@@ -57,36 +52,35 @@ export const NavigationBar = () => {
       />
       <nav className={Navbar.navContainer}>
         <div className={Navbar.logoContainer}>
-          <NavLink to="/main">
+          <Link to="/main">
             <img className={Navbar.logo} src={logo} alt="Logo" />
-          </NavLink>
+          </Link>
         </div>
         {role === "Employee" && (
-          <div className={Navbar.Options}>        
-            <NavLink to="/main" className={Navbar.Link} >
+          <div className={Navbar.Options}>
+            <Link to="/main" className={Navbar.Link}>
               <h4>Home</h4>
-            </NavLink>
-            <NavLink className={Navbar.Link} to="/projects">
+            </Link>
+            <Link className={Navbar.Link} to="/projects">
               <h4>View Projects</h4>
-            </NavLink>
+            </Link>
           </div>
         )}
         {role === "Manager" && (
           <div className={Navbar.Options}>
-          <NavLink to="/main" className={Navbar.Link}>
+            <Link to="/main" className={Navbar.Link}>
               <h4>Home</h4>
-            </NavLink>
-            <NavLink className={Navbar.Link} to="/projects">
+            </Link>
+            <Link className={Navbar.Link} to="/projects">
               <h4>View Projects</h4>
-            </NavLink>
-            <NavLink className={Navbar.Link} to="/createProject">
+            </Link>
+            <Link className={Navbar.Link} to="/createProject">
               <h4>Create Project</h4>
-            </NavLink>
-            <NavLink className={Navbar.Link}  to="/searchSkills">
+            </Link>
+            <Link className={Navbar.Link} to="/searchSkills">
               <h4>Search Employee Skills</h4>
-            </NavLink>
+            </Link>
           </div>
-
         )}
         <div className={Navbar.iconWrapper}>
           <li className={Navbar.dropdown}>
@@ -102,21 +96,22 @@ export const NavigationBar = () => {
 
             {dropdownVisible && role === "Employee" && (
               <div className={Navbar.dropdownContent}>
-                <NavLink to="/login" onClick={handleSignOut}>
+                <Link to="/login" onClick={handleSignOut}>
                   Sign out
-                </NavLink>
-                <NavLink to={`/profile/update/${userId}`}>Update Profile</NavLink>
+                </Link>
+                <Link to={`/profile/update/${userId}`}>Update Profile</Link>
               </div>
             )}
 
             {dropdownVisible && role === "Manager" && (
               <div className={Navbar.dropdownContent}>
-                <NavLink to="/login" onClick={handleSignOut}>
+                <Link to="/login" onClick={handleSignOut}>
                   Sign out
-                </NavLink>
-                <NavLink to={`/profile/update/${userId}`}>Update Profile</NavLink>
-                <NavLink to={`/registerManager`}>Create Manager</NavLink>
-                <NavLink to={""}>View Managers / Employees</NavLink>
+                </Link>
+                <Link to={`/profile/update/${userId}`}>Update Profile</Link>
+                <Link to={`/registerManager`}>Create Manager</Link>
+                <Link to={""}>View Managers / Employees</Link>
+                <Link to={"/manager/projects"}>View Projects</Link>
               </div>
             )}
           </li>

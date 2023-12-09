@@ -321,4 +321,16 @@ router.get("/api/projects", async (req, res) => {
   }
 });
 
+router.get("/api/all-projects", async (req, res) => {
+  try {
+    const [projects] = await db.query(
+      "SELECT * FROM project "
+    );
+    res.status(200).send({ projects });
+  } catch (error) {
+    console.error("Error finding projects:", error);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
 export default router;
