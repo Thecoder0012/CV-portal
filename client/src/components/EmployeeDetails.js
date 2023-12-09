@@ -17,7 +17,7 @@ const EmployeeDetails = ({ onClose, id }) => {
 
         const personSkills = profile.data.skills.map(
           (skillId) =>
-            skills.data.find((skill) => skill.id === skillId).name || ""
+            skills.data.skills.find((skill) => skill.id === skillId).name || ""
         );
 
         setSkillNames(personSkills);

@@ -33,7 +33,7 @@ router.get("/profile", async (req, res) => {
       [userId]
     );
     return res.status(200).send(managerProfile);
-  } else if(req.session.user.role_id === 2) {
+  } else if (req.session.user.role_id === 2) {
     try {
       const [fetchProfile] = await db.query(
         `SELECT *
@@ -52,9 +52,39 @@ router.get("/profile", async (req, res) => {
   }
 });
 
-
 router.get("/profile/:id", async (req, res) => {
   const personid = req.params.id;
+
+  if (!req.session.user || req.session.user.role_id === 2) {
+    const [fetchProfile] = await db.query(
+      `SELECT * FROM person
+    INNER JOIN employee ON person.person_id = employee.person_id
+    WHERE employee.person_id = ?;`,
+      [personid]
+    );
+
+    const employee_id = fetchProfile[0].employee_id;
+    const [fetchProfileSkills] = await db.query(
+      `SELECT *
+      FROM employee_skills
+      WHERE employee_id = ?`,
+      [employee_id]
+    );
+
+    const skillsIdsArray = fetchProfileSkills.map((row) => row.skills_id);
+
+    const profile = {
+      ...fetchProfile,
+      skills: skillsIdsArray,
+    };
+
+    if (profile) {
+      return res.status(200).send(profile);
+    } else {
+      return res.status(409).send("Der opstod en fejl");
+    }
+  }
+
   if (req.session.user.role_id === 1) {
     const [managerProfile] = await db.query(
       `SELECT *
@@ -65,35 +95,6 @@ router.get("/profile/:id", async (req, res) => {
       [personid]
     );
     return res.status(200).send(managerProfile);
-  }
-
-
-  const [fetchProfile] = await db.query(
-    `SELECT * FROM person
-    INNER JOIN employee ON person.person_id = employee.person_id
-    WHERE employee.person_id = ?;`,
-    [personid]
-  );
-
-  const employee_id = fetchProfile[0].employee_id;
-  const [fetchProfileSkills] = await db.query(
-    `SELECT *
-      FROM employee_skills
-      WHERE employee_id = ?`,
-    [employee_id]
-  );
-
-  const skillsIdsArray = fetchProfileSkills.map((row) => row.skills_id);
-
-  const profile = {
-    ...fetchProfile,
-    skills: skillsIdsArray,
-  };
-
-  if (profile) {
-    return res.status(200).send(profile);
-  } else {
-    return res.status(409).send("Der opstod en fejl");
   }
 });
 
@@ -166,7 +167,7 @@ router.post("/profile", upload.single("file"), async (req, res) => {
 
 router.put("/profile/employee/:id", async (req, res) => {
   const person_id = req.params.id;
-  console.log(person_id)
+  console.log(person_id);
   try {
     const {
       first_name,
@@ -238,20 +239,20 @@ router.put("/profile/employee/:id", async (req, res) => {
 router.put("/profile/manager/:id", async (req, res) => {
   const person_id = req.params.id;
 
-  const {first_name, last_name, date_of_birth, phone_number} = req.body
-  
-  const [updateManager] = await db.query('UPDATE person SET first_name=?, last_name=?, date_of_birth=?, phone_number=? WHERE person_id=?',
-      [first_name, last_name, date_of_birth, phone_number, person_id])
+  const { first_name, last_name, date_of_birth, phone_number } = req.body;
 
+  const [updateManager] = await db.query(
+    "UPDATE person SET first_name=?, last_name=?, date_of_birth=?, phone_number=? WHERE person_id=?",
+    [first_name, last_name, date_of_birth, phone_number, person_id]
+  );
 
-
-  return res.status(200).send({message: "Your profile was updated"})
-})
+  return res.status(200).send({ message: "Your profile was updated" });
+});
 
 router.get("/api/person", async (req, res) => {
   try {
     const [person] = await db.query("SELECT * FROM person");
-    res.status(200).send( {person} );
+    res.status(200).send({ person });
   } catch (error) {
     console.error("Error finding person:", error);
     res.status(500).send({ error: "Internal server error" });
@@ -269,10 +270,9 @@ router.get("/api/departments", async (req, res) => {
 });
 
 router.get("/api/skills", async (req, res) => {
-  
   try {
     const [skills] = await db.query("SELECT * FROM skills");
-    res.status(200).send({skills});
+    res.status(200).send({ skills });
   } catch (error) {
     console.error("Error finding skills:", error);
     res.status(500).send({ error: "Internal server error" });
@@ -282,18 +282,17 @@ router.get("/api/skills", async (req, res) => {
 router.get("/api/employees", async (req, res) => {
   try {
     const [employees] = await db.query("SELECT * FROM employee");
-    res.status(200).send({employees}); 
+    res.status(200).send({ employees });
   } catch (error) {
     console.error("Error finding employee:", error);
     res.status(500).send({ error: "Internal server error" });
   }
 });
 
-
 router.get("/api/employee-skills", async (req, res) => {
   try {
     const [employeeSkills] = await db.query("SELECT * FROM employee_skills");
-    res.status(200).send({employeeSkills});
+    res.status(200).send({ employeeSkills });
   } catch (error) {
     console.error("Error finding employeeSkills:", error);
     res.status(500).send({ error: "Internal server error" });
