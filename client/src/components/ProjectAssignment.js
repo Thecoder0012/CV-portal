@@ -7,7 +7,7 @@ import { FaUsers, FaTrash, FaTimes } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ProjectAssignment = () => {
+export const ProjectAssignment = () => {
   const [projects, setProjects] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
@@ -255,4 +255,3 @@ const ProjectAssignment = () => {
   );
 };
 
-export default ProjectAssignment;

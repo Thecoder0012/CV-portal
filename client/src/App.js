@@ -12,7 +12,7 @@ import { MainPage } from "./components/MainPage.js";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes.js";
 import { NotFound } from "./utils/NotFound.js";
 import { ManagerProjects } from "./components/ManagerProjects.js";
-import ProjectAssignment from "./components/ProjectAssignment.js";
+import { ProjectAssignment } from "./components/ProjectAssignment.js";
 
 
 
