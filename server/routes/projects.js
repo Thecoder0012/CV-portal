@@ -112,6 +112,28 @@ router.post("/project-assignment", async (req, res) => {
   }
 });
 
+
+router.delete("/project-assignment/:employee_id/:project_id", async (req, res) => {
+  const employee_id = req.params.employee_id;
+  const project_id = req.params.project_id;
+  try {
+    const deleteEmployeeProject = await db.query(
+      "DELETE FROM employee_projects WHERE employee_id = ? AND project_id = ?",
+      [employee_id,project_id]
+    );
+    res.status(200).send({message:"Employee removed from project successfully"});
+  } catch (error) {
+    console.error("Error removing employee from project:", error);
+    res
+      .status(500)
+      .send({message:error.message});
+  }
+});
+
+
+
+
+
 router.post("/projects", isManager, upload.single("file"), async (req, res) => {
   try {
     const { title, description, date_finish, manager_id } = req.body;

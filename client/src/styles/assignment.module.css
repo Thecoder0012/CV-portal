@@ -95,7 +95,7 @@
   }
   
   .closeButton {
-    background-color: #ff5757;
+    background-color: #fa2424;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -103,8 +103,13 @@
     cursor: pointer;
     font-size: 16px;
     position: relative;
-    right: 5%;
-    bottom: 18%;
+    right: 4%;
+    bottom: 24%;
+  }
+
+  .closeButton:hover{
+    background-color: #c92c2c;
+
   }
 
   .tableContainer .assignButton{
@@ -115,4 +120,9 @@
     cursor: pointer;
     border-radius: 5px;
     width: 120px; 
+  }
+
+  .tableContainer table .assignButton:hover{
+    background-color: #7404b5;
+    cursor: pointer;
   }

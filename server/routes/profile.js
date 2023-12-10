@@ -337,18 +337,22 @@ router.get("/api/all-projects", async (req, res) => {
 router.get("/api/person-skills", async (req, res) => {
   try {
     const [employees] = await db.query(`
-    SELECT
-    employee.employee_id,
-    employee.project_id,
-    person.first_name,
-    person.last_name,
-    GROUP_CONCAT(skills.name SEPARATOR ', ') AS skills
-    FROM person
-    INNER JOIN employee ON person.person_id = employee.person_id
-    INNER JOIN employee_skills ON employee.employee_id = employee_skills.employee_id
-    INNER JOIN skills ON employee_skills.skills_id = skills.id
-    GROUP BY
-    person.person_id, employee.employee_id;
+  SELECT
+  employee.employee_id,
+  person.first_name,
+  person.last_name,
+  GROUP_CONCAT(DISTINCT skills.name SEPARATOR ', ') AS skills,
+  GROUP_CONCAT(DISTINCT employee_projects.project_id SEPARATOR ',') AS projects
+  FROM
+  person
+  INNER JOIN employee ON person.person_id = employee.person_id
+  INNER JOIN employee_skills ON employee.employee_id = employee_skills.employee_id
+  INNER JOIN skills ON employee_skills.skills_id = skills.id
+  LEFT JOIN employee_projects ON employee.employee_id = employee_projects.employee_id
+  LEFT JOIN project ON employee_projects.project_id = project.id
+  GROUP BY
+  person.person_id, employee.employee_id;
+;
 `);
     res.status(200).send({ employees });
   } catch (error) {

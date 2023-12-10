@@ -3,31 +3,35 @@ import { NavigationBar } from "./NavigationBar";
 import { API_URL } from "../config/apiUrl";
 import axios from "axios";
 import styles from "../styles/assignment.module.css";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaTrash, FaTimes } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 
 const ProjectAssignment = () => {
   const [projects, setProjects] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const WITH_CREDENTIALS = { withCredentials: true };
+
   const [currentProjectPage, setCurrentProjectsPage] = useState(1);
   const [currentEmployeePage, setCurrentEmployeePage] = useState(1);
   const itemsPerPage = 4;
 
-  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [selectedProject, setSelectedProject] = useState(null);
-
-  const WITH_CREDENTIALS = { withCredentials: true };
-
-
+  const indexOfLastProject = currentProjectPage * itemsPerPage;
+  const indexOfFirstProject = indexOfLastProject - itemsPerPage;
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  
+  const indexOfLastEmployee = currentEmployeePage * itemsPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
+  const currentEmployees = employees.slice(indexOfFirstEmployee,indexOfLastEmployee);
 
   useEffect(() => {
-    fetchEmployees()
+    fetchEmployees();
     fetchProjects();
-  }, [currentProjectPage]);
+  }, [employees]);
 
+  
   const fetchProjects = async () => {
     try {
       const response = await axios.get(API_URL + "/api/projects");
@@ -41,35 +45,18 @@ const ProjectAssignment = () => {
     }
   };
 
-   const fetchEmployees = async () => {
-     try {
-       const response = await axios.get(API_URL + "/api/person-skills");
-       if (response.status === 200) {
-        console.log(response.data.employees);
-         setEmployees(response.data.employees);
-       } else {
-         console.error("Server could not find projects");
-       }
-     } catch (error) {
-       console.error("Error:", error);
-     }
-   };
-
-
-
-    const indexOfLastProject = currentProjectPage * itemsPerPage;
-    const indexOfFirstProject = indexOfLastProject - itemsPerPage;
-    const currentProjects = projects.slice(
-      indexOfFirstProject,
-      indexOfLastProject
-    );
-
-    const indexOfLastEmployee = currentEmployeePage * itemsPerPage;
-    const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-    const currentEmployees = employees.slice(
-      indexOfFirstEmployee,
-      indexOfLastEmployee
-    );
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get(API_URL + "/api/person-skills");
+      if (response.status === 200) {
+        setEmployees(response.data.employees);
+      } else {
+        console.error("Server could not find projects");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const paginate = (currentPage, setCurrentPage, totalItems) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -99,17 +86,32 @@ const ProjectAssignment = () => {
     console.log(employee_id);
     console.log(selectedProject.id);
     try {
-      const response = await axios.post(API_URL + "/project-assignment", {
-        project_id: selectedProject.id,
-        employee_id: employee_id,
-      },WITH_CREDENTIALS);
-
-      if (response.status === 200) {
-        toast.success(response.data.message)
-      }
+      const response = await axios.post(
+        API_URL + "/project-assignment",
+        {
+          project_id: selectedProject.id,
+          employee_id: employee_id,
+        },
+        WITH_CREDENTIALS
+      );
     } catch (err) {
       console.log(err);
       toast.error(err.response.data.message);
+    }
+  };
+
+  const removeEmployeeFromProject = async (employee_id) => {
+    try {
+      const response = await axios.delete(
+        API_URL +
+          "/project-assignment/" +
+          employee_id +
+          "/" +
+          selectedProject.id
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -120,7 +122,7 @@ const ProjectAssignment = () => {
         autoClose={15000}
         closeOnClick={true}
         position={toast.POSITION.TOP_CENTER}
-        limit={2}
+        limit={3}
       />
       <div className={styles.tableContainer}>
         <h2 className={styles.tableHeader}>Projects</h2>
@@ -161,7 +163,9 @@ const ProjectAssignment = () => {
           <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
               <h2 className={styles.tableHeader}>
-                Employee Assignment: {selectedProject.title}
+                Employee Assignment <br></br>
+                <br></br>
+                To: {selectedProject.title} -- {selectedProject.id}
               </h2>
               <table className={styles.employeeTable}>
                 <thead>
@@ -184,25 +188,32 @@ const ProjectAssignment = () => {
                       <td
                         style={{
                           color:
-                            employee.project_id === selectedProject.id
+                            employee.projects &&
+                            employee.projects.includes(
+                              String(selectedProject.id)
+                            )
                               ? "green"
                               : "red",
                         }}
                       >
-                        {employee.project_id === selectedProject.id
+                        {employee.projects &&
+                        employee.projects.includes(String(selectedProject.id))
                           ? "Assigned"
                           : "Not assigned"}
                       </td>
                       <td>
-                        {employee.project_id === selectedProject.id ? (
+                        {employee.projects &&
+                        employee.projects.includes(
+                          String(selectedProject.id)
+                        ) ? (
                           <button
                             style={{ background: "red" }}
                             className={styles.assignButton}
                             onClick={() =>
-                              assignEmployeeToProject(employee.employee_id)
+                              removeEmployeeFromProject(employee.employee_id)
                             }
                           >
-                            <FaUsers size={20} />
+                            <FaTrash size={20} />
                             <span>Remove</span>
                           </button>
                         ) : (
@@ -234,7 +245,8 @@ const ProjectAssignment = () => {
               onClick={toggleEmployeeModal}
               className={styles.closeButton}
             >
-              Close
+              <FaTimes size={20} />
+              <span>Close</span>
             </button>
           </div>
         )}
