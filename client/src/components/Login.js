@@ -59,7 +59,6 @@ export const Login = () => {
           <div className={styles.login}>
             <span className={styles.loginTitle}>Login</span>
             <form className={styles.loginForm} onSubmit={handleSubmit}>
-              <label>Username</label>
               <input
                 type="text"
                 className={styles.loginInput}
@@ -68,7 +67,6 @@ export const Login = () => {
                 onChange={handleInputChange}
                 required
               />
-              <label>Password</label>
               <input
                 type="password"
                 className="loginInput"

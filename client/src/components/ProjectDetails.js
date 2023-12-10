@@ -36,49 +36,6 @@ export const ProjectDetails = () => {
     getProject();
   }, [id]);
 
-  const handleDelete = async (project_id) => {
-    const loadingAlert = Swal.fire({
-      title: "Please wait...",
-      text: "You are being redirected back to the project list.",
-      allowOutsideClick: false,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-    });
-
-    try {
-      const isConfirmed = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#a100ff",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      });
-
-      if (isConfirmed.isConfirmed) {
-        await axios.delete(API_URL + "/projects/" + project_id, WITH_CREDENTIALS );
-
-        Swal.fire({
-          title: "Deleted!",
-          text: "The project was successfully deleted.",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 3000,
-        }).then(() => {
-          loadingAlert.close();
-          navigate(location.state ? location.state.from : "/manager/projects");
-        });
-      } else {
-        loadingAlert.close();
-      }
-    } catch (error) {
-      console.error("Error deleting project:", error);
-      loadingAlert.close();
-    }
-  };
-
   return (
     <div>
       <NavigationBar />
@@ -115,9 +72,6 @@ export const ProjectDetails = () => {
               View Project PDF
             </a>
           )}
-          <button className={styles.deleteButton} onClick={() => handleDelete(project.id)}>
-            Delete This Project
-          </button>
         </div>
       </div>
     </div>

@@ -167,7 +167,6 @@ router.post("/profile", upload.single("file"), async (req, res) => {
 
 router.put("/profile/employee/:id", async (req, res) => {
   const person_id = req.params.id;
-  console.log(person_id);
   try {
     const {
       first_name,
