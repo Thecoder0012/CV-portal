@@ -12,6 +12,7 @@ import { MainPage } from "./components/MainPage.js";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes.js";
 import { NotFound } from "./utils/NotFound.js";
 import { ManagerProjects } from "./components/ManagerProjects.js";
+import ProjectAssignment from "./components/ProjectAssignment.js";
 
 
 
@@ -26,8 +27,9 @@ function App() {
         <Route path="/project/:id" element={<ProjectDetails/>}/>
         <Route path="/projects" element={<Projects />} />
         <Route path="/searchSkills" element={<SearchSkills />} />
-        <Route path="/main" element={<MainPage/>} />
-        <Route path="/manager/projects" element={<ManagerProjects/>}/>
+        <Route path="/main" element={<MainPage />} />
+        <Route path="/manager/projects" element={<ManagerProjects />} />
+        <Route path="/manager/assignEmployees" element={<ProjectAssignment />} />
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
