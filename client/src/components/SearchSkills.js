@@ -85,8 +85,6 @@ export const SearchSkills = () => {
       (employee.user_id && employee.user_id.toString().includes(inputValue)) ||
       (employee.department_id &&
         employee.department_id.toString().includes(inputValue)) ||
-      (employee.project_id &&
-        employee.project_id.toString().includes(inputValue)) ||
       (person &&
         person.first_name &&
         person.first_name.toLowerCase().includes(inputValue)) ||

@@ -112,6 +112,7 @@ export const NavigationBar = () => {
                 <Link to={`/registerManager`}>Create Manager</Link>
                 <Link to={""}>View Managers / Employees</Link>
                 <Link to={"/manager/projects"}>Manage Projects</Link>
+                <Link to={"/manager/assignEmployees"}>Project Assignment</Link>
               </div>
             )}
           </li>
