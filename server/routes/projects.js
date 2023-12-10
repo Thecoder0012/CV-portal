@@ -142,11 +142,13 @@ router.post("/projects", isManager, upload.single("file"), async (req, res) => {
 });
 
 router.get("/projects/:id", async (req, res) => {
+
   try {
     const project_id = req.params.id;
     const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
       project_id,
     ]);
+
     if (!project) {
       return res.status(404).send("Sorry, Project not found");
     }
@@ -159,17 +161,16 @@ router.get("/projects/:id", async (req, res) => {
   }
 });
 
-router.put("/projects/:id", upload.single("file"), async (req, res) => {
+router.put("/projects/:id", async (req, res) => {
+
   try {
     const projectId = req.params.id;
     const { title, description, done, date_finish } = req.body;
-    const projectFile = req.file;
 
     const updateProjectQuery = `
         UPDATE project 
         SET title = ?, 
             description = ?, 
-            file_path = ?,
             done = ?,
             date_finish = ?
         WHERE id = ?
@@ -178,7 +179,6 @@ router.put("/projects/:id", upload.single("file"), async (req, res) => {
     await db.query(updateProjectQuery, [
       title,
       description,
-      projectFile ? projectFile.path : null,
       done,
       date_finish,
       projectId,
@@ -192,33 +192,23 @@ router.put("/projects/:id", upload.single("file"), async (req, res) => {
 });
 
 router.delete("/projects/:id", async (req, res) => {
-  const projectId = req.params.id;
-  const user_id = req.session.user.user_id;
+  const projectId = req.params.id
 
-  const [managerProfile] = await db.query(
-    `SELECT *
-FROM users
-INNER JOIN manager ON users.user_id = manager.user_id
-INNER JOIN person ON manager.person_id = person.person_id
-WHERE manager.user_id = ?;`,
-    [user_id]
-  );
-  console.log(managerProfile[0].id);
-
-  try {
-    const deleteEmployeeProjectQuery =
-      "UPDATE project SET manager_id = NULL WHERE manager_id = ?";
-    await db.query(deleteEmployeeProjectQuery, [managerProfile[0].id]);
+  try{
+    const deleteEmployeeProject = await db.query("UPDATE employee_projects SET project_id = NULL WHERE project_id = ?", [projectId])
 
     const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
     await db.query(deleteProjectQuery, [projectId]);
 
     res.status(200).send("Project deleted successfully");
+
   } catch (error) {
     console.error("Error deleting the project:", error);
     res.status(500).send(`Error deleting the project: ${error.message}`);
   }
 });
+
+
 
 router.get("/api/managers", async (req, res) => {
   try {

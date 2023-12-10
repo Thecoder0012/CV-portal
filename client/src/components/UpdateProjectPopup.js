@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../styles/UpdateProjectPopup.module.css";
+import Swal from "sweetalert2";
+import { API_URL } from "../config/apiUrl.js";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
+import { FaCheck } from "react-icons/fa";
+
+
+const WITH_CREDENTIALS = { withCredentials: true };
 
 const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
   const [projectData, setProjectData] = useState({
@@ -8,13 +16,78 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
     description: "",
     done: false,
     date_finish: "",
-    file: null,
   });
+
+
+
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    month = month < 10 ? `0${month}` : month;
+    day = day < 10 ? `0${day}` : day;
+
+    return `${year}-${month}-${day}`;
+  };
+
+
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleDelete = async (project_id) => {
+    const loadingAlert = Swal.fire({
+      title: "Please wait...",
+      text: "You are being redirected back to the project list.",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      const isConfirmed = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#a100ff",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (isConfirmed.isConfirmed) {
+        const response = await axios.delete(
+          API_URL + "/projects/" + project_id,
+          WITH_CREDENTIALS
+        );
+
+        if (response.status === 200) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "The project was successfully deleted.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 3000,
+          }).then(() => {
+            loadingAlert.close();
+            navigate(location.state ? location.state.from : "/manager/projects");
+          });
+        } else {
+          loadingAlert.close();
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      loadingAlert.close();
+    }
+  };
 
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const response = await axios.get(`/projects/${projectId}`);
+        const response = await axios.get(API_URL + `/projects/${projectId}`);
         const project = response.data;
         setProjectData({
           title: project.title,
@@ -27,10 +100,9 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
         console.error("Error fetching project data:", error);
       }
     };
-  
+
     fetchProjectData();
   }, [projectId]);
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,18 +121,22 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
   };
 
   const handleUpdate = async () => {
+
+projectData.date_finish = formatDate(projectData.date_finish)
+
     try {
-      console.log("Before update request");
-
-      const formData = new FormData();
-      formData.append("title", projectData.title);
-      formData.append("description", projectData.description);
-      formData.append("done", projectData.done);
-      formData.append("date_finish", projectData.date_finish);
-      formData.append("file", projectData.file);
+      const response = await axios.put(`${API_URL}/projects/${projectId}`, projectData, WITH_CREDENTIALS);
 
 
-      await axios.put(`/projects/${projectId}`, formData);
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Updated!",
+          text: "The project was successfully updated.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      }
 
       onUpdate();
       onClose();
@@ -72,45 +148,66 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
-        <h2>Update Project</h2>
+        <h2 style={{ textAlign: "center" }}>Update Project</h2>
         <label>Title:</label>
         <input
+          className={styles.input}
           type="text"
           name="title"
+          id="title"
           value={projectData.title}
           onChange={handleInputChange}
         />
         <label>Description:</label>
         <textarea
           name="description"
+          id="description"
           value={projectData.description}
           onChange={handleInputChange}
         />
         <label>Status:</label>
         <select
           name="done"
+          id="projectStatus"
           value={projectData.done}
           onChange={handleInputChange}
         >
-          <option value={false}>Not finished</option>
-          <option value={true}>Finished</option>
+          <option value={0}>Not finished</option>
+          <option value={1}>Finished</option>
         </select>
-        <label>Finish Date:</label>
+        <label>End date:</label>
         <input
+          className={styles.input}
           type="date"
           name="date_finish"
-          value={projectData.date_finish}
+          id="endDate"
+          value={formatDate(projectData.date_finish)}
           onChange={handleInputChange}
         />
-        <label>Upload PDF:</label>
-        <input
-          type="file"
-          name="file"
-          accept=".pdf"
-          onChange={handleFileChange}
-        />
-        <button onClick={handleUpdate}>Update</button>
-        <button onClick={onClose}>Close</button>
+
+        <div className={styles.buttons}>
+          <div>
+            <FaCheck
+              className={styles.updateBtn}
+              onClick={() => {
+                handleUpdate(projectId);
+              }}
+            ></FaCheck>
+          </div>
+          <div>
+            <MdDelete
+              className={styles.deleteBtn}
+              onClick={() => {
+                handleDelete(projectId);
+              }}
+            />
+          </div>
+          <div>
+            <button onClick={onClose} className={styles.closeBtn}>
+              &times;
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -5,13 +5,8 @@
   background-color: rgb(161, 0, 255);
 }
 .header{
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 20px;
-  display: block;
   text-align: center;
-  font-family: 'Lato', sans-serif;
-font-family: 'Roboto Mono', monospace;
+  font-family: 'Lato';
 }
 .searchInput {
   width: -webkit-fill-available;
