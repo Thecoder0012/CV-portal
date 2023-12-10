@@ -33,17 +33,31 @@ const isManager = (req, res, next) => {
 
 router.post("/project-assignment", async (req, res) => {
   try {
-    const user_id = req.session.user.user_id;
+    // const user_id = req.session.user.user_id;
     const [manager] = await db.query(
       `SELECT first_name,last_name,email
        FROM users
        INNER JOIN manager ON users.user_id = manager.user_id
        INNER JOIN person ON manager.person_id = person.person_id
        WHERE manager.user_id = ?;`,
-      [user_id]
+      [27]
     );
 
     const { project_id, employee_id } = req.body;
+
+    if (!project_id || !employee_id) {
+      return res
+        .status(404)
+        .send({ message: "Project and Employee are not found" });
+    }
+
+    const result = await db.query(
+      `
+      INSERT INTO employee_projects (project_id, employee_id)
+      VALUES (?, ?)
+      `,
+      [project_id, employee_id]
+    );
 
     const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
       project_id,
@@ -53,23 +67,13 @@ router.post("/project-assignment", async (req, res) => {
       return res.status(404).send({ message: "Project not found" });
     }
 
-    const result = await db.query(
-      `
-      UPDATE employee
-      SET project_id = ?
-      WHERE employee_id = ?`,
-      [project_id, employee_id]
-    );
-
     const [employee] = await db.query(
       `
-      SELECT first_name,last_name,email,title from employee
+     SELECT * from employee
         INNER JOIN person
         on employee.person_id = person.person_id
         INNER JOIN users
         on employee.user_id = users.user_id
-        INNER join project
-        on employee.project_id = project.id
         WHERE employee_id = ?`,
       [employee_id]
     );
@@ -104,7 +108,7 @@ router.post("/project-assignment", async (req, res) => {
     res.status(200).send({ message: "Project assigned successfully" });
   } catch (error) {
     console.error("Error assigning project:", error);
-    res.status(500).send("Error assigning project");
+    res.status(500).send({ message: "Error assigning project" });
   }
 });
 
