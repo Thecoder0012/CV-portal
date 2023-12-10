@@ -31,16 +31,16 @@ const isManager = (req, res, next) => {
   }
 };
 
-router.post("/project-assignment", isManager,async (req, res) => {
+router.post("/project-assignment",async (req, res) => {
   try {
-    // const user_id = req.session.user.user_id;
+    const user_id = req.session.user.user_id;
     const [manager] = await db.query(
       `SELECT first_name,last_name,email
        FROM users
        INNER JOIN manager ON users.user_id = manager.user_id
        INNER JOIN person ON manager.person_id = person.person_id
        WHERE manager.user_id = ?;`,
-      [27]
+      [user_id]
     );
 
     const { project_id, employee_id } = req.body;
@@ -113,7 +113,7 @@ router.post("/project-assignment", isManager,async (req, res) => {
 });
 
 
-router.delete("/project-assignment/:employee_id/:project_id",isManager, async (req, res) => {
+router.delete("/project-assignment/:employee_id/:project_id", async (req, res) => {
   const employee_id = req.params.employee_id;
   const project_id = req.params.project_id;
   try {
@@ -134,7 +134,7 @@ router.delete("/project-assignment/:employee_id/:project_id",isManager, async (r
 
 
 
-router.post("/projects", isManager, upload.single("file"), async (req, res) => {
+router.post("/projects", upload.single("file"), async (req, res) => {
   try {
     const { title, description, date_finish, manager_id } = req.body;
     const projectFile = req.file ? req.file.filename : null;
@@ -188,7 +188,7 @@ router.get("/projects/:id", async (req, res) => {
   }
 });
 
-router.put("/projects/:id",isManager, upload.single("file"), async (req, res) => {
+router.put("/projects/:id", upload.single("file"), async (req, res) => {
   try {
     const projectId = req.params.id;
     const { title, description, done, date_finish } = req.body;
@@ -220,7 +220,7 @@ router.put("/projects/:id",isManager, upload.single("file"), async (req, res) =>
   }
 });
 
-router.delete("/projects/:id",isManager, async (req, res) => {
+router.delete("/projects/:id", async (req, res) => {
   const projectId = req.params.id;
   const user_id = req.session.user.user_id;
 
