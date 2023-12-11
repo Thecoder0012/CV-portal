@@ -19,14 +19,16 @@ export const ProjectDetails = () => {
     file_path: null,
   });
   const [request, setRequest] = useState(false);
+  const [role_id, setRoleId] = useState();
 
   const WITH_CREDENTIALS = { withCredentials: true };
   const { id } = useParams();
 
   const getProject = async () => {
     try {
-      const response = await axios.get(API_URL + "/projects/" + id);
-      setProject(response.data);
+      const response = await axios.get(API_URL + "/projects/" + id, WITH_CREDENTIALS);
+      setProject(response.data.getProject);
+      setRoleId(response.data.role_id)
     } catch (error) {
       toast.error(error.response.data.message);
       if (error.response.status === 429) {
@@ -100,13 +102,15 @@ export const ProjectDetails = () => {
               View Project PDF
             </a>
           )}
-          <button
-            className={styles.requestButton}
-            onClick={requestProject}
-            disabled={request}
-          >
-            Assign me
-          </button>
+          {role_id === 2 && (
+            <button
+              className={styles.requestButton}
+              onClick={requestProject}
+              disabled={request}
+            >
+              Assign me
+            </button>
+          )}
         </div>
       </div>
     </div>
