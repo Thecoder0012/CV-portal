@@ -171,12 +171,15 @@ router.post("/projects", upload.single("file"), async (req, res) => {
 });
 
 router.get("/projects/:id", async (req, res) => {
-
   try {
     const project_id = req.params.id;
-    const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
-      project_id,
-    ]);
+    const [project] = await db.query(
+      `SELECT * FROM project
+       INNER JOIN manager ON project.manager_id = manager.id
+       INNER JOIN person ON manager.person_id = person.person_id
+       WHERE project.id = ?`,
+      [project_id]
+    );
 
     if (!project) {
       return res.status(404).send("Sorry, Project not found");
@@ -252,6 +255,59 @@ router.get("/api/managers", async (req, res) => {
     console.error("Error finding managers:", error);
     res.status(500).send({ error: "Internal server error" });
   }
+});
+
+router.post("/request-project",async(req,res) => {
+  const user_id = req.session.user.user_id;
+  const project_id = req.body.project_id;
+
+   const [employee] = await db.query(`
+    SELECT person.first_name, person.last_name,email
+    FROM users
+    INNER JOIN employee ON users.user_id = employee.user_id
+    INNER JOIN person ON employee.person_id = person.person_id
+    WHERE users.user_id = ?`, [user_id]);
+
+    const [project] = await db.query(`SELECT * from project WHERE id = ?`,[project_id])
+
+    const [manager] = await db.query(`
+    SELECT * from project
+    INNER JOIN manager ON project.manager_id = manager.id
+    INNER JOIN person ON manager.person_id = person.person_id
+    INNER JOIN users ON manager.user_id = users.user_id
+    where project.id = ?;`,[project_id]);
+
+
+     const employee_name = employee[0].first_name + " " + employee[0].last_name;
+     const employee_email = employee[0].email;
+
+     const manager_name = manager[0].first_name + " " + manager[0].last_name;
+     const manager_email = manager[0].email;
+
+    const mailInfo = transporter.sendMail(
+      {
+        from: employee_email,
+        to: manager_email,
+        subject: "Project Request assignment from: " + employee_name,
+        text: `Hello ${manager_name} \n\n I want to be assigned to project: ${project[0].title}.\n \n
+        Best regards \n
+        Employee:
+        ${employee_name}`,
+      },
+      (error, info) => {
+        if (error) {
+          console.log(error)
+        } else {
+          res
+            .status(200)
+            .send({
+              message: "You have successfully sent a message!"
+            });
+        }
+      }
+    );
+
+  return res.status(200).send({message: "Your request has been sent!",request: true})
 });
 
 export default router;

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "../styles/projectDetails.module.css";
 import { API_URL } from "../config/apiUrl.js";
 import { NavigationBar } from "./NavigationBar.js";
 import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ProjectDetails = () => {
   const [project, setProject] = useState({
@@ -16,19 +18,38 @@ export const ProjectDetails = () => {
     date_finish: "",
     file_path: null,
   });
+  const [request, setRequest] = useState(false);
 
   const WITH_CREDENTIALS = { withCredentials: true };
-
   const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const getProject = async () => {
     try {
       const response = await axios.get(API_URL + "/projects/" + id);
       setProject(response.data);
     } catch (error) {
-      console.error("Error fetching project:", error);
+      toast.error(error.response.data.message);
+      if (error.response.status === 429) {
+        toast.error(error.response.data);
+      }
+    }
+  };
+
+  const requestProject = async () => {
+    try {
+      const response = await axios.post(
+        API_URL + "/request-project",
+        {
+          project_id: id,
+        },
+        WITH_CREDENTIALS
+      );
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        setRequest(response.data.request);
+      }
+    } catch (error) {
+      console.error("Error assigning project:", error);
     }
   };
 
@@ -39,6 +60,12 @@ export const ProjectDetails = () => {
   return (
     <div>
       <NavigationBar />
+      <ToastContainer
+        autoClose={15000}
+        closeOnClick={true}
+        position={toast.POSITION.TOP_CENTER}
+        limit={2}
+      />
       <div className={styles.singleProject}>
         <h1 className={styles.projectTitle}>{project.title}</h1>
         <div className={styles.projectDetails}>
@@ -46,17 +73,18 @@ export const ProjectDetails = () => {
             <strong>Description:</strong> {project.description}
           </p>
           <p>
-            <strong>Author:</strong> {project.author}
+            <strong>Author:</strong> {project.first_name}
           </p>
           <p>
-            <strong>Status:</strong> {project.done ? "Finished" : "Not finished"}
+            <strong>Status:</strong>
+            {project.done ? "Finished" : "Not finished"}
           </p>
           <p>
-            <strong>Date Made:</strong>{" "}
+            <strong>Date Made:</strong>
             {new Date(project.date_made).toLocaleDateString()}
           </p>
           <p>
-            <strong>Date Finish:</strong>{" "}
+            <strong>Date Finish:</strong>
             {new Date(project.date_finish).toLocaleDateString()}
           </p>
           <p>
@@ -72,12 +100,15 @@ export const ProjectDetails = () => {
               View Project PDF
             </a>
           )}
+          <button
+            className={styles.requestButton}
+            onClick={requestProject}
+            disabled={request}
+          >
+            Assign me
+          </button>
         </div>
       </div>
     </div>
   );
 };
-
-
-
-
