@@ -1,6 +1,12 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,400&family=Roboto+Mono&display=swap');
+
+
+
 .tableContainer {
     max-width: 600px;
     margin: auto;
+font-family: 'Lato';
   }
   
   .tableHeader {
@@ -28,13 +34,13 @@
     display: flex;
     list-style: none;
     padding: 20px 0;
-    justify-content: center;
+    justify-content: center;  
   }
   
   .paginationItem {
     margin: 0 5px;
     padding: 8px 12px;
-    background-color: #3498db;
+    background-color: #a100ffdb;
     color: #fff;
     border-radius: 4px;
     cursor: pointer;
@@ -42,19 +48,18 @@
   }
   
   .paginationItem:hover {
-    background-color: #2079b0;
+    background-color: rgba(191, 102, 243, 0.9); 
   }
   
   .active {
-    background-color: #2079b0;
+    background-color: #8a00da;
   }
   
   .employeeListContainer {
     margin-top: 20px;
     width: 80%;
     display: flex;
-    flex-direction: column; /* Updated to display items vertically */
-  
+    flex-direction: column;
   }
   
   .modalOverlay {
@@ -70,59 +75,73 @@
   }
   
   .modalContent {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    width: 40%;
-    font-size: 1.2em;
+   background-color: white;
+   font-family: 'Lato';
+   border-radius: 4px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+   position: relative;
   }
   
   .employeeTable {
     width: 100%;
     border-collapse: collapse;
+    font-family: 'Lato';
   }
   
   .employeeTable th,
   .employeeTable td {
-    padding: 12px;
-    text-align: left;
+    padding: 15px;
+    text-align: center;
     border-bottom: 1px solid #ddd;
   }
   
   .employeeTable th {
     background: #f2f2f2;
   }
-  
+
   .closeButton {
-    background-color: #fa2424;
-    color: white;
-    padding: 10px 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    position: relative;
-    right: 4%;
-    bottom: 24%;
-  }
-
-  .closeButton:hover{
-    background-color: #c92c2c;
-
+    color: #c70000;;
   }
 
   .tableContainer .assignButton{
-    background-color: #a100ff;
-    color: #fff;
-    padding: 8px 16px;
+    color: #c70000;
+    padding: 4px 8px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    width: 120px; 
+    background: none;
   }
 
-  .tableContainer table .assignButton:hover{
-    background-color: #7404b5;
+  .assignEmployee{
+    color: #a100ffdb;
+    padding: 4px 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .tableContainer table .assignEmployee:hover{
+    background-color: rgba(191, 102, 243, 0.9); 
     cursor: pointer;
   }
+
+  .employeeSkills{
+    font-family: 'Lato';
+    display: inline-block;
+    padding: 5px;
+    margin: 2px;
+    color: rgb(161, 0, 255);
+    border-radius: 3px;
+  }
+

@@ -66,7 +66,7 @@ export const ManagerProjects = () => {
               <th>Project End/Date</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style={{textAlign: "center"}}>
             {currentProjects.map((project, i) => (
               <tr key={i} className={`${styles.tableRow} ${styles.projectRow}`} onClick={() => {handleUpdateClick(project.id)}}>
                 <td 
@@ -85,19 +85,20 @@ export const ManagerProjects = () => {
         </table>
       </div>
       <div className={styles.pagination}>
-        {Array.from(
-          { length: Math.ceil(projects.length / projectsPerPage) },
-          (_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => paginate(index + 1)}
-              className={index + 1 === currentPage ? styles.active : ""}
-            >
-              {index + 1}
-            </button>
-          )
-        )}
-      </div>
+  {Array.from(
+    { length: Math.ceil(projects.length / projectsPerPage) },
+    (_, index) => (
+      <button
+        key={index + 1}
+        onClick={() => paginate(index + 1)}
+        className={index + 1 === currentPage ? styles.activeButton : ''}
+      >
+        {index + 1}
+      </button>
+    )
+  )}
+</div>
+
       {selectedProjectId && (
         <UpdateProjectPopup
           projectId={selectedProjectId}
@@ -108,4 +109,9 @@ export const ManagerProjects = () => {
     </div>
   );
 };
+
+//Project assigntment - Fontfamily lato
+//Pagination knapper laves om til lilla
+//Gør knapperne lidt mørkere i pagination, så man kan se hvilken side man er på
+//Style pop up i Employee Assigment og lad skills være lilla ligesom i Search EMployee Skills
 

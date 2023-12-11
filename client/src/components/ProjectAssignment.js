@@ -3,7 +3,8 @@ import { NavigationBar } from "./NavigationBar";
 import { API_URL } from "../config/apiUrl";
 import axios from "axios";
 import styles from "../styles/assignment.module.css";
-import { FaUsers, FaTrash, FaTimes } from "react-icons/fa";
+import { FaUsers, FaTimes } from "react-icons/fa";
+import { MdPersonRemove } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -138,14 +139,15 @@ export const ProjectAssignment = () => {
               <tr className={styles.employeeRow} key={project.id}>
                 <td>{project.title}</td>
                 <td>
-                  <button
-                    style={{ position: "relative", left: "55%" }}
-                    className={styles.assignButton}
-                    onClick={() => toggleEmployeeModal(project)}
-                  >
-                    <FaUsers size={20} />
-                    <span>Assign Employee</span>
-                  </button>
+                <button
+                style={{ position: "relative", left: "55%" }}
+                className={styles.assignEmployee}
+                onClick={() => toggleEmployeeModal(project)}
+              >
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  Assign Employee
+                </span>
+              </button>
                 </td>
               </tr>
             ))}
@@ -162,16 +164,21 @@ export const ProjectAssignment = () => {
         {showEmployeeModal && (
           <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
+            <button
+              onClick={toggleEmployeeModal}
+              className={styles.closeButton}
+            >
+              <FaTimes size={15} />
+            </button>
               <h2 className={styles.tableHeader}>
-                Employee Assignment <br></br>
-                <br></br>
-                To: {selectedProject.title} -- {selectedProject.id}
+              <h3>Assign Employees</h3>
+              <h4 style={{fontWeight: "300"}}>{selectedProject.title} / #{selectedProject.id}</h4>
               </h2>
               <table className={styles.employeeTable}>
                 <thead>
                   <tr>
-                    <th>Employee ID:</th>
-                    <th>Name</th>
+                    <th>Employee ID</th>
+                    <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Skills</th>
                     <th>Status</th>
@@ -184,8 +191,10 @@ export const ProjectAssignment = () => {
                       <td>{employee.employee_id}</td>
                       <td>{employee.first_name}</td>
                       <td>{employee.last_name}</td>
-                      <td>{employee.skills}</td>
-                      <td
+                      <td>
+                      <span className={styles.employeeSkills}>{employee.skills}</span>
+                    </td>
+                    <td
                         style={{
                           color:
                             employee.projects &&
@@ -193,7 +202,7 @@ export const ProjectAssignment = () => {
                               String(selectedProject.id)
                             )
                               ? "green"
-                              : "red",
+                              : "#c70000",
                         }}
                       >
                         {employee.projects &&
@@ -207,25 +216,28 @@ export const ProjectAssignment = () => {
                           String(selectedProject.id)
                         ) ? (
                           <button
-                            style={{ background: "red" }}
+                            style={{ background: "none" }}
                             className={styles.assignButton}
                             onClick={() =>
                               removeEmployeeFromProject(employee.employee_id)
                             }
                           >
-                            <FaTrash size={20} />
-                            <span>Remove</span>
+                            <span style={{ display: "flex", alignItems: "center" }}>Exclude
+                            <MdPersonRemove size={15} style={{ marginLeft: "5px" }} />
+                            </span>
                           </button>
                         ) : (
                           <button
-                            style={{ background: "green" }}
+                            style={{ color: "green" }}
                             className={styles.assignButton}
                             onClick={() =>
                               assignEmployeeToProject(employee.employee_id)
                             }
                           >
-                            <FaUsers size={20} />
-                            <span>Assign</span>
+                        
+                            <span style={{ display: "flex", alignItems: "center" }}>Assign
+                            <FaUsers size={15} style={{ marginLeft: "5px" }} />
+                            </span>
                           </button>
                         )}
                       </td>
@@ -241,13 +253,6 @@ export const ProjectAssignment = () => {
                 )}
               </ul>
             </div>
-            <button
-              onClick={toggleEmployeeModal}
-              className={styles.closeButton}
-            >
-              <FaTimes size={20} />
-              <span>Close</span>
-            </button>
           </div>
         )}
       </div>

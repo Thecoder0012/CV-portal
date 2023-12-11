@@ -24,7 +24,7 @@
 }
   
   .closeButton {
-    background-color: #ff5757; /* Red color for the close button */
+    background-color: #c70000;; /* Red color for the close button */
     color: white;
     padding: 10px 15px;
     border: none;
@@ -33,8 +33,5 @@
     font-size: 16px;
     margin-top: 15px;
   }
-  
-  .closeButton:hover {
-    background-color: #d93f3f; /* Darker red on hover */
-  }
+
   
