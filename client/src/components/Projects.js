@@ -22,6 +22,9 @@ export const Projects = () => {
   ]);
 
   const navigate = useNavigate();
+  const WITH_CREDENTIALS = { withCredentials: true };
+
+  const [assignedProjects, setAssignedProjects] = useState([]);
 
   const fetchProjects = async () => {
     try {
@@ -37,8 +40,26 @@ export const Projects = () => {
     }
   };
 
+  const fetchAssignedProjects = async () => {
+    try {
+      const response = await axios.get(
+        API_URL + "/assigned-projects",
+        WITH_CREDENTIALS
+      );
+      if (response.status === 200) {
+        setAssignedProjects(response.data);
+      } else {
+        console.error("Server could not find projects");
+      }
+    } catch (error) {
+      console.log("catch");
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     fetchProjects();
+    fetchAssignedProjects();
   }, []);
 
   return (
@@ -56,7 +77,11 @@ export const Projects = () => {
         {projects.map((project, i) => (
           <div
             key={i}
-            className={mainCss.projectBox}
+            className={`${mainCss.projectBox} ${
+              assignedProjects.some(
+                (assignedProject) => assignedProject.project_id === project.id
+              ) && mainCss.assignedProject
+            }`}
             onClick={() => {
               navigate(`/project/${project.id}`);
             }}

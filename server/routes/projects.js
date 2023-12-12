@@ -132,6 +132,30 @@ router.delete(
   }
 );
 
+router.get("/assigned-projects", async (req, res) => {
+  const user_id = req.session.user.user_id;
+
+  const [employee] = await db.query(
+    `
+  SELECT * from employee
+  INNER join users ON employee.user_id = users.user_id
+  WHERE employee.user_id = ?;`,
+    [user_id]
+  );
+
+  const employee_id = employee[0].employee_id;
+  const [assignedProjects] = await db.query(
+    `
+  Select * from employee
+  INNER join employee_projects 
+  ON employee.employee_id = employee_projects.employee_id
+  where employee.employee_id = ?;`,
+    [employee_id]
+  );
+
+  res.status(200).send(assignedProjects);
+});
+
 router.post("/projects", upload.single("file"), async (req, res) => {
   try {
     const { title, description, date_finish, manager_id } = req.body;
@@ -173,7 +197,8 @@ router.get("/projects/:id", async (req, res) => {
     const project_id = req.params.id;
     const role_id = req.session.user.role_id;
     const [project] = await db.query(
-      `SELECT * FROM project
+      `SELECT project.id AS project_id, project.*, manager.*, person.*
+       FROM project
        INNER JOIN manager ON project.manager_id = manager.id
        INNER JOIN person ON manager.person_id = person.person_id
        WHERE project.id = ?`,

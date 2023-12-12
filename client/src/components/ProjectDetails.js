@@ -18,8 +18,11 @@ export const ProjectDetails = () => {
     date_finish: "",
     file_path: null,
   });
+
   const [request, setRequest] = useState(false);
+
   const [role_id, setRoleId] = useState();
+  const [assignedProjects, setAssignedProjects] = useState([]);
 
   const WITH_CREDENTIALS = { withCredentials: true };
   const { id } = useParams();
@@ -55,8 +58,28 @@ export const ProjectDetails = () => {
     }
   };
 
+  const fetchAssignedProjects = async () => {
+    try {
+      const response = await axios.get(
+        API_URL + "/assigned-projects",
+        WITH_CREDENTIALS
+      );
+      if (response.status === 200) {
+        setAssignedProjects(response.data);
+      } else {
+        console.error("Server could not find projects");
+      }
+    } catch (error) {
+      console.log("catch");
+      console.error("Error:", error);
+    }
+  };
+
+
+
   useEffect(() => {
     getProject();
+    fetchAssignedProjects();
   }, [id]);
 
   return (
@@ -102,15 +125,19 @@ export const ProjectDetails = () => {
               View Project PDF
             </a>
           )}
-          {role_id === 2 && (
-            <button
-              className={styles.requestButton}
-              onClick={requestProject}
-              disabled={request}
-            >
-              Assign me
-            </button>
-          )}
+          {role_id === 2 &&
+            !assignedProjects.some(
+              (assignedProjects) =>
+                assignedProjects.project_id === project.project_id
+            ) && (
+              <button
+                className={styles.requestButton}
+                onClick={requestProject}
+                disabled={request}
+              >
+                Assign me
+              </button>
+            )}
         </div>
       </div>
     </div>
