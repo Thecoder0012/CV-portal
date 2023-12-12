@@ -31,7 +31,7 @@ const isManager = (req, res, next) => {
   }
 };
 
-router.post("/project-assignment",async (req, res) => {
+router.post("/project-assignment", async (req, res) => {
   try {
     const user_id = req.session.user.user_id;
     const [manager] = await db.query(
@@ -112,27 +112,49 @@ router.post("/project-assignment",async (req, res) => {
   }
 });
 
-
-router.delete("/project-assignment/:employee_id/:project_id", async (req, res) => {
-  const employee_id = req.params.employee_id;
-  const project_id = req.params.project_id;
-  try {
-    const deleteEmployeeProject = await db.query(
-      "DELETE FROM employee_projects WHERE employee_id = ? AND project_id = ?",
-      [employee_id,project_id]
-    );
-    res.status(200).send({message:"Employee removed from project successfully"});
-  } catch (error) {
-    console.error("Error removing employee from project:", error);
-    res
-      .status(500)
-      .send({message:error.message});
+router.delete(
+  "/project-assignment/:employee_id/:project_id",
+  async (req, res) => {
+    const employee_id = req.params.employee_id;
+    const project_id = req.params.project_id;
+    try {
+      const deleteEmployeeProject = await db.query(
+        "DELETE FROM employee_projects WHERE employee_id = ? AND project_id = ?",
+        [employee_id, project_id]
+      );
+      res
+        .status(200)
+        .send({ message: "Employee removed from project successfully" });
+    } catch (error) {
+      console.error("Error removing employee from project:", error);
+      res.status(500).send({ message: error.message });
+    }
   }
+);
+
+router.get("/assigned-projects", async (req, res) => {
+  const user_id = req.session.user.user_id;
+
+  const [employee] = await db.query(
+    `
+  SELECT * from employee
+  INNER join users ON employee.user_id = users.user_id
+  WHERE employee.user_id = ?;`,
+    [user_id]
+  );
+
+  const employee_id = employee[0].employee_id;
+  const [assignedProjects] = await db.query(
+    `
+  Select * from employee
+  INNER join employee_projects 
+  ON employee.employee_id = employee_projects.employee_id
+  where employee.employee_id = ?;`,
+    [employee_id]
+  );
+
+  res.status(200).send(assignedProjects);
 });
-
-
-
-
 
 router.post("/projects", upload.single("file"), async (req, res) => {
   try {
@@ -171,19 +193,24 @@ router.post("/projects", upload.single("file"), async (req, res) => {
 });
 
 router.get("/projects/:id", async (req, res) => {
-
   try {
     const project_id = req.params.id;
-    const [project] = await db.query("SELECT * FROM project WHERE id = ?", [
-      project_id,
-    ]);
+    const role_id = req.session.user.role_id;
+    const [project] = await db.query(
+      `SELECT project.id AS project_id, project.*, manager.*, person.*
+       FROM project
+       INNER JOIN manager ON project.manager_id = manager.id
+       INNER JOIN person ON manager.person_id = person.person_id
+       WHERE project.id = ?`,
+      [project_id]
+    );
 
     if (!project) {
       return res.status(404).send("Sorry, Project not found");
     }
 
     const getProject = project[0];
-    res.status(200).json(getProject);
+    res.status(200).json({ getProject, role_id });
   } catch (error) {
     console.error("Error while fetching the project:", error);
     res.status(500).send({ message: "Error while fetching the project" });
@@ -191,7 +218,6 @@ router.get("/projects/:id", async (req, res) => {
 });
 
 router.put("/projects/:id", async (req, res) => {
-
   try {
     const projectId = req.params.id;
     const { title, description, done, date_finish } = req.body;
@@ -221,23 +247,23 @@ router.put("/projects/:id", async (req, res) => {
 });
 
 router.delete("/projects/:id", async (req, res) => {
-  const projectId = req.params.id
+  const projectId = req.params.id;
 
-  try{
-    const deleteEmployeeProject = await db.query("UPDATE employee_projects SET project_id = NULL WHERE project_id = ?", [projectId])
+  try {
+    const deleteEmployeeProject = await db.query(
+      "UPDATE employee_projects SET project_id = NULL WHERE project_id = ?",
+      [projectId]
+    );
 
     const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
     await db.query(deleteProjectQuery, [projectId]);
 
     res.status(200).send("Project deleted successfully");
-
   } catch (error) {
     console.error("Error deleting the project:", error);
     res.status(500).send(`Error deleting the project: ${error.message}`);
   }
 });
-
-
 
 router.get("/api/managers", async (req, res) => {
   try {
@@ -252,6 +278,66 @@ router.get("/api/managers", async (req, res) => {
     console.error("Error finding managers:", error);
     res.status(500).send({ error: "Internal server error" });
   }
+});
+
+router.post("/request-project", async (req, res) => {
+  const user_id = req.session.user.user_id;
+  const project_id = req.body.project_id;
+
+  const [employee] = await db.query(
+    `
+    SELECT person.first_name, person.last_name,email
+    FROM users
+    INNER JOIN employee ON users.user_id = employee.user_id
+    INNER JOIN person ON employee.person_id = person.person_id
+    WHERE users.user_id = ?`,
+    [user_id]
+  );
+
+  const [project] = await db.query(`SELECT * from project WHERE id = ?`, [
+    project_id,
+  ]);
+
+  const [manager] = await db.query(
+    `
+    SELECT * from project
+    INNER JOIN manager ON project.manager_id = manager.id
+    INNER JOIN person ON manager.person_id = person.person_id
+    INNER JOIN users ON manager.user_id = users.user_id
+    where project.id = ?;`,
+    [project_id]
+  );
+
+  const employee_name = employee[0].first_name + " " + employee[0].last_name;
+  const employee_email = employee[0].email;
+
+  const manager_name = manager[0].first_name + " " + manager[0].last_name;
+  const manager_email = manager[0].email;
+
+  const mailInfo = transporter.sendMail(
+    {
+      from: employee_email,
+      to: manager_email,
+      subject: "Project Request assignment from: " + employee_name,
+      text: `Hello ${manager_name} \n\n I want to be assigned to project: ${project[0].title}.\n \n
+        Best regards \n
+        Employee:
+        ${employee_name}`,
+    },
+    (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        res.status(200).send({
+          message: "You have successfully sent a message!",
+        });
+      }
+    }
+  );
+
+  return res
+    .status(200)
+    .send({ message: "Your request has been sent!", request: true });
 });
 
 export default router;

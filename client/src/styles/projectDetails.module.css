@@ -64,3 +64,26 @@ textarea:focus,
 select:focus {
   border-color: #af10af;
 }
+
+.requestButton {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border: none;
+  width: 31%;
+  position: relative;
+  left: 33%;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.requestButton:hover {
+  background-color: #45a049;
+}
+
+.requestButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+}
