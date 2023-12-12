@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 import { API_URL } from "../config/apiUrl.js";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTimes } from "react-icons/fa";
+
 
 
 const WITH_CREDENTIALS = { withCredentials: true };
@@ -148,7 +149,8 @@ projectData.date_finish = formatDate(projectData.date_finish)
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
-        <h2 style={{ textAlign: "center" }}>Update Project</h2>
+      <div id="form" style={{ maxWidth: "800px", margin: "auto" }}>
+      <h2 style={{ textAlign: "center" }}>Update Project</h2>
         <label>Title:</label>
         <input
           className={styles.input}
@@ -184,7 +186,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
           value={formatDate(projectData.date_finish)}
           onChange={handleInputChange}
         />
-
+        </div>
         <div className={styles.buttons}>
           <div>
             <FaCheck
@@ -192,6 +194,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
               onClick={() => {
                 handleUpdate(projectId);
               }}
+              size={25}
             ></FaCheck>
           </div>
           <div>
@@ -200,13 +203,14 @@ projectData.date_finish = formatDate(projectData.date_finish)
               onClick={() => {
                 handleDelete(projectId);
               }}
+              size={25}
             />
           </div>
-          <div>
-            <button onClick={onClose} className={styles.closeBtn}>
-              &times;
+          
+            <button onClick={onClose} className={styles.closeButton}>
+              <FaTimes size={15}/>
             </button>
-          </div>
+          
         </div>
       </div>
     </div>

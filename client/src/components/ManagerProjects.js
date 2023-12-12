@@ -110,8 +110,3 @@ export const ManagerProjects = () => {
   );
 };
 
-//Project assigntment - Fontfamily lato
-//Pagination knapper laves om til lilla
-//Gør knapperne lidt mørkere i pagination, så man kan se hvilken side man er på
-//Style pop up i Employee Assigment og lad skills være lilla ligesom i Search EMployee Skills
-

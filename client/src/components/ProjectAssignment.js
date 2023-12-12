@@ -222,7 +222,7 @@ export const ProjectAssignment = () => {
                               removeEmployeeFromProject(employee.employee_id)
                             }
                           >
-                            <span style={{ display: "flex", alignItems: "center" }}>Exclude
+                            <span style={{ display: "flex", alignItems: "center" }}>Remove
                             <MdPersonRemove size={15} style={{ marginLeft: "5px" }} />
                             </span>
                           </button>
