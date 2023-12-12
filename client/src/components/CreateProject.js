@@ -88,7 +88,7 @@ export const CreateProject = () => {
 
   return (
     <div className={styles.createProjects}>
-    <NavigationBar/>
+      <NavigationBar />
       <ToastContainer
         autoClose={15000}
         closeOnClick={true}
@@ -107,14 +107,6 @@ export const CreateProject = () => {
           />
         </div>
         <div className={styles.projectFormGroup}>
-          <textarea
-            type="text"
-            placeholder="Description"
-            name="description"
-            className={styles.writeProjectsText}
-            onChange={handleInputChange}
-          ></textarea>
-
           <input
             type="date"
             id="projectDate"
@@ -122,17 +114,26 @@ export const CreateProject = () => {
             onChange={handleInputChange}
             name="date_finish"
           />
+
+          <textarea
+            type="text"
+            placeholder="Description"
+            name="description"
+            className={styles.writeProjectsText}
+            onChange={handleInputChange}
+            style={{width: "1000px", height: "45px"}}
+          ></textarea>
         </div>
-<div className={styles.createProjectInputs}>
-        <select 
+        <div className={styles.createProjectInputs}>
+          <select
             id="author"
             name="authorId"
             onChange={handleManagers}
             value={chosenManager}
             className={styles.author}
           >
-            <option value="" disabled >
-            Project Manager
+            <option value="" disabled>
+              Project Manager
             </option>
             {managers.map((manager) => (
               <option key={manager.id} value={manager.id}>
@@ -140,26 +141,27 @@ export const CreateProject = () => {
               </option>
             ))}
           </select>
-          <input style={{ borderColor: 'rgba(161, 0, 255, 0.19)' }} 
-          type="file"
-          accept="application/pdf"
-          onChange={handlePdfChange}
-        />
+          <input
+            style={{ borderColor: "rgba(161, 0, 255, 0.19)" }}
+            type="file"
+            accept="application/pdf"
+            onChange={handlePdfChange}
+          />
 
-        <div className={styles.pdfPreview}>
-          {file_path && (
-            <a
-              href={URL.createObjectURL(file_path)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open Your Project
-            </a>
-          )}
-          <button className={styles.projectSubmit} type="submit">
-          Create project
-        </button>
-        </div>
+          <div className={styles.pdfPreview}>
+            {file_path && (
+              <a
+                href={URL.createObjectURL(file_path)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Your Project
+              </a>
+            )}
+            <button className={styles.projectSubmit} type="submit">
+              Create project
+            </button>
+          </div>
         </div>
       </form>
     </div>

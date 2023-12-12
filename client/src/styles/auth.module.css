@@ -30,7 +30,7 @@ ul {
 }
 
 .mainContainer {
-  font-family: system-ui;
+  font-family: 'Lato';
   position: absolute;
  display: contents;
 }
@@ -76,6 +76,12 @@ input{
   border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 16px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
 }
 
 

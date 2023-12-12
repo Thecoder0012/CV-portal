@@ -14,6 +14,7 @@
 .projectTitle {
   color: #a100ff;
   font-size: 32px;
+  font-family: 'Lato';
 }
 
 
@@ -58,6 +59,11 @@
   background-color: #c82333;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
+}
 
 .requestButton {
   background-color: #4caf50;

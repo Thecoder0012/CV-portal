@@ -1,5 +1,7 @@
-body {
-  /* background-color: antiquewhite; */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
 }
 .container {
   position: absolute;

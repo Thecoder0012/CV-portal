@@ -31,19 +31,26 @@ const EmployeeDetails = ({ onClose, id }) => {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>Employee Profile</h2>
+
+        
         {profile && (
+          
           <div>
-            <p>Employee ID: {profile.employee_id}</p>
-            <p>First Name: {profile.first_name}</p>
-            <p>Last Name: {profile.last_name}</p>
+          <h2>{profile.first_name + ' ' + profile.last_name}</h2>
             <p>
-              Date of Birth:
+            <label style={{fontStyle: "italic" }}>Employee-ID:  </label>
+            {'#' + profile.employee_id}</p>
+            <p>
+            <label style={{fontStyle: "italic" }}>Date of birth: </label>
               {new Date(profile.date_of_birth).toLocaleDateString()}
             </p>
-            <p>Phone Number: {profile.phone_number}</p>
+            <p>
+            <label style={{fontStyle: "italic" }}>Phone: </label>
+            {profile.phone_number}</p>
 
-            <p>Skills: {skillNames.join(", ")}</p>
+            <p>
+            <label style={{fontStyle: "italic" }}>Skills: </label>
+            {skillNames.join(", ")}</p>
             
           </div>
         )}
