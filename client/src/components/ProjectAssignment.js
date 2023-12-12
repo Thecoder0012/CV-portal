@@ -168,7 +168,7 @@ export const ProjectAssignment = () => {
               onClick={toggleEmployeeModal}
               className={styles.closeButton}
             >
-              <FaTimes size={15} />
+              <FaTimes size={20} />
             </button>
               <h2 className={styles.tableHeader}>
               <h3>Assign Employees</h3>

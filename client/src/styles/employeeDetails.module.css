@@ -1,4 +1,3 @@
-/* EmployeeDetails.module.css */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -13,18 +12,17 @@
   
   .modalContent {
     background: white;
-    padding: 30px; /* Increased padding for a bigger modal box */
-    border-radius: 10px; /* Increased border radius for rounded corners */
+    padding: 30px; 
+    border-radius: 10px; 
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    max-width: 500px; /* Adjust the max-width as needed */
+    max-width: 500px; 
     width: 100%;
-    margin-bottom: 15%;
     font-size: 1.3em;
-
+    font-family: 'Lato';
 }
   
   .closeButton {
-    background-color: #c70000;; /* Red color for the close button */
+    background-color: #c70000;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -34,4 +32,8 @@
     margin-top: 15px;
   }
 
-  
+  input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
+}

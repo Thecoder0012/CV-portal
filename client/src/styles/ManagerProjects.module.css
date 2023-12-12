@@ -111,3 +111,9 @@
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
+}

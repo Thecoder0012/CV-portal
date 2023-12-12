@@ -208,7 +208,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
           </div>
           
             <button onClick={onClose} className={styles.closeButton}>
-              <FaTimes size={15}/>
+              <FaTimes size={20}/>
             </button>
           
         </div>

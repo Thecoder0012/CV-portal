@@ -42,6 +42,7 @@
   padding: 20px;
   width: 70vw;
   margin-top: 0%;
+  color: rgb(161, 0, 255);
 }
 
 .projectInput::placeholder {
@@ -49,8 +50,10 @@
   font-weight: 400;
 }
 
-.projectInput:focus {
-  outline-style: none;
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
 }
 
 .projectFile {

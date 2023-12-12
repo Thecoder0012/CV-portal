@@ -78,6 +78,12 @@ input{
   font-size: 16px;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
+}
+
 
 .loginButton, .registerButton {
   background-color: #A100FF;

@@ -84,9 +84,10 @@ select {
   outline: none;
   transition: border-color 0.3s ease;
   font-family: 'Lato';
+  font-size: 1.2em;
 }
 
-.input:focus,
+input:focus,
 textarea:focus,
 select:focus {
   border-color: #af10af;
@@ -108,7 +109,8 @@ select:focus {
   background: none;
   border: none;
   cursor: pointer;
-  color: #c70000;;
+  color: #c70000;
+  margin-top: 5px;
 }
 
 button.close-btn:hover {

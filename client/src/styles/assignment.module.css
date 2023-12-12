@@ -145,3 +145,9 @@ font-family: 'Lato';
     border-radius: 3px;
   }
 
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #af10af;
+}
+
