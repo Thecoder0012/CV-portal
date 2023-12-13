@@ -25,6 +25,8 @@ export const Projects = () => {
   const WITH_CREDENTIALS = { withCredentials: true };
 
   const [assignedProjects, setAssignedProjects] = useState([]);
+  const [roleId, setRoleId] = useState([]);
+  const [requestedProjects,setRequestedProjects] = useState(null)
 
   const fetchProjects = async () => {
     try {
@@ -39,6 +41,19 @@ export const Projects = () => {
       console.error("Error:", error);
     }
   };
+
+   const fetchRequestedProjects = async () => {
+     try {
+       const response = await axios.get(API_URL + "/project-requests");
+       if (response.status === 200) {
+         setRequestedProjects(response.data.requestedProjects);
+       } else {
+         console.error("Server could not find requested projects");
+       }
+     } catch (error) {
+       console.error("Error:", error);
+     }
+   };
 
   const fetchAssignedProjects = async () => {
     try {
@@ -57,10 +72,31 @@ export const Projects = () => {
     }
   };
 
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(
+          API_URL + "/auth-login",
+          WITH_CREDENTIALS
+        );
+        if (response.status === 200) {
+          setRoleId(response.data.user.role_id); 
+        } else {
+          console.error("Server could not find user");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+  
+
   useEffect(() => {
+    fetchUserRole()
     fetchProjects();
-    fetchAssignedProjects();
-  }, []);
+     if (roleId === 2) {
+       fetchAssignedProjects();
+       fetchRequestedProjects();
+     }
+  }, [roleId]);
 
   return (
     <div className={mainCss.mainContainer}>
@@ -81,6 +117,12 @@ export const Projects = () => {
               assignedProjects.some(
                 (assignedProject) => assignedProject.project_id === project.id
               ) && mainCss.assignedProject
+            } ${
+              requestedProjects &&
+              requestedProjects.some(
+                (requestedProject) => requestedProject.project_id === project.id
+              ) &&
+              mainCss.pendingRequest
             }`}
             onClick={() => {
               navigate(`/project/${project.id}`);

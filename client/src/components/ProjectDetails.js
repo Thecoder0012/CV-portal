@@ -19,7 +19,7 @@ export const ProjectDetails = () => {
     file_path: null,
   });
 
-  const [request, setRequest] = useState(false);
+const [requestedProjects, setRequestedProjects] = useState([]);
 
   const [role_id, setRoleId] = useState();
   const [assignedProjects, setAssignedProjects] = useState([]);
@@ -40,6 +40,20 @@ export const ProjectDetails = () => {
     }
   };
 
+  const fetchRequestedProjects = async () => {
+    try {
+      const response = await axios.get(API_URL + "/project-requests");
+      if (response.status === 200) {
+        setRequestedProjects(response.data.requestedProjects);
+      } else {
+        console.error("Server could not find requested projects");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
   const requestProject = async () => {
     try {
       const response = await axios.post(
@@ -51,46 +65,42 @@ export const ProjectDetails = () => {
       );
       if (response.status === 200) {
         toast.success(response.data.message);
-        setRequest(response.data.request);
       }
     } catch (error) {
       console.error("Error assigning project:", error);
     }
   };
 
-  const fetchAssignedProjects = async () => {
-    try {
-      const response = await axios.get(
-        API_URL + "/assigned-projects",
-        WITH_CREDENTIALS
-      );
-      if (response.status === 200) {
-        setAssignedProjects(response.data);
-      } else {
-        console.error("Server could not find projects");
-      }
-    } catch (error) {
-      console.log("catch");
-      console.error("Error:", error);
+const fetchAssignedProjects = async () => {
+  try {
+    const response = await axios.get(
+      API_URL + "/assigned-projects",
+      WITH_CREDENTIALS
+    );
+    if (response.status === 200) {
+      setAssignedProjects(response.data);
+    } else {
+      console.error("Server could not find projects");
     }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
 
 
   useEffect(() => {
     getProject();
+    if(role_id === 2){
     fetchAssignedProjects();
-  }, [id]);
+    fetchRequestedProjects();
+    }
+  }, [role_id,requestedProjects]);
 
   return (
     <div>
       <NavigationBar />
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={2}
-      />
+
       <div className={styles.singleProject}>
         <h1 className={styles.projectTitle}>{project.title}</h1>
         <div className={styles.projectDetails}>
@@ -129,12 +139,12 @@ export const ProjectDetails = () => {
             !assignedProjects.some(
               (assignedProjects) =>
                 assignedProjects.project_id === project.project_id
+            ) &&
+            !requestedProjects.some(
+              (requestProject) =>
+                requestProject.project_id === project.project_id
             ) && (
-              <button
-                className={styles.requestButton}
-                onClick={requestProject}
-                disabled={request}
-              >
+              <button className={styles.requestButton} onClick={requestProject}>
                 Assign me
               </button>
             )}
