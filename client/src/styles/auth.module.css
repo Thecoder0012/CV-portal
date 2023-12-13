@@ -96,6 +96,11 @@ select:focus {
   transition: background-color 0.3s ease;
 }
 
+  .personInfo {
+    border-top: 1px solid #A100FF;
+    padding-top: 10px
+}
+
 
 .loginButton:hover {
   background-color: #8800ff
