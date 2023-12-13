@@ -192,5 +192,9 @@ text-align: center;
 
 
 .assignedProject {
-  border: 1px solid rgb(7, 168, 7);
+  border: 2px solid rgb(7, 168, 7);
+}
+
+.pendingRequest {
+  border: 2px solid rgba(236, 174, 58, 0.79); 
 }

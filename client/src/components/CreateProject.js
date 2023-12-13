@@ -89,12 +89,6 @@ export const CreateProject = () => {
   return (
     <div className={styles.createProjects}>
       <NavigationBar />
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={1}
-      />
       <form className={styles.projectForm} onSubmit={handleSubmit}>
         <div className={styles.projectFormGroup}>
           <input
