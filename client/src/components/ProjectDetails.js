@@ -23,6 +23,8 @@ const [requestedProjects, setRequestedProjects] = useState([]);
 
   const [role_id, setRoleId] = useState();
   const [assignedProjects, setAssignedProjects] = useState([]);
+  const [employeeId, setEmployeeID] = useState(null);
+
 
   const WITH_CREDENTIALS = { withCredentials: true };
   const { id } = useParams();
@@ -42,9 +44,10 @@ const [requestedProjects, setRequestedProjects] = useState([]);
 
   const fetchRequestedProjects = async () => {
     try {
-      const response = await axios.get(API_URL + "/project-requests");
+      const response = await axios.get(API_URL + "/project-requests",WITH_CREDENTIALS);
       if (response.status === 200) {
         setRequestedProjects(response.data.requestedProjects);
+        setEmployeeID(response.data.employee_id);
       } else {
         console.error("Server could not find requested projects");
       }
@@ -142,7 +145,8 @@ const fetchAssignedProjects = async () => {
             ) &&
             !requestedProjects.some(
               (requestProject) =>
-                requestProject.project_id === project.project_id
+                requestProject.project_id === project.project_id &&
+                requestProject.employee_id === employeeId
             ) && (
               <button className={styles.requestButton} onClick={requestProject}>
                 Assign me

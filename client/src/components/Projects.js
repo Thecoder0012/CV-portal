@@ -27,6 +27,7 @@ export const Projects = () => {
   const [assignedProjects, setAssignedProjects] = useState([]);
   const [roleId, setRoleId] = useState([]);
   const [requestedProjects,setRequestedProjects] = useState(null)
+  const [employeeId, setEmployeeID] = useState(null);
 
   const fetchProjects = async () => {
     try {
@@ -44,9 +45,10 @@ export const Projects = () => {
 
    const fetchRequestedProjects = async () => {
      try {
-       const response = await axios.get(API_URL + "/project-requests");
+       const response = await axios.get(API_URL + "/project-requests",WITH_CREDENTIALS);
        if (response.status === 200) {
          setRequestedProjects(response.data.requestedProjects);
+         setEmployeeID(response.data.employee_id)
        } else {
          console.error("Server could not find requested projects");
        }
@@ -120,7 +122,9 @@ export const Projects = () => {
             } ${
               requestedProjects &&
               requestedProjects.some(
-                (requestedProject) => requestedProject.project_id === project.id
+                (requestedProject) =>
+                  requestedProject.project_id === project.id &&
+                  requestedProject.employee_id === employeeId
               ) &&
               mainCss.pendingRequest
             }`}

@@ -152,7 +152,6 @@ router.get("/assigned-projects", async (req, res) => {
         where employee.employee_id = ?;`,
       [employee_id]
     );
-    console.log(assignedProjects);
 
     res.status(200).send(assignedProjects);
   } else {
@@ -353,16 +352,26 @@ router.post("/request-project", async (req, res) => {
 router.get("/project-requests", async (req, res) => {
   try {
     const role_id = req.session.user.role_id;
+    const user_id = req.session.user.user_id;
+
 
     if (role_id !== 2) {
       return res.status(403).send({ message: "You are not an employee" });
     }
 
+    const [employee] = await db.query(
+      `SELECT * FROM employee
+      INNER JOIN users ON employee.user_id = users.user_id
+      WHERE users.user_id = ?;`,[user_id]
+    );
+    
+    const employee_id = employee[0].employee_id
+
     const [requestedProjects] = await db.query(
       `SELECT employee_id, project_id, status FROM project_requests`
     );
 
-    res.status(200).send({ requestedProjects });
+    res.status(200).send({ requestedProjects,employee_id});
   } catch (error) {
     console.error("Could not fetch the projects:", error);
     res.status(500).send({ message: "Internal Server Error" });
