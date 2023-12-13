@@ -119,12 +119,6 @@ export const ProjectAssignment = () => {
   return (
     <div>
       <NavigationBar />
-      <ToastContainer
-        autoClose={15000}
-        closeOnClick={true}
-        position={toast.POSITION.TOP_CENTER}
-        limit={3}
-      />
       <div className={styles.tableContainer}>
         <h2 className={styles.tableHeader}>Projects</h2>
         <table className={styles.table}>

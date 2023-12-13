@@ -46,13 +46,6 @@ export const RegisterManager = () => {
     <div className={styles.mainContainer}>
     <NavigationBar/>
 
- <ToastContainer
-   autoClose={3000}
-   closeOnClick={true}
-   position={toast.POSITION.TOP_CENTER}
-   limit={3}
- />
-
  <div className={styles.registerContainer}>
    <div className={styles.register}>
      <span className={styles.registerTitle}>Create Manager</span>

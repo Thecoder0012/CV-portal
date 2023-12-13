@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../config/apiUrl.js";
 import logo from "../images/logo.png";
@@ -15,6 +15,7 @@ export const NavigationBar = () => {
   const [role, setRole] = useState();
   const [userId, setUserId] = useState();
   const WITH_CREDENTIALS = { withCredentials: true };
+  const location = useLocation(); 
 
   async function fetchUser() {
     const response = await axios.get(API_URL + "/auth-login", WITH_CREDENTIALS);
@@ -58,40 +59,73 @@ export const NavigationBar = () => {
         </div>
         {role === "Employee" && (
           <div className={Navbar.Options}>
-            <Link to="/main" className={Navbar.Link}>
+            <Link
+              to="/main"
+              className={`${Navbar.Link} ${
+                location.pathname === "/main" ? Navbar.activeLink : ""
+              }`}
+            >
               <h4>Home</h4>
             </Link>
-            <Link className={Navbar.Link} to="/projects">
+            <Link
+              className={`${Navbar.Link} ${
+                location.pathname === "/projects" ? Navbar.activeLink : ""
+              }`}
+              to="/projects"
+            >
               <h4>View Projects</h4>
             </Link>
           </div>
         )}
         {role === "Manager" && (
           <div className={Navbar.Options}>
-            <Link to="/main" className={Navbar.Link}>
+            <Link
+              to="/main"
+              className={`${Navbar.Link} ${
+                location.pathname === "/main" ? Navbar.activeLink : ""
+              }`}
+            >
               <h4>Home</h4>
             </Link>
-            <Link className={Navbar.Link} to="/projects">
+            <Link
+              className={`${Navbar.Link} ${
+                location.pathname === "/projects" ? Navbar.activeLink : ""
+              }`}
+              to="/projects"
+            >
               <h4>View Projects</h4>
             </Link>
-            <Link className={Navbar.Link} to="/createProject">
+            <Link
+              className={`${Navbar.Link} ${
+                location.pathname === "/createProject" ? Navbar.activeLink : ""
+              }`}
+              to="/createProject"
+            >
               <h4>Create Project</h4>
             </Link>
-            <Link className={Navbar.Link} to="/searchSkills">
+            <Link
+              className={`${Navbar.Link} ${
+                location.pathname === "/searchSkills" ? Navbar.activeLink : ""
+              }`}
+              to="/searchSkills"
+            >
               <h4>Search Employee Skills</h4>
             </Link>
           </div>
         )}
-        <div className={Navbar.iconWrapper}>
+        <div
+          className={Navbar.iconWrapper}
+          onMouseEnter={() => setDropdownVisible(true)}
+          onMouseLeave={() => setDropdownVisible(false)}
+        >
           <li className={Navbar.dropdown}>
-            <h4 onClick={() => setDropdownVisible(!dropdownVisible)}>
+            <h4 >
               {auth} / {role}
             </h4>
             <FontAwesomeIcon
               icon={faCaretDown}
               className={Navbar.dropbtnArrow}
               style={{ color: "#A100FF" }}
-              onClick={() => setDropdownVisible(!dropdownVisible)}
             />
 
             {dropdownVisible && role === "Employee" && (

@@ -133,27 +133,31 @@ router.delete(
 );
 
 router.get("/assigned-projects", async (req, res) => {
-  const user_id = req.session.user.user_id;
+  if (req.session.user.role_id === 2) {
+    const user_id = req.session.user.user_id;
+    const [employee] = await db.query(
+      `
+        SELECT * from employee
+        INNER join users ON employee.user_id = users.user_id
+        WHERE employee.user_id = ?;`,
+      [user_id]
+    );
 
-  const [employee] = await db.query(
-    `
-  SELECT * from employee
-  INNER join users ON employee.user_id = users.user_id
-  WHERE employee.user_id = ?;`,
-    [user_id]
-  );
+    const employee_id = employee[0].employee_id;
+    const [assignedProjects] = await db.query(
+      `
+        Select * from employee
+        INNER join employee_projects 
+        ON employee.employee_id = employee_projects.employee_id
+        where employee.employee_id = ?;`,
+      [employee_id]
+    );
+    console.log(assignedProjects);
 
-  const employee_id = employee[0].employee_id;
-  const [assignedProjects] = await db.query(
-    `
-  Select * from employee
-  INNER join employee_projects 
-  ON employee.employee_id = employee_projects.employee_id
-  where employee.employee_id = ?;`,
-    [employee_id]
-  );
-
-  res.status(200).send(assignedProjects);
+    res.status(200).send(assignedProjects);
+  } else {
+    res.status(403).send({ message: "Access forbidden for this role" });
+  }
 });
 
 router.post("/projects", upload.single("file"), async (req, res) => {
@@ -281,41 +285,55 @@ router.get("/api/managers", async (req, res) => {
 });
 
 router.post("/request-project", async (req, res) => {
-  const user_id = req.session.user.user_id;
-  const project_id = req.body.project_id;
+  try {
+    const user_id = req.session.user.user_id;
+    const project_id = req.body.project_id;
+    const role_id = req.session.user.role_id;
 
-  const [employee] = await db.query(
-    `
-    SELECT person.first_name, person.last_name,email
-    FROM users
-    INNER JOIN employee ON users.user_id = employee.user_id
-    INNER JOIN person ON employee.person_id = person.person_id
-    WHERE users.user_id = ?`,
-    [user_id]
-  );
+    if (!user_id || !project_id || role_id !== 2) {
+      return res
+        .status(400)
+        .send({ message: "Something happended. Try again" });
+    }
 
-  const [project] = await db.query(`SELECT * from project WHERE id = ?`, [
-    project_id,
-  ]);
+    const [employee] = await db.query(
+      `
+      SELECT employee.employee_id,person.first_name, person.last_name,email
+      FROM users
+      INNER JOIN employee ON users.user_id = employee.user_id
+      INNER JOIN person ON employee.person_id = person.person_id
+      WHERE users.user_id = ?`,
+      [user_id]
+    );
 
-  const [manager] = await db.query(
-    `
-    SELECT * from project
-    INNER JOIN manager ON project.manager_id = manager.id
-    INNER JOIN person ON manager.person_id = person.person_id
-    INNER JOIN users ON manager.user_id = users.user_id
-    where project.id = ?;`,
-    [project_id]
-  );
+    const [project] = await db.query(`SELECT * FROM project WHERE id = ?`, [
+      project_id,
+    ]);
 
-  const employee_name = employee[0].first_name + " " + employee[0].last_name;
-  const employee_email = employee[0].email;
+    const [manager] = await db.query(
+      `
+      SELECT * FROM project
+      INNER JOIN manager ON project.manager_id = manager.id
+      INNER JOIN person ON manager.person_id = person.person_id
+      INNER JOIN users ON manager.user_id = users.user_id
+      WHERE project.id = ?;`,
+      [project_id]
+    );
 
-  const manager_name = manager[0].first_name + " " + manager[0].last_name;
-  const manager_email = manager[0].email;
+    const requestedProject = await db.query(
+      `
+      INSERT INTO project_requests (employee_id, project_id, status)
+      VALUES (?, ?, ?)`,
+      [employee[0].employee_id, project_id, true]
+    );
 
-  const mailInfo = transporter.sendMail(
-    {
+    const employee_name = employee[0].first_name + " " + employee[0].last_name;
+    const employee_email = employee[0].email;
+
+    const manager_name = manager[0].first_name + " " + manager[0].last_name;
+    const manager_email = manager[0].email;
+
+    const mailInfo = await transporter.sendMail({
       from: employee_email,
       to: manager_email,
       subject: "Project Request assignment from: " + employee_name,
@@ -323,21 +341,31 @@ router.post("/request-project", async (req, res) => {
         Best regards \n
         Employee:
         ${employee_name}`,
-    },
-    (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        res.status(200).send({
-          message: "You have successfully sent a message!",
-        });
-      }
-    }
-  );
+    });
 
-  return res
-    .status(200)
-    .send({ message: "Your request has been sent!", request: true });
+    res.status(200).send({ message: "Your request has been sent!" });
+  } catch (error) {
+    console.error("Error sending project request:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
 });
 
+router.get("/project-requests", async (req, res) => {
+  try {
+    const role_id = req.session.user.role_id;
+
+    if (role_id !== 2) {
+      return res.status(403).send({ message: "You are not an employee" });
+    }
+
+    const [requestedProjects] = await db.query(
+      `SELECT employee_id, project_id, status FROM project_requests`
+    );
+
+    res.status(200).send({ requestedProjects });
+  } catch (error) {
+    console.error("Could not fetch the projects:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
 export default router;
