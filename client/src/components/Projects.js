@@ -120,11 +120,15 @@ export const Projects = () => {
                 (assignedProject) => assignedProject.project_id === project.id
               ) && mainCss.assignedProject
             } ${
+              !assignedProjects.some(
+                (assignedProject) => assignedProject.project_id === project.id
+              ) &&
               requestedProjects &&
               requestedProjects.some(
                 (requestedProject) =>
                   requestedProject.project_id === project.id &&
-                  requestedProject.employee_id === employeeId
+                  requestedProject.employee_id === employeeId &&
+                  requestedProject.status === 1
               ) &&
               mainCss.pendingRequest
             }`}

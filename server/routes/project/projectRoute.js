@@ -1,8 +1,8 @@
-import transporter from "../mail/mailConfig.js";
+import transporter from "../../mail/mailConfig.js";
 import multer from "multer";
 import path from "path";
 import { Router } from "express";
-import db from "../db/connection.js";
+import db from "../../db/connection.js";
 
 const router = Router();
 
@@ -30,6 +30,115 @@ const isManager = (req, res, next) => {
       .send({ message: "Forbidden route! You are not authorized" });
   }
 };
+
+router.post("/projects", upload.single("file"), async (req, res) => {
+  try {
+    const { title, description, date_finish, manager_id } = req.body;
+    const projectFile = req.file ? req.file.filename : null;
+
+    let [projectCount] = await db.query(
+      "SELECT COUNT(*) as count FROM project"
+    );
+    projectCount = projectCount[0].count;
+
+    if (projectCount >= 20) {
+      return res.status(400).send({
+        message: "Project limit reached.",
+      });
+    }
+
+    const createProjectQuery = `
+        INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
+        VALUES (?, ?, false, CURDATE(), ?, ?,?)
+    `;
+
+    const result = await db.query(createProjectQuery, [
+      title,
+      description,
+      date_finish,
+      projectFile,
+      manager_id,
+    ]);
+
+    res.status(200).send({ message: "Project succesfully created" });
+  } catch (error) {
+    console.error("Error while creating the project:", error);
+    res.status(500).send({ message: "Error while creating the project" });
+  }
+});
+
+router.get("/projects/:id", async (req, res) => {
+  try {
+    const project_id = req.params.id;
+    const role_id = req.session.user.role_id;
+    const [project] = await db.query(
+      `SELECT project.id AS project_id, project.*, manager.*, person.*
+       FROM project
+       INNER JOIN manager ON project.manager_id = manager.id
+       INNER JOIN person ON manager.person_id = person.person_id
+       WHERE project.id = ?`,
+      [project_id]
+    );
+
+    if (!project) {
+      return res.status(404).send("Sorry, Project not found");
+    }
+
+    const getProject = project[0];
+    res.status(200).json({ getProject, role_id });
+  } catch (error) {
+    console.error("Error while fetching the project:", error);
+    res.status(500).send({ message: "Error while fetching the project" });
+  }
+});
+
+router.put("/projects/:id", async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { title, description, done, date_finish } = req.body;
+
+    const updateProjectQuery = `
+        UPDATE project 
+        SET title = ?, 
+            description = ?, 
+            done = ?,
+            date_finish = ?
+        WHERE id = ?
+    `;
+
+    await db.query(updateProjectQuery, [
+      title,
+      description,
+      done,
+      date_finish,
+      projectId,
+    ]);
+
+    res.status(200).send("Project updated successfully");
+  } catch (error) {
+    console.error("Error while updating project:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.delete("/projects/:id", async (req, res) => {
+  const projectId = req.params.id;
+
+  try {
+    const deleteEmployeeProject = await db.query(
+      "UPDATE employee_projects SET project_id = NULL WHERE project_id = ?",
+      [projectId]
+    );
+
+    const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
+    await db.query(deleteProjectQuery, [projectId]);
+
+    res.status(200).send("Project deleted successfully");
+  } catch (error) {
+    console.error("Error deleting the project:", error);
+    res.status(500).send(`Error deleting the project: ${error.message}`);
+  }
+});
 
 router.post("/project-assignment", async (req, res) => {
   try {
@@ -159,134 +268,6 @@ router.get("/assigned-projects", async (req, res) => {
   }
 });
 
-router.post("/projects", upload.single("file"), async (req, res) => {
-  try {
-    const { title, description, date_finish, manager_id } = req.body;
-    const projectFile = req.file ? req.file.filename : null;
-
-    let [projectCount] = await db.query(
-      "SELECT COUNT(*) as count FROM project"
-    );
-    projectCount = projectCount[0].count;
-
-    if (projectCount >= 20) {
-      return res.status(400).send({
-        message: "Project limit reached.",
-      });
-    }
-
-    const createProjectQuery = `
-        INSERT INTO project (title, description, done, date_made, date_finish, file_path,manager_id)
-        VALUES (?, ?, false, CURDATE(), ?, ?,?)
-    `;
-
-    const result = await db.query(createProjectQuery, [
-      title,
-      description,
-      date_finish,
-      projectFile,
-      manager_id,
-    ]);
-    
-    const createdProjectTitle = title
-    
-    res.status(200).send({
-      message: `Project "${createdProjectTitle}" created!`,
-    });
-  } catch (error) {
-    console.error("Error while creating the project:", error);
-    res.status(500).send({ message: "Error while creating the project" });
-  }
-});
-
-router.get("/projects/:id", async (req, res) => {
-  try {
-    const project_id = req.params.id;
-    const role_id = req.session.user.role_id;
-    const [project] = await db.query(
-      `SELECT project.id AS project_id, project.*, manager.*, person.*
-       FROM project
-       INNER JOIN manager ON project.manager_id = manager.id
-       INNER JOIN person ON manager.person_id = person.person_id
-       WHERE project.id = ?`,
-      [project_id]
-    );
-
-    if (!project) {
-      return res.status(404).send("Sorry, Project not found");
-    }
-
-    const getProject = project[0];
-    res.status(200).json({ getProject, role_id });
-  } catch (error) {
-    console.error("Error while fetching the project:", error);
-    res.status(500).send({ message: "Error while fetching the project" });
-  }
-});
-
-router.put("/projects/:id", async (req, res) => {
-  try {
-    const projectId = req.params.id;
-    const { title, description, done, date_finish } = req.body;
-
-    const updateProjectQuery = `
-        UPDATE project 
-        SET title = ?, 
-            description = ?, 
-            done = ?,
-            date_finish = ?
-        WHERE id = ?
-    `;
-
-    await db.query(updateProjectQuery, [
-      title,
-      description,
-      done,
-      date_finish,
-      projectId,
-    ]);
-
-    res.status(200).send("Project updated successfully");
-  } catch (error) {
-    console.error("Error while updating project:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
-router.delete("/projects/:id", async (req, res) => {
-  const projectId = req.params.id;
-
-  try {
-    const deleteEmployeeProject = await db.query(
-      "UPDATE employee_projects SET project_id = NULL WHERE project_id = ?",
-      [projectId]
-    );
-
-    const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
-    await db.query(deleteProjectQuery, [projectId]);
-
-    res.status(200).send("Project deleted successfully");
-  } catch (error) {
-    console.error("Error deleting the project:", error);
-    res.status(500).send(`Error deleting the project: ${error.message}`);
-  }
-});
-
-router.get("/api/managers", async (req, res) => {
-  try {
-    const [managers] = await db.query(`
-    SELECT person.first_name, person.last_name,manager.id
-    FROM users
-    INNER JOIN manager ON users.user_id = manager.user_id
-    INNER JOIN person ON manager.person_id = person.person_id`);
-
-    res.status(200).send({ managers });
-  } catch (error) {
-    console.error("Error finding managers:", error);
-    res.status(500).send({ error: "Internal server error" });
-  }
-});
-
 router.post("/request-project", async (req, res) => {
   try {
     const user_id = req.session.user.user_id;
@@ -358,7 +339,6 @@ router.get("/project-requests", async (req, res) => {
     const role_id = req.session.user.role_id;
     const user_id = req.session.user.user_id;
 
-
     if (role_id !== 2) {
       return res.status(403).send({ message: "You are not an employee" });
     }
@@ -366,16 +346,17 @@ router.get("/project-requests", async (req, res) => {
     const [employee] = await db.query(
       `SELECT * FROM employee
       INNER JOIN users ON employee.user_id = users.user_id
-      WHERE users.user_id = ?;`,[user_id]
+      WHERE users.user_id = ?;`,
+      [user_id]
     );
-    
-    const employee_id = employee[0].employee_id
+
+    const employee_id = employee[0].employee_id;
 
     const [requestedProjects] = await db.query(
       `SELECT employee_id, project_id, status FROM project_requests`
     );
 
-    res.status(200).send({ requestedProjects,employee_id});
+    res.status(200).send({ requestedProjects, employee_id });
   } catch (error) {
     console.error("Could not fetch the projects:", error);
     res.status(500).send({ message: "Internal Server Error" });

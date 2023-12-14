@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "../styles/UpdateProjectPopup.module.css";
 import Swal from "sweetalert2";
 import { API_URL } from "../config/apiUrl.js";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
@@ -19,6 +19,7 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
     date_finish: "",
   });
 
+  console.log(projectData);
 
 
   const formatDate = (inputDate) => {
@@ -88,8 +89,8 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const response = await axios.get(API_URL + `/projects/${projectId}`);
-        const project = response.data;
+        const response = await axios.get(API_URL + `/projects/${projectId}`,WITH_CREDENTIALS);
+        const project = response.data.getProject;
         setProjectData({
           title: project.title,
           description: project.description,

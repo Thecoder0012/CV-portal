@@ -50,7 +50,7 @@ export const RegisterManager = () => {
         role_id: 1,
       });
   
-      const profileResponse = await axios.post(API_URL + "/registerManager", {
+      const profileResponse = await axios.post(API_URL + "/manager", {
         firstName: firstName,
         lastName: lastName,
         dateOfBirth: dateOfBirth,

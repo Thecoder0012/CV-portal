@@ -15,9 +15,11 @@ input{
  font-family: 'Lato';
 }
 
-input:focus{
+.searchInput:focus{
   border-color: rgb(161, 0, 255);
 }
+
+
 
 .tableContainer {
   overflow-x: auto;
@@ -51,6 +53,7 @@ input:focus{
 
 .tableRow:hover {
   background-color: rgba(191, 102, 243, 0.9); 
+  cursor: pointer;
 }
 
 .skill {
