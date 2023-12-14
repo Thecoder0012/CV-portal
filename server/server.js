@@ -1,10 +1,9 @@
 import express from "express";
 import session from "express-session";
-import authRouter from "./routes/auth.js";
-import profileRouter from "./routes/profile.js";
-import projectsRouter from "./routes/projects.js";
-import createManagerRouter from './routes/createManager.js';
-
+import authRouter from "./routes/auth/authRoute.js";
+import profileRouter from "./routes/profile/profileRoute.js";
+import projectsRouter from "./routes/project/projectRouter.js";
+import apiRouter from "./routes/api/apiRoute.js";
 import cors from 'cors';
 import path from "path";
 import "dotenv/config";
@@ -37,10 +36,10 @@ app.use(
   })
 );
 
+app.use(apiRouter)
 app.use(authRouter);
 app.use(profileRouter);
 app.use(projectsRouter);
-app.use(createManagerRouter);
 
 app.listen(8080,() => {
     console.log("Running on port",8080);
