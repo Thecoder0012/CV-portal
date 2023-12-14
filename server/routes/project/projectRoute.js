@@ -351,7 +351,7 @@ router.get("/project-requests", async (req, res) => {
     );
 
     const employee_id = employee[0].employee_id;
-    
+
     const [requestedProjects] = await db.query(
       `SELECT employee_id, project_id, status FROM project_requests`
     );
