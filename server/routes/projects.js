@@ -187,8 +187,12 @@ router.post("/projects", upload.single("file"), async (req, res) => {
       projectFile,
       manager_id,
     ]);
-
-    res.status(200).send({ message: "Project succesfully created" });
+    
+    const createdProjectTitle = title
+    
+    res.status(200).send({
+      message: `Project "${createdProjectTitle}" created!`,
+    });
   } catch (error) {
     console.error("Error while creating the project:", error);
     res.status(500).send({ message: "Error while creating the project" });

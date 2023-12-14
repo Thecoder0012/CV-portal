@@ -1,7 +1,6 @@
 import styles from "../styles/auth.module.css";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { NavigationBar } from "./NavigationBar.js";
 import axios from "axios";
@@ -158,7 +157,7 @@ export const RegisterManager = () => {
                 Select a Department
               </option>
               {departments.map((department) => (
-                <option key={department.id} value={department.id}>
+                <option key={department.id} value={department.id} className={styles.test1}>
                   {department.name}, {department.country}
                 </option>
               ))}

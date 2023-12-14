@@ -99,6 +99,8 @@ router.get("/profile/:id", async (req, res) => {
 });
 
 router.post("/profile", upload.single("file"), async (req, res) => {
+
+  console.log("TEST")
   try {
     const {
       first_name,
@@ -110,7 +112,12 @@ router.post("/profile", upload.single("file"), async (req, res) => {
     } = req.body;
     let file_path = req.file.filename;
 
+    console.log("TEST2")
+console.log("test3")
+console.log("USERID")
     const user_id = req.session.user.user_id;
+    console.log("USERID")
+    console.log(user_id)
     const [existingProfile] = await db.query(
       `SELECT * FROM employee 
        INNER JOIN person 
@@ -120,6 +127,8 @@ router.post("/profile", upload.single("file"), async (req, res) => {
        OR person.phone_number = ?`,
       [user_id, phone_number]
     );
+
+    console.log("test3")
 
     if (existingProfile.length > 0) {
       const user_exists = existingProfile.some(
@@ -158,7 +167,7 @@ router.post("/profile", upload.single("file"), async (req, res) => {
 
       return res
         .status(200)
-        .send({ message: "The employee has been registered" });
+        .send({ message: `Your profile was created, ${first_name} ${last_name} ` });
     }
   } catch (error) {
     return res.status(500).send({ message: "Internal server error" });
