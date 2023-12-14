@@ -14,9 +14,11 @@ input{
  outline: none;
 }
 
-input:focus{
+.searchInput:focus{
   border-color: rgb(161, 0, 255);
 }
+
+
 
 .tableContainer {
   overflow-x: auto;
@@ -49,6 +51,7 @@ input:focus{
 
 .tableRow:hover {
   background-color: #e0e0e0;
+  cursor: pointer;
 }
 
 .skill {
