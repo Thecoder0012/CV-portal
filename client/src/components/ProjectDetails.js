@@ -56,6 +56,8 @@ const [requestedProjects, setRequestedProjects] = useState([]);
     }
   };
 
+  //CreateProject css og description i ManageProject
+
 
   const requestProject = async () => {
     try {
@@ -108,25 +110,22 @@ const fetchAssignedProjects = async () => {
         <h1 className={styles.projectTitle}>{project.title}</h1>
         <div className={styles.projectDetails}>
           <p>
-            <strong>Description:</strong> {project.description}
+            <strong>Project Description: </strong> {project.description}
           </p>
           <p>
-            <strong>Author:</strong> {project.first_name}
+            <strong>Project Manager: </strong> {project.first_name}
           </p>
           <p>
-            <strong>Status:</strong>
-            {project.done ? "Finished" : "Not finished"}
+            <strong>Project Status: </strong>
+            {project.done ? "Active" : "Inactive"}
           </p>
           <p>
-            <strong>Date Made:</strong>
+            <strong>Project Created: </strong>
             {new Date(project.date_made).toLocaleDateString()}
           </p>
           <p>
-            <strong>Date Finish:</strong>
+            <strong>Project End Date: </strong>
             {new Date(project.date_finish).toLocaleDateString()}
-          </p>
-          <p>
-            <strong>Pdf:</strong> {project.file_path}
           </p>
           {project.file_path && (
             <a
@@ -135,7 +134,7 @@ const fetchAssignedProjects = async () => {
               rel="noopener noreferrer"
               className={styles.viewPdfLink}
             >
-              View Project PDF
+              View PDF
             </a>
           )}
           {role_id === 2 &&
