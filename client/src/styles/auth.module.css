@@ -99,13 +99,15 @@ select:focus {
   .personInfo {
     border-top: 1px solid #A100FF;
     padding-top: 10px
-}
-
+  }
 
 .loginButton:hover {
   background-color: #8800ff
 }
 
+.test1{
+  font-family: 'Lato';
+}
 
 .registerButton:hover {
   background-color: #8800ff
@@ -131,6 +133,7 @@ select:focus {
   font-size: 16px;
   border: 1px solid #ced4da;
   border-radius: 4px;
+  font-family: 'Lato';
 }
 
 .checkboxContainer {

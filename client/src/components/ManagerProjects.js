@@ -75,7 +75,7 @@ export const ManagerProjects = () => {
                   {project.title}
                 </td>
                 <td style={{ color: project.done ? 'green' : 'red' }}>
-              {project.done ? 'Finished' : 'Not finished'}
+              {project.done ? 'Active' : 'Inactive'}
             </td>
                 <td>{new Date(project.date_made).toLocaleDateString()}</td>
                 <td>{new Date(project.date_finish).toLocaleDateString()}</td>                

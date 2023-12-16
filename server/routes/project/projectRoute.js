@@ -4,6 +4,7 @@ import path from "path";
 import { Router } from "express";
 import db from "../../db/connection.js";
 
+
 const router = Router();
 
 const storage = multer.diskStorage({
@@ -351,7 +352,7 @@ router.get("/project-requests", async (req, res) => {
     );
 
     const employee_id = employee[0].employee_id;
-    
+
     const [requestedProjects] = await db.query(
       `SELECT employee_id, project_id, status FROM project_requests`
     );
@@ -362,4 +363,24 @@ router.get("/project-requests", async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+
+router.get("/projects/:id/assigned", async (req, res) => {
+  const projectId = req.params.id;
+
+  const assignedEmployees = await db.query(
+    "SELECT * FROM employee_projects \
+    INNER JOIN employee ON employee_projects.employee_id = employee.employee_id \
+    INNER JOIN person ON employee.person_id = person.person_id \
+    WHERE employee_projects.project_id = ?",
+    [projectId]
+  );
+
+  
+
+
+
+
+});
+
 export default router;

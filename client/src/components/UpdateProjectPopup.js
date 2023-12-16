@@ -175,8 +175,8 @@ projectData.date_finish = formatDate(projectData.date_finish)
           value={projectData.done}
           onChange={handleInputChange}
         >
-          <option value={0}>Not finished</option>
-          <option value={1}>Finished</option>
+          <option value={1}>Active</option>
+          <option value={0}>Inactive</option>
         </select>
         <label>End date:</label>
         <input
