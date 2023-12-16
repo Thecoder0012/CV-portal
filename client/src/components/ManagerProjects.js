@@ -9,8 +9,8 @@ import UpdateProjectPopup from "./UpdateProjectPopup";
 export const ManagerProjects = () => {
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 4;
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const projectsPerPage = 4;
 
   const fetchProjects = async () => {
     try {
@@ -38,19 +38,9 @@ export const ManagerProjects = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleProjectClick = (projectId) => {
-    setSelectedProjectId(projectId);
-  };
-
   const handleUpdateClick = (projectId) => {
     setSelectedProjectId(projectId);
   };
-
-  const handleUpdateRow = (e) => {
-    const projectId = e.currentTarget.dataset.projectId;
-    handleUpdateClick(projectId);
-  };
-
 
   return (
     <div>

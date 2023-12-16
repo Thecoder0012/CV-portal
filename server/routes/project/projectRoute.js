@@ -365,10 +365,10 @@ router.get("/project-requests", async (req, res) => {
 });
 
 
-router.get("/projects/:id/assigned", async (req, res) => {
+router.get("/projects/assigned/:id", async (req, res) => {
   const projectId = req.params.id;
 
-  const assignedEmployees = await db.query(
+  const [assignedEmployees] = await db.query(
     "SELECT * FROM employee_projects \
     INNER JOIN employee ON employee_projects.employee_id = employee.employee_id \
     INNER JOIN person ON employee.person_id = person.person_id \
@@ -376,8 +376,13 @@ router.get("/projects/:id/assigned", async (req, res) => {
     [projectId]
   );
 
-  
+  const EmployeeNames = []
+  for(const item of assignedEmployees){
+    EmployeeNames.push(item.first_name + " " + item.last_name)
+  }
 
+
+return res.status(200).send({assignedEmployees: EmployeeNames})
 
 
 

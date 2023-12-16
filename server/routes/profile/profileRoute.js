@@ -111,12 +111,9 @@ router.post("/profile", upload.single("file"), async (req, res) => {
     } = req.body;
     let file_path = req.file.filename;
 
-    console.log("TEST2")
-console.log("test3")
-console.log("USERID")
+
     const user_id = req.session.user.user_id;
-    console.log("USERID")
-    console.log(user_id)
+
     const [existingProfile] = await db.query(
       `SELECT * FROM employee 
        INNER JOIN person 
@@ -126,8 +123,6 @@ console.log("USERID")
        OR person.phone_number = ?`,
       [user_id, phone_number]
     );
-
-    console.log("test3")
 
     if (existingProfile.length > 0) {
       const user_exists = existingProfile.some(

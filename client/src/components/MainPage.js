@@ -7,14 +7,8 @@ import { useOnScreen } from "./UseOnScreen";
 export const MainPage = () => {
   const accentureFactsRef = useRef(null);
 
-  const isOnScreen = useOnScreen(accentureFactsRef);
-
-
-
-
-  if({isOnScreen}) {
-    
-  }
+  useOnScreen(accentureFactsRef);
+  
   return (
     <div>
       <NavigationBar className={main.NavBar} />

@@ -13,8 +13,8 @@
 
 .projectTitle {
   color: #a100ff;
-  font-size: 32px;
   font-family: 'Lato';
+  text-align: center;
 }
 
 
@@ -34,13 +34,45 @@
 
 
 .viewPdfLink {
-  color: #a100ff;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
   text-decoration: none;
-  font-size: 18px;
+  color: #a100ff;
 }
 
 .viewPdfLink:hover {
   text-decoration: underline;
+}
+.assignedEmployees{
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+li{
+  font-family: 'Lato';
+}
+
+h2 {
+  font-family: 'Lato';
+}
+
+
+.assignedToProject{
+  font-size: smaller;
+  color: black;
+  cursor: pointer;
+}
+
+.assignedNames{
+  font-size: smaller;
+  cursor: pointer;
+  
+}
+
+.assignedNames:hover{
+  text-decoration: underline;
+  text-decoration-color: #a100ff;
 }
 
 .deleteButton {
