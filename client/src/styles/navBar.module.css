@@ -63,13 +63,11 @@ h4 {
 .Link {
     position: relative;
     text-decoration: none;
-    transition: color 0.3s ease;
     padding-bottom: 3px;
 }
   
 
 .Link::before {
-
     content: '';
     position: absolute;
     bottom: 0;
@@ -80,9 +78,6 @@ h4 {
     
 }
 
-.Link:hover {
-    color: black;
-}
 
 .Link:hover::before {
     width: 90%;

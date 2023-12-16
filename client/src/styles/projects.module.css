@@ -17,8 +17,8 @@
 }
 
 .projectForm {
- text-align: center;
- margin-top: 50px;
+  text-align: center;
+  margin-top: 50px;
 }
 
 
@@ -83,12 +83,8 @@ select:focus {
 
 .writeProjectsText {
   font-family: 'Lato';
-  font-size: 20px;
-  padding: 10px;
   width: 70vw;
-  height: 4vh;
   margin: 10px;
-  border-color: rgba(161, 0, 255, 0.19);
 }
 
 
@@ -110,8 +106,8 @@ select:focus {
 }
 
 .projectSubmit {
-  width: -webkit-fill-available; 
-  width: fill-available; 
+  width: -webkit-fill-available;
+  width: fill-available;
   background-color: #A100FF;
   color: #fff;
   padding: 10px;
@@ -125,14 +121,14 @@ select:focus {
 
 .imagePreview {
   position: relative;
-    top: 30px;
-    left: 9%;
-    width: 100%;
-    max-height: 25vw;
-    max-width: 70vw;
-    margin-top: 10px;
-    object-fit: cover;
-    border-radius: 26px;
+  top: 30px;
+  left: 9%;
+  width: 100%;
+  max-height: 25vw;
+  max-width: 70vw;
+  margin-top: 10px;
+  object-fit: cover;
+  border-radius: 26px;
 }
 
 .pdfPreview {
@@ -140,23 +136,21 @@ select:focus {
   font-size: 16px;
 }
 
-.pdfPreview img{
+.pdfPreview img {
   width: 50px;
   height: auto;
   margin-right: 10px;
 }
 
-.author{
+.author {
   margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 16px;
-    border-color: rgba(161, 0, 255, 0.19);
+  padding: 10px;
+  width: 1000px;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
-.createProjectInputs{
+.createProjectInputs {
   display: inline-grid;
   margin-top: 10px;
 }
-

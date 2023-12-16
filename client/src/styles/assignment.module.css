@@ -128,13 +128,25 @@
   cursor: pointer;
   border-radius: 5px;
   background: none;
-  transition: background-color 0.3s ease;
+  position: relative;
+  transition: color 0.3s ease; /* Transition color on hover */
 }
 
-.tableContainer table .assignEmployee:hover {
-  background-color: rgba(191, 102, 243, 0.9);
-  cursor: pointer;
+.assignEmployee::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px; 
+  bottom: 0;
+  left: 0;
+  background-color: #a100ffdb;
+  transition: width 0.5s ease; 
 }
+
+.assignEmployee:hover::before {
+  width: 100%; 
+}
+
 
 .employeeSkills {
   font-family: 'Lato';

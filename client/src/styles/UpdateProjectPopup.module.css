@@ -59,14 +59,15 @@
   position: absolute;
 }
 
-.deleteBtn{
+.deleteBtn {
   color: #c70000;
   cursor: pointer;
   font-size: xx-large;
 }
 
-.updateBtn{
-  color: #a100ff;;
+.updateBtn {
+  color: #a100ff;
+  ;
   cursor: pointer;
   font-size: xx-large;
 }
@@ -91,6 +92,23 @@ input:focus,
 textarea:focus,
 select:focus {
   border-color: #af10af;
+}
+
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #af10af;
+  border-radius: 2px;
+}
+
+
+textarea {
+  height: 8em;
+  font-size: 15px;
 }
 
 .buttons {

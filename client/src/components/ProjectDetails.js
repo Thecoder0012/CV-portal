@@ -138,6 +138,7 @@ export const ProjectDetails = () => {
           <div>
           `,
         showCloseButton: true,
+        confirmButtonColor: '#a100ff', // Set the background color to blue
       });
       
       
