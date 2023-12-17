@@ -7,12 +7,16 @@ import { FaUsers, FaTimes } from "react-icons/fa";
 import { MdPersonRemove } from "react-icons/md";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ProjectRequests } from "./ProjectRequests";
 
 export const ProjectAssignment = () => {
   const [projects, setProjects] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [requestedProjects, setRequestedProjects] = useState([]);
+  const [showRequests, setShowRequests] = useState(false); // New state for showing messages
+
   const WITH_CREDENTIALS = { withCredentials: true };
 
   const [currentProjectPage, setCurrentProjectsPage] = useState(1);
@@ -21,18 +25,37 @@ export const ProjectAssignment = () => {
 
   const indexOfLastProject = currentProjectPage * itemsPerPage;
   const indexOfFirstProject = indexOfLastProject - itemsPerPage;
-  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
-  
+  const currentProjects = projects.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  );
+
   const indexOfLastEmployee = currentEmployeePage * itemsPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-  const currentEmployees = employees.slice(indexOfFirstEmployee,indexOfLastEmployee);
+  const currentEmployees = employees.slice(
+    indexOfFirstEmployee,
+    indexOfLastEmployee
+  );
 
   useEffect(() => {
-    fetchEmployees();
     fetchProjects();
-  }, [employees]);
+    fetchProjectRequests();
+    fetchEmployees();
+  }, []);
 
-  
+  const fetchProjectRequests = async () => {
+    try {
+      const response = await axios.get(API_URL + "/api/requested-projects");
+      setRequestedProjects(response.data.requestedProjects);
+      if (response.status === 200) {
+      } else {
+        console.error("Server could not find projects");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const fetchProjects = async () => {
     try {
       const response = await axios.get(API_URL + "/api/projects");
@@ -84,8 +107,6 @@ export const ProjectAssignment = () => {
   };
 
   const assignEmployeeToProject = async (employee_id) => {
-    console.log(employee_id);
-    console.log(selectedProject.id);
     try {
       const response = await axios.post(
         API_URL + "/project-assignment",
@@ -95,6 +116,8 @@ export const ProjectAssignment = () => {
         },
         WITH_CREDENTIALS
       );
+
+      fetchEmployees();
     } catch (err) {
       console.log(err);
       toast.error(err.response.data.message);
@@ -110,12 +133,23 @@ export const ProjectAssignment = () => {
           "/" +
           selectedProject.id
       );
+      fetchEmployees();
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message);
     }
   };
 
+  const incomingRequests = () => {
+    setShowRequests(!showRequests);
+  };
+
+    const rejectRequest = async (request_id) => {
+        const response = await axios.put(
+          API_URL + "/project-requests/" + request_id
+        );
+            fetchProjectRequests();
+    };
   return (
     <div>
       <NavigationBar />
@@ -133,15 +167,15 @@ export const ProjectAssignment = () => {
               <tr className={styles.employeeRow} key={project.id}>
                 <td>{project.title}</td>
                 <td>
-                <button
-                style={{ position: "relative", left: "55%" }}
-                className={styles.assignEmployee}
-                onClick={() => toggleEmployeeModal(project)}
-              >
-                <span style={{ display: "flex", alignItems: "center" }}>
-                  Assign Employee
-                </span>
-              </button>
+                  <button
+                    style={{ position: "relative", left: "55%" }}
+                    className={styles.assignEmployee}
+                    onClick={() => toggleEmployeeModal(project)}
+                  >
+                    <span style={{ display: "flex", alignItems: "center" }}>
+                      Assign Employee
+                    </span>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -158,15 +192,17 @@ export const ProjectAssignment = () => {
         {showEmployeeModal && (
           <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
-            <button
-              onClick={toggleEmployeeModal}
-              className={styles.closeButton}
-            >
-              <FaTimes size={20} />
-            </button>
+              <button
+                onClick={toggleEmployeeModal}
+                className={styles.closeButton}
+              >
+                <FaTimes size={20} />
+              </button>
               <h2 className={styles.tableHeader}>
-              <h3>Assign Employees</h3>
-              <h4 style={{fontWeight: "300"}}>{selectedProject.title} / #{selectedProject.id}</h4>
+                <h3>Assign Employees</h3>
+                <h4 style={{ fontWeight: "300" }}>
+                  {selectedProject.title} / #{selectedProject.id}
+                </h4>
               </h2>
               <table className={styles.employeeTable}>
                 <thead>
@@ -186,9 +222,11 @@ export const ProjectAssignment = () => {
                       <td>{employee.first_name}</td>
                       <td>{employee.last_name}</td>
                       <td>
-                      <span className={styles.employeeSkills}>{employee.skills}</span>
-                    </td>
-                    <td
+                        <span className={styles.employeeSkills}>
+                          {employee.skills}
+                        </span>
+                      </td>
+                      <td
                         style={{
                           color:
                             employee.projects &&
@@ -216,8 +254,14 @@ export const ProjectAssignment = () => {
                               removeEmployeeFromProject(employee.employee_id)
                             }
                           >
-                            <span style={{ display: "flex", alignItems: "center" }}>Remove
-                            <MdPersonRemove size={15} style={{ marginLeft: "5px" }} />
+                            <span
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              Remove
+                              <MdPersonRemove
+                                size={15}
+                                style={{ marginLeft: "5px" }}
+                              />
                             </span>
                           </button>
                         ) : (
@@ -228,9 +272,14 @@ export const ProjectAssignment = () => {
                               assignEmployeeToProject(employee.employee_id)
                             }
                           >
-                        
-                            <span style={{ display: "flex", alignItems: "center" }}>Assign
-                            <FaUsers size={15} style={{ marginLeft: "5px" }} />
+                            <span
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              Assign
+                              <FaUsers
+                                size={15}
+                                style={{ marginLeft: "5px" }}
+                              />
                             </span>
                           </button>
                         )}
@@ -248,6 +297,16 @@ export const ProjectAssignment = () => {
               </ul>
             </div>
           </div>
+        )}
+        <button className={styles.messagesButton} onClick={incomingRequests}>
+          {showRequests ? "Hide Messages" : "Show Messages"}
+        </button>
+        {showRequests && (
+          <ProjectRequests
+            requestedProjects={requestedProjects}
+            rejectRequest={rejectRequest}
+            fetchProjectRequests={fetchProjectRequests}
+          />
         )}
       </div>
     </div>

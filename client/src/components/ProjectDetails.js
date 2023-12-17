@@ -146,7 +146,8 @@ const fetchAssignedProjects = async () => {
             !requestedProjects.some(
               (requestProject) =>
                 requestProject.project_id === project.project_id &&
-                requestProject.employee_id === employeeId
+                requestProject.employee_id === employeeId &&
+                requestProject.status === 1
             ) && (
               <button className={styles.requestButton} onClick={requestProject}>
                 Assign me
