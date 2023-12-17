@@ -140,7 +140,7 @@ export const Projects = () => {
               <h2 className={mainCss.h2}>{project.title}</h2>
               <p className={mainCss.projectDetails}>
                 <strong>Status:</strong>
-                {project.done ? "Finished" : "Not finished"}
+                {project.done ? "Completed" : "Active"}
                 <br />
                 <strong>Project first date:</strong>
                 {new Date(project.date_made).toLocaleDateString()}

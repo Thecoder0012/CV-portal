@@ -115,7 +115,7 @@ const fetchAssignedProjects = async () => {
           </p>
           <p>
             <strong>Status:</strong>
-            {project.done ? "Finished" : "Not finished"}
+            {project.done ? "Completed" : "Active"}
           </p>
           <p>
             <strong>Date Made:</strong>

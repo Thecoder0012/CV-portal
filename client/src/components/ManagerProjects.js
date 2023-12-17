@@ -82,7 +82,7 @@ export const ManagerProjects = () => {
                     textDecoration: project.done ? "line-through" : "underline",
                   }}
                 >
-                  {project.done ? "Finished" : "Active"}
+                  {project.done ? "Completed" : "Active"}
                 </td>
                 <td>{new Date(project.date_made).toLocaleDateString()}</td>
                 <td>{new Date(project.date_finish).toLocaleDateString()}</td>
