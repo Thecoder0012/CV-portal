@@ -129,18 +129,18 @@
   border-radius: 5px;
   background: none;
   position: relative;
-  transition: color 0.3s ease; /* Transition color on hover */
+  transition: color 0.3s ease; 
 }
 
 .assignEmployee::before {
   content: '';
   position: absolute;
   width: 0;
-  height: 1px; 
+  height: 1.5px; 
   bottom: 0;
   left: 0;
   background-color: #a100ffdb;
-  transition: width 0.5s ease; 
+  transition: width 0.3s ease; 
 }
 
 .assignEmployee:hover::before {

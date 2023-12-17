@@ -139,14 +139,20 @@ export const Projects = () => {
             <div className={mainCss.projectDetailsContainer}>
               <h2 className={mainCss.h2}>{project.title}</h2>
               <p className={mainCss.projectDetails}>
-                <strong>Status:</strong>
-                {project.done ? "Finished" : "Not finished"}
+                <div id="projectStatus">
+                <strong>Status: </strong>
+                {project.done ? "Active" : "Inactive"}
+                </div>
                 <br />
-                <strong>Project first date:</strong>
+                <div id="projectStartDate">
+                <strong>Start Date: </strong>
                 {new Date(project.date_made).toLocaleDateString()}
+                </div>
                 <br />
-                <strong>Project finished date:</strong>
+                <div id="projectEndDate">
+                <strong>End Date: </strong>
                 {new Date(project.date_finish).toLocaleDateString()}
+                </div>
                 <br />
                 {project.file_path && (
                   <a

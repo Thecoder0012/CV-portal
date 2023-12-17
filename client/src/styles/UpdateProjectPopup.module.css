@@ -109,6 +109,7 @@ select:focus {
 textarea {
   height: 8em;
   font-size: 15px;
+  resize: none;
 }
 
 .buttons {

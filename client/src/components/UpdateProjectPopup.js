@@ -162,7 +162,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
           onChange={handleInputChange}
         />
         <label>Description</label>
-        <textarea
+        <textarea 
           name="description"
           id="description"
           value={projectData.description}
