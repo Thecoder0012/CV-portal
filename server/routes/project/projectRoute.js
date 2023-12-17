@@ -187,6 +187,23 @@ router.post("/project-assignment", async (req, res) => {
       [employee_id]
     );
 
+    const existingRequest = await db.query(
+      `SELECT * FROM project_requests 
+       WHERE project_id = ? 
+       AND employee_id = ? 
+       AND status = 1`,
+      [project_id, employee_id]
+    );
+
+    if (existingRequest.length > 0) {
+      const removeRequest = await db.query(
+        `UPDATE project_requests 
+         SET status = 0 
+         WHERE project_id = ? 
+         AND employee_id = ?`,
+        [project_id, employee_id]
+      );
+    }
     const employee_name = employee[0].first_name + " " + employee[0].last_name;
     const employee_email = employee[0].email;
 
@@ -362,4 +379,16 @@ router.get("/project-requests", async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+router.put("/project-requests/:requestId", async (req, res) => {
+  const requestId = req.params.requestId;
+  const updateRequest = await db.query(
+    `Update project_requests 
+        SET status = 0 
+        WHERE request_id = ?`,
+    [requestId]
+  );
+  res.status(200).send({ updateRequest });
+});
+
 export default router;
