@@ -85,6 +85,7 @@ export const ProjectDetails = () => {
       if (response.status === 200) {
         toast.success(response.data.message);
       }
+      fetchRequestedProjects();
     } catch (error) {
       console.error("Error assigning project:", error);
     }
@@ -112,7 +113,6 @@ export const ProjectDetails = () => {
     const response = await axios.get(
       `${API_URL}/projects/assigned/${projectId}`
     );
-
     setAssignedEmployees(response.data.assignedEmployees);
   };
 
