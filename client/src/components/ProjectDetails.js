@@ -176,7 +176,7 @@ export const ProjectDetails = () => {
             <strong>Project Manager: </strong> {project.first_name}
           </p>
           <p>
-            <strong>Status:</strong>
+            <strong>Status: </strong>
             {project.done ? "Completed" : "Active"}
           </p>
           <p>
