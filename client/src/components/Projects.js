@@ -141,7 +141,7 @@ export const Projects = () => {
               <p className={mainCss.projectDetails}>
                 <div id="projectStatus">
                 <strong>Status: </strong>
-                {project.done ? "Active" : "Inactive"}
+                {project.done ? "Completed" : "Active"}
                 </div>
                 <br />
                 <div id="projectStartDate">

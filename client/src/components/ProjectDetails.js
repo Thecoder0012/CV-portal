@@ -121,6 +121,7 @@ export const ProjectDetails = () => {
     if (role_id === 2) {
       fetchAssignedProjects();
       fetchRequestedProjects();
+      return;
     }
     fetchAssignedEmployees();
   }, [requestedProjects, role_id]);
@@ -181,8 +182,8 @@ export const ProjectDetails = () => {
             <strong>Project Manager: </strong> {project.first_name}
           </p>
           <p>
-            <strong>Project Status: </strong>
-            {project.done ? "Active" : "Inactive"}
+            <strong>Status:</strong>
+            {project.done ? "Completed" : "Active"}
           </p>
           <p>
             <strong>Project Created: </strong>
@@ -234,7 +235,8 @@ export const ProjectDetails = () => {
             !requestedProjects.some(
               (requestProject) =>
                 requestProject.project_id === project.project_id &&
-                requestProject.employee_id === employeeId
+                requestProject.employee_id === employeeId &&
+                requestProject.status === 1
             ) && (
               <button
                 className={styles.requestButton}

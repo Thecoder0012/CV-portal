@@ -85,7 +85,6 @@ router.get("/api/all-projects", async (req, res) => {
   }
 });
 
-
 router.get("/api/managers", async (req, res) => {
   try {
     const [managers] = await db.query(`
@@ -123,6 +122,21 @@ router.get("/api/person-skills", async (req, res) => {
     res.status(200).send({ employees });
   } catch (error) {
     console.error("Error finding employees:", error);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+router.get("/api/requested-projects", async (req, res) => {
+  try {
+    const [requestedProjects] = await db.query(`
+    SELECT * from project_requests 
+    INNER JOIN employee on employee.employee_id = project_requests.employee_id
+    INNER JOIN person on employee.person_id = person.person_id
+    INNER JOIN project on project.id = project_requests.project_id
+    WHERE project_requests.status = 1;`);
+    res.status(200).send({ requestedProjects });
+  } catch (error) {
+    console.error("Error finding requested projects:", error);
     res.status(500).send({ error: "Internal server error" });
   }
 });

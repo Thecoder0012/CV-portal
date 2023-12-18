@@ -56,38 +56,45 @@ export const ManagerProjects = () => {
               <th>Project End/Date</th>
             </tr>
           </thead>
-          <tbody style={{textAlign: "center"}}>
+          <tbody style={{ textAlign: "center" }}>
             {currentProjects.map((project, i) => (
-              <tr key={i} className={`${styles.tableRow} ${styles.projectRow}`} onClick={() => {handleUpdateClick(project.id)}}>
-                <td 
-                  className={styles.projectTitle}
+              <tr
+                key={i}
+                className={`${styles.tableRow} ${styles.projectRow}`}
+                onClick={() => {
+                  handleUpdateClick(project.id);
+                }}
+              >
+                <td className={styles.projectTitle}>{project.title}</td>
+                <td
+                  style={{
+                    color: project.done ? "green" : "#3498db",
+                    textDecoration: project.done ? "line-through" : "underline",
+                  }}
                 >
-                  {project.title}
+                  {project.done ? "Completed" : "Active"}
                 </td>
-                <td style={{ color: project.done ? 'green' : 'red' }}>
-              {project.done ? 'Active' : 'Inactive'}
-            </td>
                 <td>{new Date(project.date_made).toLocaleDateString()}</td>
-                <td>{new Date(project.date_finish).toLocaleDateString()}</td>                
+                <td>{new Date(project.date_finish).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <div className={styles.pagination}>
-  {Array.from(
-    { length: Math.ceil(projects.length / projectsPerPage) },
-    (_, index) => (
-      <button
-        key={index + 1}
-        onClick={() => paginate(index + 1)}
-        className={index + 1 === currentPage ? styles.activeButton : ''}
-      >
-        {index + 1}
-      </button>
-    )
-  )}
-</div>
+        {Array.from(
+          { length: Math.ceil(projects.length / projectsPerPage) },
+          (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => paginate(index + 1)}
+              className={index + 1 === currentPage ? styles.activeButton : ""}
+            >
+              {index + 1}
+            </button>
+          )
+        )}
+      </div>
 
       {selectedProjectId && (
         <UpdateProjectPopup
