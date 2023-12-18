@@ -38,19 +38,9 @@ export const ManagerProjects = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleProjectClick = (projectId) => {
-    setSelectedProjectId(projectId);
-  };
-
   const handleUpdateClick = (projectId) => {
     setSelectedProjectId(projectId);
   };
-
-  const handleUpdateRow = (e) => {
-    const projectId = e.currentTarget.dataset.projectId;
-    handleUpdateClick(projectId);
-  };
-
 
   return (
     <div>

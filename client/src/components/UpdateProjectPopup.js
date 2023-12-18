@@ -71,7 +71,7 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
             text: "The project was successfully deleted.",
             icon: "success",
             showConfirmButton: false,
-            timer: 3000,
+            timer: 2000,
           }).then(() => {
             loadingAlert.close();
             navigate(location.state ? location.state.from : "/manager/projects");
@@ -136,7 +136,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
           text: "The project was successfully updated.",
           icon: "success",
           showConfirmButton: false,
-          timer: 3000,
+          timer: 2000,
         });
       }
 
@@ -152,7 +152,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
       <div id="form" style={{ maxWidth: "800px", margin: "auto" }}>
       <h2 style={{ textAlign: "center" }}>Update Project</h2>
-        <label>Title:</label>
+        <label>Title</label>
         <input
           className={styles.input}
           type="text"
@@ -161,14 +161,15 @@ projectData.date_finish = formatDate(projectData.date_finish)
           value={projectData.title}
           onChange={handleInputChange}
         />
-        <label>Description:</label>
-        <textarea
+        <label>Description</label>
+        <textarea 
           name="description"
           id="description"
           value={projectData.description}
           onChange={handleInputChange}
+          className={styles.descriptionContainer}
         />
-        <label>Status:</label>
+        <label>Status</label>
         <select
           name="done"
           id="projectStatus"
@@ -178,7 +179,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
           <option value={1}>Completed</option>
           <option value={0}>Active</option>
         </select>
-        <label>End date:</label>
+        <label>End date</label>
         <input
           className={styles.input}
           type="date"

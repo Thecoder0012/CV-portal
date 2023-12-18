@@ -19,21 +19,26 @@ export const ProjectDetails = () => {
     file_path: null,
   });
 
-const [requestedProjects, setRequestedProjects] = useState([]);
-
+  const [requestedProjects, setRequestedProjects] = useState([]);
   const [role_id, setRoleId] = useState();
   const [assignedProjects, setAssignedProjects] = useState([]);
   const [employeeId, setEmployeeID] = useState(null);
-
+  const [assignedEmployees, setAssignedEmployees] = useState([]);
 
   const WITH_CREDENTIALS = { withCredentials: true };
   const { id } = useParams();
 
   const getProject = async () => {
     try {
-      const response = await axios.get(API_URL + "/projects/" + id, WITH_CREDENTIALS);
+      const response = await axios.get(
+        API_URL + "/projects/" + id,
+        WITH_CREDENTIALS
+      );
       setProject(response.data.getProject);
-      setRoleId(response.data.role_id)
+      if (response.data.role_id === role_id) {
+        return;
+      }
+      setRoleId(response.data.role_id);
     } catch (error) {
       toast.error(error.response.data.message);
       if (error.response.status === 429) {
@@ -44,10 +49,22 @@ const [requestedProjects, setRequestedProjects] = useState([]);
 
   const fetchRequestedProjects = async () => {
     try {
-      const response = await axios.get(API_URL + "/project-requests",WITH_CREDENTIALS);
+      const response = await axios.get(
+        API_URL + "/project-requests",
+        WITH_CREDENTIALS
+      );
       if (response.status === 200) {
-        setRequestedProjects(response.data.requestedProjects);
         setEmployeeID(response.data.employee_id);
+        setRequestedProjects((prevRequestedProjects) => {
+          if (
+            JSON.stringify(prevRequestedProjects) ===
+            JSON.stringify(response.data.requestedProjects)
+          ) {
+            return prevRequestedProjects;
+          }
+
+          return response.data.requestedProjects;
+        });
       } else {
         console.error("Server could not find requested projects");
       }
@@ -55,7 +72,6 @@ const [requestedProjects, setRequestedProjects] = useState([]);
       console.error("Error:", error);
     }
   };
-
 
   const requestProject = async () => {
     try {
@@ -74,31 +90,83 @@ const [requestedProjects, setRequestedProjects] = useState([]);
     }
   };
 
-const fetchAssignedProjects = async () => {
-  try {
-    const response = await axios.get(
-      API_URL + "/assigned-projects",
-      WITH_CREDENTIALS
-    );
-    if (response.status === 200) {
-      setAssignedProjects(response.data);
-    } else {
-      console.error("Server could not find projects");
+  const fetchAssignedProjects = async () => {
+    try {
+      const response = await axios.get(
+        API_URL + "/assigned-projects",
+        WITH_CREDENTIALS
+      );
+      if (response.status === 200) {
+        setAssignedProjects(response.data);
+      } else {
+        console.error("Server could not find projects");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+  };
 
+  const fetchAssignedEmployees = async () => {
+    const projectId = project.project_id;
 
+    const response = await axios.get(
+      `${API_URL}/projects/assigned/${projectId}`
+    );
+
+    setAssignedEmployees(response.data.assignedEmployees);
+  };
 
   useEffect(() => {
     getProject();
-    if(role_id === 2){
-    fetchAssignedProjects();
-    fetchRequestedProjects();
+    if (role_id === 2) {
+      fetchAssignedProjects();
+      fetchRequestedProjects();
+      return;
     }
-  }, [role_id,requestedProjects]);
+    fetchAssignedEmployees();
+  }, [requestedProjects, role_id]);
+
+  function displayAssigned(numberOfAssignedEmployees) {
+  
+    if (numberOfAssignedEmployees > 1) {
+      Swal.fire({
+        title: project.title,
+        html: `
+        <div id="swalContainer" style="display: inline-flex">
+        <ol>${assignedEmployees
+          .map((employee) => `<li>${employee}</li>`)
+          .join("")}</ol>
+          <div>
+          `,
+        showCloseButton: true,
+        confirmButtonColor: '#a100ff', // Set the background color to blue
+      });
+      
+      
+    } else if (numberOfAssignedEmployees === 1) {
+      Swal.fire({
+        title: project.title,
+        html: `
+        <div id="swalContainer" style="display: inline-flex">
+        <ol>
+        <li>
+        ${assignedEmployees}
+        </li>
+        </ol>
+          <div>
+          `,
+        showCloseButton: true,
+      });
+    } else {
+      Swal.fire({
+        title: project.title,
+        text: "No employees assigned.",
+        showCloseButton: true,
+      });
+    }
+  }
+  
+  
 
   return (
     <div>
@@ -108,36 +176,57 @@ const fetchAssignedProjects = async () => {
         <h1 className={styles.projectTitle}>{project.title}</h1>
         <div className={styles.projectDetails}>
           <p>
-            <strong>Description:</strong> {project.description}
+            <strong>Project Description: </strong> {project.description}
           </p>
           <p>
-            <strong>Author:</strong> {project.first_name}
+            <strong>Project Manager: </strong> {project.first_name}
           </p>
           <p>
             <strong>Status:</strong>
             {project.done ? "Completed" : "Active"}
           </p>
           <p>
-            <strong>Date Made:</strong>
+            <strong>Project Created: </strong>
             {new Date(project.date_made).toLocaleDateString()}
           </p>
           <p>
-            <strong>Date Finish:</strong>
+            <strong>Project End Date: </strong>
             {new Date(project.date_finish).toLocaleDateString()}
           </p>
-          <p>
-            <strong>Pdf:</strong> {project.file_path}
-          </p>
-          {project.file_path && (
-            <a
-              href={API_URL + "/uploads/" + project.file_path}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.viewPdfLink}
-            >
-              View Project PDF
-            </a>
-          )}
+          <div className={styles.assignedEmployees}>
+            {project.file_path && (
+              <a
+                href={API_URL + "/uploads/" + project.file_path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.viewPdfLink}
+              >
+                View PDF
+              </a>
+            )}
+            <div>
+              <h4 style={{ textAlign: "left" }}>Assigned</h4>
+              <ul
+                className={styles.assignedNames}
+                onClick={() => {
+
+                  displayAssigned(assignedEmployees.length)
+                }
+                  
+            }>
+                {assignedEmployees.length > 1 ? (
+                  <li>
+                    {assignedEmployees[0]} +{assignedEmployees.length - 1}{" "}
+                    more...
+                  </li>
+                ) : assignedEmployees.length === 1 ? (
+                  <li>{assignedEmployees}</li>
+                ) : (
+                  <li>None</li>
+                )}
+              </ul>
+            </div>
+          </div>
           {role_id === 2 &&
             !assignedProjects.some(
               (assignedProjects) =>
@@ -149,7 +238,10 @@ const fetchAssignedProjects = async () => {
                 requestProject.employee_id === employeeId &&
                 requestProject.status === 1
             ) && (
-              <button className={styles.requestButton} onClick={requestProject}>
+              <button
+                className={styles.requestButton}
+                onClick={requestProject}
+              >
                 Assign me
               </button>
             )}

@@ -113,9 +113,8 @@ export const CreateProject = () => {
             type="text"
             placeholder="Description"
             name="description"
-            className={styles.writeProjectsText}
             onChange={handleInputChange}
-            style={{width: "1000px", height: "45px"}}
+            style={{width: "1000px"}}
           ></textarea>
         </div>
         <div className={styles.createProjectInputs}>
@@ -136,7 +135,6 @@ export const CreateProject = () => {
             ))}
           </select>
           <input
-            style={{ borderColor: "rgba(161, 0, 255, 0.19)" }}
             type="file"
             accept="application/pdf"
             onChange={handlePdfChange}
@@ -153,7 +151,7 @@ export const CreateProject = () => {
               </a>
             )}
             <button className={styles.projectSubmit} type="submit">
-              Create project
+              Create Project
             </button>
           </div>
         </div>
