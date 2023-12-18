@@ -121,13 +121,11 @@ export const ProjectDetails = () => {
     if (role_id === 2) {
       fetchAssignedProjects();
       fetchRequestedProjects();
-      return;
     }
     fetchAssignedEmployees();
   }, [requestedProjects, role_id]);
 
   function displayAssigned(numberOfAssignedEmployees) {
-  
     if (numberOfAssignedEmployees > 1) {
       Swal.fire({
         title: project.title,
@@ -139,10 +137,8 @@ export const ProjectDetails = () => {
           <div>
           `,
         showCloseButton: true,
-        confirmButtonColor: '#a100ff', // Set the background color to blue
+        confirmButtonColor: "#a100ff", // Set the background color to blue
       });
-      
-      
     } else if (numberOfAssignedEmployees === 1) {
       Swal.fire({
         title: project.title,
@@ -165,8 +161,6 @@ export const ProjectDetails = () => {
       });
     }
   }
-  
-  
 
   return (
     <div>
@@ -209,11 +203,9 @@ export const ProjectDetails = () => {
               <ul
                 className={styles.assignedNames}
                 onClick={() => {
-
-                  displayAssigned(assignedEmployees.length)
-                }
-                  
-            }>
+                  displayAssigned(assignedEmployees.length);
+                }}
+              >
                 {assignedEmployees.length > 1 ? (
                   <li>
                     {assignedEmployees[0]} +{assignedEmployees.length - 1}{" "}
@@ -238,10 +230,7 @@ export const ProjectDetails = () => {
                 requestProject.employee_id === employeeId &&
                 requestProject.status === 1
             ) && (
-              <button
-                className={styles.requestButton}
-                onClick={requestProject}
-              >
+              <button className={styles.requestButton} onClick={requestProject}>
                 Assign me
               </button>
             )}
