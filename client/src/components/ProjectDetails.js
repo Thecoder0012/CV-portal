@@ -137,7 +137,7 @@ export const ProjectDetails = () => {
           <div>
           `,
         showCloseButton: true,
-        confirmButtonColor: "#a100ff", // Set the background color to blue
+        confirmButtonColor: "#a100ff",
       });
     } else if (numberOfAssignedEmployees === 1) {
       Swal.fire({
@@ -152,12 +152,14 @@ export const ProjectDetails = () => {
           <div>
           `,
         showCloseButton: true,
+        confirmButtonColor: "#a100ff",
       });
     } else {
       Swal.fire({
         title: project.title,
         text: "No employees assigned.",
         showCloseButton: true,
+        confirmButtonColor: "#a100ff",
       });
     }
   }
@@ -176,7 +178,7 @@ export const ProjectDetails = () => {
             <strong>Project Manager: </strong> {project.first_name}
           </p>
           <p>
-            <strong>Status:</strong>
+            <strong>Status: </strong>
             {project.done ? "Completed" : "Active"}
           </p>
           <p>

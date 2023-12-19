@@ -150,7 +150,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
-      <div id="form" style={{ maxWidth: "800px", margin: "auto" }}>
+      <div id="form" style={{margin: "auto" }}>
       <h2 style={{ textAlign: "center" }}>Update Project</h2>
         <label>Title</label>
         <input
@@ -169,6 +169,15 @@ projectData.date_finish = formatDate(projectData.date_finish)
           onChange={handleInputChange}
           className={styles.descriptionContainer}
         />
+        <label>End date</label>
+        <input
+          className={styles.input}
+          type="date"
+          name="date_finish"
+          id="endDate"
+          value={formatDate(projectData.date_finish)}
+          onChange={handleInputChange}
+        />
         <label>Status</label>
         <select
           name="done"
@@ -179,15 +188,7 @@ projectData.date_finish = formatDate(projectData.date_finish)
           <option value={1}>Completed</option>
           <option value={0}>Active</option>
         </select>
-        <label>End date</label>
-        <input
-          className={styles.input}
-          type="date"
-          name="date_finish"
-          id="endDate"
-          value={formatDate(projectData.date_finish)}
-          onChange={handleInputChange}
-        />
+        
         </div>
         <div className={styles.buttons}>
           <div>
