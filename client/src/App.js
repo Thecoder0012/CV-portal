@@ -10,7 +10,7 @@ import { Projects } from "./components/project/Projects.js";
 import { SearchSkills } from "./components/profile/SearchSkills.js";
 import { MainPage } from "./components/main/MainPage.js";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes.js";
-import { NotFound } from "./utils/NotFound.js";
+import { NotFound } from "./components/error/NotFound.js";
 import { ManagerProjects } from "./components/project/ManagerProjects.js";
 import { ProjectAssignment } from "./components/project/ProjectAssignment.js";
 
