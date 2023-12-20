@@ -1,10 +1,10 @@
-import styles from "../styles/auth.module.css";
+import styles from "../../styles/auth/auth.module.css";
 import { useEffect, useState } from "react";
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavigationBar } from "./NavigationBar.js";
+import { NavigationBar } from ".././main/NavigationBar.js";
 import axios from "axios";
-import { API_URL } from "../api/url.js";
+import { API_URL } from "../../config/apiUrl.js";
 
 export const RegisterManager = () => {
   const [departments, setDepartments] = useState([]);

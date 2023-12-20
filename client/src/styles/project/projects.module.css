@@ -84,13 +84,16 @@ select:focus {
 .writeProjectsText {
   font-family: 'Lato';
   width: 70vw;
-  margin: 10px;
+}
+
+.projectFormGroup{
+  display: inline-grid;
 }
 
 
 
 .projectFormGroupSelectStatus {
-  width: 70.4vw;
+  width: 70vw;
   height: 8vh;
   font-family: 'Lato';
   font-size: 20px;
@@ -98,7 +101,7 @@ select:focus {
 }
 
 .projectFormGroupSelectDate {
-  width: 69.2vw;
+  width: 70vw;
   height: 4vh;
   font-family: 'Lato';
   font-size: 20px;
@@ -145,7 +148,6 @@ select:focus {
 .author {
   margin-bottom: 15px;
   padding: 10px;
-  width: 1000px;
   border-radius: 4px;
   font-size: 16px;
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import styles from "../styles/projectDetails.module.css";
-import { API_URL } from "../config/apiUrl.js";
-import { NavigationBar } from "./NavigationBar.js";
+import styles from "../../styles//project/projectDetails.module.css";
+import { API_URL } from "../../config/apiUrl.js";
+import { NavigationBar } from "../main/NavigationBar.js";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -137,7 +137,7 @@ export const ProjectDetails = () => {
           <div>
           `,
         showCloseButton: true,
-        confirmButtonColor: "#a100ff", // Set the background color to blue
+        confirmButtonColor: "#a100ff",
       });
     } else if (numberOfAssignedEmployees === 1) {
       Swal.fire({
@@ -152,12 +152,14 @@ export const ProjectDetails = () => {
           <div>
           `,
         showCloseButton: true,
+        confirmButtonColor: "#a100ff",
       });
     } else {
       Swal.fire({
         title: project.title,
         text: "No employees assigned.",
         showCloseButton: true,
+        confirmButtonColor: "#a100ff",
       });
     }
   }

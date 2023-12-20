@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { NavigationBar } from "./NavigationBar";
-import { API_URL } from "../config/apiUrl";
+import { NavigationBar } from "../main/NavigationBar";
+import { API_URL } from "../../config/apiUrl";
 import axios from "axios";
-import styles from "../styles/assignment.module.css";
+import styles from "../../styles/project/assignment.module.css";
 import { FaUsers, FaTimes } from "react-icons/fa";
 import { MdPersonRemove } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -15,10 +15,7 @@ export const ProjectAssignment = () => {
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [requestedProjects, setRequestedProjects] = useState([]);
-  const [showRequests, setShowRequests] = useState(false); // New state for showing messages
-
-  const WITH_CREDENTIALS = { withCredentials: true };
-
+  const [showRequests, setShowRequests] = useState(false);
   const [currentProjectPage, setCurrentProjectsPage] = useState(1);
   const [currentEmployeePage, setCurrentEmployeePage] = useState(1);
   const itemsPerPage = 4;
@@ -47,10 +44,6 @@ export const ProjectAssignment = () => {
     try {
       const response = await axios.get(API_URL + "/api/requested-projects");
       setRequestedProjects(response.data.requestedProjects);
-      if (response.status === 200) {
-      } else {
-        console.error("Server could not find projects");
-      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -114,9 +107,8 @@ export const ProjectAssignment = () => {
           project_id: selectedProject.id,
           employee_id: employee_id,
         },
-        WITH_CREDENTIALS
+        { withCredentials: true }
       );
-
       fetchEmployees();
     } catch (err) {
       console.log(err);
@@ -144,12 +136,13 @@ export const ProjectAssignment = () => {
     setShowRequests(!showRequests);
   };
 
-    const rejectRequest = async (request_id) => {
-        const response = await axios.put(
-          API_URL + "/project-requests/" + request_id
-        );
-            fetchProjectRequests();
-    };
+  const rejectRequest = async (request_id) => {
+    const response = await axios.put(
+      API_URL + "/project-requests/" + request_id
+    );
+    fetchProjectRequests();
+  };
+
   return (
     <div>
       <NavigationBar />
@@ -288,6 +281,7 @@ export const ProjectAssignment = () => {
                   ))}
                 </tbody>
               </table>
+
               <ul className={styles.pagination}>
                 {paginate(
                   currentEmployeePage,
@@ -298,8 +292,10 @@ export const ProjectAssignment = () => {
             </div>
           </div>
         )}
+      </div>
+      <div className={styles.projectRequests}>
         <button className={styles.messagesButton} onClick={incomingRequests}>
-          {showRequests ? "Hide Messages" : "Show Messages"}
+          {showRequests ? "Hide Requests" : "Project Requests +" + requestedProjects.length}
         </button>
         {showRequests && (
           <ProjectRequests
@@ -312,4 +308,3 @@ export const ProjectAssignment = () => {
     </div>
   );
 };
-

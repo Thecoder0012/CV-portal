@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import main from "../styles/mainPage.module.css";
+import main from "../../styles/main/mainPage.module.css";
 export function useOnScreen(ref) {
   const [isOnScreen, setIsOnScreen] = useState(false);
 

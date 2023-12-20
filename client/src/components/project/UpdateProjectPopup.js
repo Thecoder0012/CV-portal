@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "../styles/UpdateProjectPopup.module.css";
+import styles from "../../styles/project/UpdateProjectPopup.module.css";
 import Swal from "sweetalert2";
-import { API_URL } from "../config/apiUrl.js";
-import {useNavigate, useLocation } from "react-router-dom";
+import { API_URL } from "../../config/apiUrl.js";
+import { useNavigate, useLocation } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { FaCheck, FaTimes } from "react-icons/fa";
-
-
 
 const WITH_CREDENTIALS = { withCredentials: true };
 
@@ -21,7 +19,6 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
 
   console.log(projectData);
 
-
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
     const year = date.getFullYear();
@@ -33,8 +30,6 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
     return `${year}-${month}-${day}`;
   };
 
-
-  
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -74,7 +69,9 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
             timer: 2000,
           }).then(() => {
             loadingAlert.close();
-            navigate(location.state ? location.state.from : "/manager/projects");
+            navigate(
+              location.state ? location.state.from : "/manager/projects"
+            );
           });
         } else {
           loadingAlert.close();
@@ -89,7 +86,10 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const response = await axios.get(API_URL + `/projects/${projectId}`,WITH_CREDENTIALS);
+        const response = await axios.get(
+          API_URL + `/projects/${projectId}`,
+          WITH_CREDENTIALS
+        );
         const project = response.data.getProject;
         setProjectData({
           title: project.title,
@@ -123,12 +123,14 @@ const UpdateProjectPopup = ({ projectId, onClose, onUpdate }) => {
   };
 
   const handleUpdate = async () => {
-
-projectData.date_finish = formatDate(projectData.date_finish)
+    projectData.date_finish = formatDate(projectData.date_finish);
 
     try {
-      const response = await axios.put(`${API_URL}/projects/${projectId}`, projectData, WITH_CREDENTIALS);
-
+      const response = await axios.put(
+        `${API_URL}/projects/${projectId}`,
+        projectData,
+        WITH_CREDENTIALS
+      );
 
       if (response.status === 200) {
         Swal.fire({
@@ -150,44 +152,44 @@ projectData.date_finish = formatDate(projectData.date_finish)
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
-      <div id="form" style={{ maxWidth: "800px", margin: "auto" }}>
-      <h2 style={{ textAlign: "center" }}>Update Project</h2>
-        <label>Title</label>
-        <input
-          className={styles.input}
-          type="text"
-          name="title"
-          id="title"
-          value={projectData.title}
-          onChange={handleInputChange}
-        />
-        <label>Description</label>
-        <textarea 
-          name="description"
-          id="description"
-          value={projectData.description}
-          onChange={handleInputChange}
-          className={styles.descriptionContainer}
-        />
-        <label>Status</label>
-        <select
-          name="done"
-          id="projectStatus"
-          value={projectData.done}
-          onChange={handleInputChange}
-        >
-          <option value={1}>Completed</option>
-          <option value={0}>Active</option>
-        </select>
-        <label>End date</label>
-        <input
-          className={styles.input}
-          type="date"
-          name="date_finish"
-          id="endDate"
-          value={formatDate(projectData.date_finish)}
-          onChange={handleInputChange}
-        />
+        <div id="form" style={{ margin: "auto" }}>
+          <h2 style={{ textAlign: "center" }}>Update Project</h2>
+          <label>Title</label>
+          <input
+            className={styles.input}
+            type="text"
+            name="title"
+            id="title"
+            value={projectData.title}
+            onChange={handleInputChange}
+          />
+          <label>Description</label>
+          <textarea
+            name="description"
+            id="description"
+            value={projectData.description}
+            onChange={handleInputChange}
+            className={styles.descriptionContainer}
+          />
+          <label>End date</label>
+          <input
+            className={styles.input}
+            type="date"
+            name="date_finish"
+            id="endDate"
+            value={formatDate(projectData.date_finish)}
+            onChange={handleInputChange}
+          />
+          <label>Status</label>
+          <select
+            name="done"
+            id="projectStatus"
+            value={projectData.done}
+            onChange={handleInputChange}
+          >
+            <option value={1}>Completed</option>
+            <option value={0}>Active</option>
+          </select>
         </div>
         <div className={styles.buttons}>
           <div>
@@ -208,11 +210,10 @@ projectData.date_finish = formatDate(projectData.date_finish)
               size={25}
             />
           </div>
-          
-            <button onClick={onClose} className={styles.closeButton}>
-              <FaTimes size={20}/>
-            </button>
-          
+
+          <button onClick={onClose} className={styles.closeButton}>
+            <FaTimes size={20} />
+          </button>
         </div>
       </div>
     </div>

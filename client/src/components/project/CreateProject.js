@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import styles from "../styles/projects.module.css";
+import styles from "../../styles/project/projects.module.css";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
-import { API_URL } from "../config/apiUrl.js";
+import { API_URL } from "../../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavigationBar } from "./NavigationBar.js";
+import { NavigationBar } from "../../components/main/NavigationBar.js";
 
 export const CreateProject = () => {
   const [project, setProject] = useState({
@@ -100,7 +100,7 @@ export const CreateProject = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className={styles.projectFormGroup}>
+        <div id="testman" className={styles.projectFormGroup}>
           <input
             type="date"
             id="projectDate"
@@ -114,10 +114,10 @@ export const CreateProject = () => {
             placeholder="Description"
             name="description"
             onChange={handleInputChange}
-            style={{width: "1000px"}}
+            style={{width: "70vw"}}
           ></textarea>
-        </div>
-        <div className={styles.createProjectInputs}>
+        
+       
           <select
             id="author"
             name="authorId"
@@ -153,7 +153,7 @@ export const CreateProject = () => {
             <button className={styles.projectSubmit} type="submit">
               Create Project
             </button>
-          </div>
+        </div>
         </div>
       </form>
     </div>

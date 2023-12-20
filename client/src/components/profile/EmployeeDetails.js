@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL } from "../config/apiUrl.js";
-import styles from "../styles/employeeDetails.module.css";
+import { API_URL } from "../../config/apiUrl.js";
+import styles from "../../styles/profile/employeeDetails.module.css";
 
 const EmployeeDetails = ({ onClose, id }) => {
   const [profile, setProfile] = useState(null);
@@ -31,27 +31,26 @@ const EmployeeDetails = ({ onClose, id }) => {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-
-        
         {profile && (
-          
           <div>
-          <h2>{profile.first_name + ' ' + profile.last_name}</h2>
+            <h2>{profile.first_name + " " + profile.last_name}</h2>
             <p>
-            <label style={{fontStyle: "italic" }}>Employee-ID:  </label>
-            {'#' + profile.employee_id}</p>
+              <label style={{ fontStyle: "italic" }}>Employee-ID: </label>
+              {"#" + profile.employee_id}
+            </p>
             <p>
-            <label style={{fontStyle: "italic" }}>Date of birth: </label>
+              <label style={{ fontStyle: "italic" }}>Date of birth: </label>
               {new Date(profile.date_of_birth).toLocaleDateString()}
             </p>
             <p>
-            <label style={{fontStyle: "italic" }}>Phone: </label>
-            {profile.phone_number}</p>
+              <label style={{ fontStyle: "italic" }}>Phone: </label>
+              {profile.phone_number}
+            </p>
 
             <p>
-            <label style={{fontStyle: "italic" }}>Skills: </label>
-            {skillNames.join(", ")}</p>
-            
+              <label style={{ fontStyle: "italic" }}>Skills: </label>
+              {skillNames.join(", ")}
+            </p>
           </div>
         )}
         <button className={styles.closeButton} onClick={onClose}>

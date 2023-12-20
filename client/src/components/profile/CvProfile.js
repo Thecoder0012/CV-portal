@@ -3,8 +3,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "../styles/auth.module.css";
-import { API_URL } from "../config/apiUrl.js";
+import styles from "../../styles/auth/auth.module.css";
+import { API_URL } from "../../config/apiUrl.js";
 import { useNavigate } from "react-router-dom";
 
 export const CvProfile = () => {
@@ -210,11 +210,13 @@ export const CvProfile = () => {
                 Open Your PDF file
               </a>
             )}
+            
 
+            
+            <h3 className={styles.skillsContainer}>Skills</h3>
             <div className={styles.checkboxContainer}>
-              <label>Skills</label>
               {skills.map((skill) => (
-                <div key={skill.id} className={styles.checkboxItem}>
+                <div key={skill.id} className={styles.checkboxItem}>  
                   <input
                     type="checkbox"
                     id={skill.id}
@@ -223,7 +225,7 @@ export const CvProfile = () => {
                     onChange={handleSkills}
                     defaultChecked={selectedSkills.includes(skill.id)}
                   />
-                  <label htmlFor={skill.id}>{skill.name}</label>
+                  <h5 htmlFor={skill.id}>{skill.name}</h5>
                 </div>
               ))}
             </div>

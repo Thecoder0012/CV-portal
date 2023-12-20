@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { NavigationBar } from "./NavigationBar";
-import main from "../styles/mainPage.module.css";
-import videoSrc from "../videoplayback.mp4";
+import main from "../../styles/main/mainPage.module.css";
+import videoSrc from "../../videoplayback.mp4";
 import { useOnScreen } from "./UseOnScreen";
 
 export const MainPage = () => {
   const accentureFactsRef = useRef(null);
 
   useOnScreen(accentureFactsRef);
-  
+
   return (
     <div>
       <NavigationBar className={main.NavBar} />
