@@ -2,8 +2,8 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import styles from "../styles/auth.module.css";
-import { API_URL } from "../config/apiUrl.js";
+import styles from "../../styles/auth/auth.module.css";
+import { API_URL } from "../../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

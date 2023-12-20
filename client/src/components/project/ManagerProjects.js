@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { NavigationBar } from "./NavigationBar.js";
-import styles from "../styles/ManagerProjects.module.css";
-import { API_URL } from "../config/apiUrl.js";
-import UpdateProjectPopup from "./UpdateProjectPopup";
-
+import { NavigationBar } from "../main/NavigationBar.js";
+import styles from "../../styles/project/ManagerProjects.module.css";
+import { API_URL } from "../../config/apiUrl.js";
+import UpdateProjectPopup from "./UpdateProjectPopup.js";
 
 export const ManagerProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -68,7 +67,7 @@ export const ManagerProjects = () => {
                 <td className={styles.projectTitle}>{project.title}</td>
                 <td
                   style={{
-                    color: project.done ? "green" : "#3498db",
+                    color: project.done ? "green" : "#a100ff",
                     textDecoration: project.done ? "line-through" : "underline",
                   }}
                 >
@@ -106,4 +105,3 @@ export const ManagerProjects = () => {
     </div>
   );
 };
-

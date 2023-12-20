@@ -2,10 +2,10 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-import { NavigationBar } from "./NavigationBar.js";
-import mainCss from "../styles/auth.module.css";
+import { NavigationBar } from "../main/NavigationBar.js";
+import mainCss from "../../styles/auth/auth.module.css";
 import "react-toastify/dist/ReactToastify.css";
-import { API_URL } from "../config/apiUrl.js";
+import { API_URL } from "../../config/apiUrl.js";
 import { useNavigate } from "react-router-dom";
 
 export const Projects = () => {

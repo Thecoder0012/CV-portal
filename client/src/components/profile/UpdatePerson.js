@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styles from "../styles/auth.module.css";
+import styles from "../../styles/auth/auth.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { API_URL } from "../config/apiUrl";
-import { NavigationBar } from "./NavigationBar";
+import { API_URL } from "../../config/apiUrl";
+import { NavigationBar } from "../main/NavigationBar";
 import { useParams } from "react-router-dom";
 
 export const UpdatePerson = () => {
@@ -99,13 +99,14 @@ export const UpdatePerson = () => {
       }
     } else if (role === "Manager") {
       try {
-        const response = await axios.put(API_URL + "/profile/manager/" + id,
-        {
-          first_name: first_name,
-          last_name: last_name,
-          date_of_birth: formatDate(date_of_birth),
-          phone_number: phone_number
-        },
+        const response = await axios.put(
+          API_URL + "/profile/manager/" + id,
+          {
+            first_name: first_name,
+            last_name: last_name,
+            date_of_birth: formatDate(date_of_birth),
+            phone_number: phone_number,
+          },
           WITH_CREDENTIALS
         );
 
@@ -113,7 +114,7 @@ export const UpdatePerson = () => {
           toast.success(response.data.message);
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
         toast.error(err.response.data.message);
       }
     }

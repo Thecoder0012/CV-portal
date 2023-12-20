@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import styles from "../styles/auth.module.css";
+import styles from "../../styles/auth/auth.module.css";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { API_URL } from "../config/apiUrl.js";
+import { API_URL } from "../../config/apiUrl.js";
 
 export const Login = () => {
   const [credentials, setCredentials] = useState({

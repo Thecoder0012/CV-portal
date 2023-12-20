@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { NavigationBar } from "./NavigationBar.js";
-import styles from "../styles/searchSkills.module.css";
+import { NavigationBar } from "../main/NavigationBar.js";
+import styles from "../../styles/profile/searchSkills.module.css";
 import axios from "axios";
 import EmployeeDetails from "./EmployeeDetails.js";
-import { API_URL } from "../config/apiUrl.js";
+import { API_URL } from "../../config/apiUrl.js";
 
 export const SearchSkills = () => {
   const [employeesData, setEmployeesData] = useState([]);
@@ -24,19 +24,14 @@ export const SearchSkills = () => {
     setSelectedPersonId(null);
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const employeesResponse = await axios.get(
-                    API_URL + "/api/employees"
-        );
+        const employeesResponse = await axios.get(API_URL + "/api/employees");
 
         setEmployeesData(employeesResponse.data.employees);
 
-        const skillsResponse = await axios.get(
-          API_URL + "/api/skills"
-        );
+        const skillsResponse = await axios.get(API_URL + "/api/skills");
         setSkillsData(skillsResponse.data.skills);
 
         const employeeSkillsResponse = await axios.get(
@@ -44,9 +39,7 @@ export const SearchSkills = () => {
         );
         setEmployeeSkillsData(employeeSkillsResponse.data.employeeSkills);
 
-        const personResponse = await axios.get(
-          API_URL + "/api/person"
-        );
+        const personResponse = await axios.get(API_URL + "/api/person");
         setPersonData(personResponse.data.person);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -74,8 +67,6 @@ export const SearchSkills = () => {
     const person = personData.find(
       (person) => person.person_id === employee.person_id
     );
-
-
 
     return (
       (employee.employee_id &&
@@ -109,13 +100,13 @@ export const SearchSkills = () => {
       <NavigationBar />
       <h1 className={styles.header}>Find Employee</h1>
       <div className={styles.tableContainer}>
-      <input
-        type="text"
-        placeholder="Search for a name or a skill.."
-        onChange={handleInputChange}
-        value={inputValue}
-        className={styles.searchInput}
-      />
+        <input
+          type="text"
+          placeholder="Search for a name or a skill.."
+          onChange={handleInputChange}
+          value={inputValue}
+          className={styles.searchInput}
+        />
         <table className={styles.skillsTable}>
           <thead className={styles.thead}>
             <tr>
@@ -179,7 +170,7 @@ export const SearchSkills = () => {
           >
             {index + 1}
           </button>
-        ))} 
+        ))}
       </div>
       {SelectedPersonId && (
         <EmployeeDetails onClose={closePopup} id={SelectedPersonId} />

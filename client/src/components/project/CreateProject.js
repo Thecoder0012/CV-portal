@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import styles from "../styles/projects.module.css";
+import styles from "../../styles/project/projects.module.css";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
-import { API_URL } from "../config/apiUrl.js";
+import { API_URL } from "../../config/apiUrl.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavigationBar } from "./NavigationBar.js";
+import { NavigationBar } from "../../components/main/NavigationBar.js";
 
 export const CreateProject = () => {
   const [project, setProject] = useState({
