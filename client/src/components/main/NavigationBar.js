@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../config/apiUrl.js";
-import logo from "../../images/logo.png";
+import logo from "../../resources/images/logo.png"
 import Navbar from "../../styles/main/navBar.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

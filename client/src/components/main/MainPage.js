@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { NavigationBar } from "./NavigationBar";
 import main from "../../styles/main/mainPage.module.css";
-import videoSrc from "../../videoplayback.mp4";
+import videoSrc from "../../resources/videos/homepageVideo.mp4";
 import { useOnScreen } from "./UseOnScreen";
 
 export const MainPage = () => {
