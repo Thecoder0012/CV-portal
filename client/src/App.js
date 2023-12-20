@@ -27,10 +27,7 @@ function App() {
         <Route path="/searchSkills" element={<SearchSkills />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/manager/projects" element={<ManagerProjects />} />
-        <Route
-          path="/manager/assignEmployees"
-          element={<ProjectAssignment />}
-        />
+        <Route path="/manager/assignEmployees" element={<ProjectAssignment />} />
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
