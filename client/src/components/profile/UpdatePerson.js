@@ -240,9 +240,8 @@ export const UpdatePerson = () => {
                     </option>
                   ))}
                 </select>
-
+                <h3 className={styles.skillsContainer}>Skills</h3>
                 <div className={styles.checkboxContainer}>
-                  <label>Skills</label>
                   {skills.map((skill) => (
                     <div key={skill.id} className={styles.checkboxItem}>
                       <input
@@ -253,7 +252,7 @@ export const UpdatePerson = () => {
                         onChange={handleSkills}
                         checked={selectedSkills.includes(skill.id)}
                       />
-                      <label htmlFor={skill.id}>{skill.name}</label>
+                      <h5 htmlFor={skill.id}>{skill.name}</h5>
                     </div>
                   ))}
                 </div>
