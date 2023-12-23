@@ -1,8 +1,6 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-
-import { NavigationBar } from "../main/NavigationBar.js";
 import mainCss from "../../styles/auth/auth.module.css";
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../../config/apiUrl.js";
@@ -102,7 +100,6 @@ export const Projects = () => {
 
   return (
     <div className={mainCss.mainContainer}>
-      <NavigationBar />
       <h1 className={mainCss.Headline}>Projects</h1>
       <div
         style={{

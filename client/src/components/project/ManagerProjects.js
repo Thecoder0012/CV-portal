@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { NavigationBar } from "../main/NavigationBar.js";
 import styles from "../../styles/project/ManagerProjects.module.css";
 import { API_URL } from "../../config/apiUrl.js";
 import UpdateProjectPopup from "./UpdateProjectPopup.js";
@@ -43,7 +42,6 @@ export const ManagerProjects = () => {
 
   return (
     <div>
-      <NavigationBar />
       <h1 className={styles.Headline}>Manage Archived Projects</h1>
       <div className={styles.projectContainer}>
         <table className={styles.projectsTable}>

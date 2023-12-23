@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import styles from "../../styles//project/projectDetails.module.css";
 import { API_URL } from "../../config/apiUrl.js";
-import { NavigationBar } from "../main/NavigationBar.js";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -166,8 +165,6 @@ export const ProjectDetails = () => {
 
   return (
     <div>
-      <NavigationBar />
-
       <div className={styles.singleProject}>
         <h1 className={styles.projectTitle}>{project.title}</h1>
         <div className={styles.projectDetails}>

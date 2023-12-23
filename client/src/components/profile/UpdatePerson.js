@@ -3,7 +3,6 @@ import styles from "../../styles/auth/auth.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../../config/apiUrl";
-import { NavigationBar } from "../main/NavigationBar";
 import { useParams } from "react-router-dom";
 
 export const UpdatePerson = () => {
@@ -184,7 +183,6 @@ export const UpdatePerson = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <NavigationBar />
       <div className={styles.cvContainer}>
         <div className={styles.register}>
           <span className={styles.registerTitle}>Update profile</span>

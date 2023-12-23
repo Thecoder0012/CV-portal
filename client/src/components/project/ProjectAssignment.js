@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavigationBar } from "../main/NavigationBar";
+
 import { API_URL } from "../../config/apiUrl";
 import axios from "axios";
 import styles from "../../styles/project/assignment.module.css";
@@ -145,7 +145,6 @@ export const ProjectAssignment = () => {
 
   return (
     <div>
-      <NavigationBar />
       <div className={styles.tableContainer}>
         <h2 className={styles.tableHeader}>Projects</h2>
         <table className={styles.table}>

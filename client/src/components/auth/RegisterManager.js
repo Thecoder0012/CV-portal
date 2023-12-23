@@ -2,7 +2,6 @@ import styles from "../../styles/auth/auth.module.css";
 import { useEffect, useState } from "react";
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavigationBar } from ".././main/NavigationBar.js";
 import axios from "axios";
 import { API_URL } from "../../config/apiUrl.js";
 
@@ -108,7 +107,6 @@ export const RegisterManager = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <NavigationBar />
       <div className={styles.registerContainer}>
         <div className={styles.register}>
           <span className={styles.registerTitle}>Register Manager</span>

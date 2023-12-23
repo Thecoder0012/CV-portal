@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { NavigationBar } from "./NavigationBar";
 import main from "../../styles/main/mainPage.module.css";
 import videoSrc from "../../resources/videos/homepageVideo.mp4";
 import { useOnScreen } from "./UseOnScreen";
@@ -11,7 +10,6 @@ export const MainPage = () => {
 
   return (
     <div>
-      <NavigationBar className={main.NavBar} />
       <div className={main.mainDiv}>
         <video autoPlay loop muted className={main.backgroundVideo}>
           <source src={videoSrc} type="video/mp4" />

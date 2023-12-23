@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { NavigationBar } from "../main/NavigationBar.js";
 import styles from "../../styles/profile/searchSkills.module.css";
 import axios from "axios";
 import EmployeeDetails from "./EmployeeDetails.js";
@@ -97,7 +96,6 @@ export const SearchSkills = () => {
 
   return (
     <div className={styles.searchSkills}>
-      <NavigationBar />
       <h1 className={styles.header}>Find Employee</h1>
       <div className={styles.tableContainer}>
         <input
