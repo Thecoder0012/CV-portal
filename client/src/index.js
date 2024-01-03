@@ -9,7 +9,7 @@ const AppWithNavbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/cvProfile" || location.pathname === "/cv" ) {
+    if (location.pathname === "/login" || location.pathname === "/register"|| location.pathname === "/cv") {
       setShowNavigationBar(false);
     } else {
       setShowNavigationBar(true);

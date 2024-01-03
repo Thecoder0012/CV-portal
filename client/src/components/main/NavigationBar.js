@@ -26,8 +26,8 @@ export const NavigationBar = () => {
 
   async function fetchProfile() {
     const response = await axios.get(API_URL + "/profile", WITH_CREDENTIALS);
-    setAuth(response.data[0].first_name);
-    setUserId(response.data[0].person_id);
+    setAuth(response.data[0]?.first_name);
+    setUserId(response.data[0]?.person_id);
   }
 
   useEffect(() => {
