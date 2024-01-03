@@ -17,6 +17,7 @@ export const CreateProject = () => {
   });
   const [managers, setManagers] = useState([]);
   const [chosenManager, setChosenManager] = useState([]);
+  const [isFocused, setIsFoucsed] = useState(false)
 
   const { title, description, date_finish, manager_id, file_path } = project;
 
@@ -101,11 +102,14 @@ export const CreateProject = () => {
         </div>
         <div id="testman" className={styles.projectFormGroup}>
           <input
-            type="date"
+            type={isFocused ? "date" : "text"}
             id="projectDate"
+            placeholder="Project End Date"
             className={styles.writeProjectsText}
             onChange={handleInputChange}
             name="date_finish"
+            onFocus={() => setIsFoucsed(true)}
+            onBlur={() => setIsFoucsed(false)}
           />
 
           <textarea
@@ -113,10 +117,9 @@ export const CreateProject = () => {
             placeholder="Description"
             name="description"
             onChange={handleInputChange}
-            style={{width: "70vw"}}
+            style={{ width: "70vw" }}
           ></textarea>
-        
-       
+
           <select
             id="author"
             name="authorId"
@@ -152,7 +155,7 @@ export const CreateProject = () => {
             <button className={styles.projectSubmit} type="submit">
               Create Project
             </button>
-        </div>
+          </div>
         </div>
       </form>
     </div>
