@@ -236,7 +236,6 @@ export const ProjectDetails = () => {
             ) && (
               <button className={styles.requestButton} onClick={requestProject}>
                 Assign me
-                <span className={styles.loadingIndicator}></span>
               </button>
             )}
         </div>
