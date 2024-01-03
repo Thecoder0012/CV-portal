@@ -221,15 +221,12 @@ export const ProjectDetails = () => {
               </ul>
             </div>
           </div>
-         
-          
 
-          {role_id === 2 && project.title && 
-
+          {role_id === 2 &&
+            project.title &&
             !assignedProjects.some(
               (assignedProjects) =>
                 assignedProjects.project_id === project.project_id
-
             ) &&
             !requestedProjects.some(
               (requestProject) =>
@@ -237,10 +234,10 @@ export const ProjectDetails = () => {
                 requestProject.employee_id === employeeId &&
                 requestProject.status === 1
             ) && (
-              <button className={styles.requestButton} disabled={true}>
-              Assign me
-              <span className={styles.loadingIndicator}></span>
-            </button>
+              <button className={styles.requestButton} onClick={requestProject}>
+                Assign me
+                <span className={styles.loadingIndicator}></span>
+              </button>
             )}
         </div>
       </div>
