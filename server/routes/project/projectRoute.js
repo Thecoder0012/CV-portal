@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const isManager = (req, res, next) => {
+  console.log(req.session.user);
   if (req.session.user && req.session.user.role_id === 1) {
     next();
   } else {
@@ -141,7 +142,7 @@ router.delete("/projects/:id", async (req, res) => {
   }
 });
 
-router.post("/project-assignment", async (req, res) => {
+router.post("/project-assignment", isManager,async (req, res) => {
   try {
     const user_id = req.session.user.user_id;
     const [manager] = await db.query(
