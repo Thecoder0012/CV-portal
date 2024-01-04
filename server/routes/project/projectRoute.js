@@ -141,7 +141,7 @@ router.delete("/projects/:id", async (req, res) => {
   }
 });
 
-router.post("/project-assignment", isManager,async (req, res) => {
+router.post("/project-assignment",async (req, res) => {
   try {
     const user_id = req.session.user.user_id;
     const [manager] = await db.query(
