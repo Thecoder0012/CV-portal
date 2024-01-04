@@ -23,7 +23,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const isManager = (req, res, next) => {
-  console.log(req.session.user);
   if (req.session.user && req.session.user.role_id === 1) {
     next();
   } else {
