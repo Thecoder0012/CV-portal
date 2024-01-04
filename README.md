@@ -4,7 +4,7 @@
 
 The Cv profile Platform is a comprehensive application designed to address the specific needs of both employees and managers within an organization. Employees can effortlessly create and manage their CV resumes, while managers gain access to tools such as creating projects, look up employees, and assigning employees to projects.
 
-Screenshots
+## Screenshots
 <img width="1430" alt="Frontpage" src="https://github.com/Thecoder0012/CV-portal/assets/92215742/58d8b6f4-5789-48da-b439-1ef1b08515aa">
 
 ## Run Locally
