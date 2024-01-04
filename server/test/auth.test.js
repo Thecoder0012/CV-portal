@@ -5,9 +5,9 @@ import { app } from "../server.js";
 describe("POST /register", () => {
   it("should register a new user", async () => {
     const newUser = {
-      username: "testtest",
-      password: "testtest",
-      email: "testtest00@example.com",
+      username: "testtest0",
+      password: "testtest0",
+      email: "testtest000@example.com",
       role_id: 1,
     };
     const response = await request(app).post("/register").send(newUser);
