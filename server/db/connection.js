@@ -135,10 +135,8 @@ async function createTable() {
 
     await connection.query(`
     CREATE TABLE IF NOT EXISTS employee_skills (
-    my_row_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT /*!80023 INVISIBLE */,
     employee_id INT DEFAULT NULL,
     skills_id INT DEFAULT NULL,
-    PRIMARY KEY (my_row_id),
     FOREIGN KEY (employee_id) REFERENCES employee (employee_id),
     FOREIGN KEY (skills_id) REFERENCES skills (id)
   )
@@ -146,10 +144,8 @@ async function createTable() {
 
     await connection.query(`
     CREATE TABLE IF NOT EXISTS employee_projects (
-    my_row_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT /*!80023 INVISIBLE */,
     employee_id INT DEFAULT NULL,
     project_id INT DEFAULT NULL,
-    PRIMARY KEY (my_row_id),
     FOREIGN KEY (employee_id) REFERENCES employee (employee_id),
     FOREIGN KEY (project_id) REFERENCES project (id)
   )

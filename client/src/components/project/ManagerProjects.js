@@ -25,7 +25,7 @@ export const ManagerProjects = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [projects]);
 
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;

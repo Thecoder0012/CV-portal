@@ -130,6 +130,10 @@ router.delete("/projects/:id", async (req, res) => {
       "UPDATE employee_projects SET project_id = NULL WHERE project_id = ?",
       [projectId]
     );
+    const deleteProjectRequest = await db.query(
+      "UPDATE project_requests SET project_id = NULL WHERE project_id = ?",
+      [projectId]
+    );
 
     const deleteProjectQuery = "DELETE FROM project WHERE id = ?";
     await db.query(deleteProjectQuery, [projectId]);
@@ -392,12 +396,12 @@ router.get("/projects/assigned/:id", async (req, res) => {
     [projectId]
   );
 
-  const EmployeeNames = []
-  for(const item of assignedEmployees){
-    EmployeeNames.push(item.first_name + " " + item.last_name)
+  const EmployeeNames = [];
+  for (const item of assignedEmployees) {
+    EmployeeNames.push(item.first_name + " " + item.last_name);
   }
 
-return res.status(200).send({assignedEmployees: EmployeeNames})
+  return res.status(200).send({ assignedEmployees: EmployeeNames });
 });
 
 router.put("/project-requests/:requestId", async (req, res) => {
